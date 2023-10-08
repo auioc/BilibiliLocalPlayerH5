@@ -14,5 +14,9 @@ tsc
 
 echo '{"compress":{"pure_funcs":["console.debug"]},"ecma":2017}' >terser.json
 
-html-minifier-terser --minify-js --collapse-whitespace --remove-comments public/index.html >public/index.html
-terser --config-file terser.json public/player.js >public/player.js
+html-minifier-terser --minify-js --collapse-whitespace --remove-comments public/index.html >public/index.min.html
+terser --config-file terser.json public/player.js >public/player.min.js
+
+mv public/index.min.html public/index.html
+mv public/player.min.js public/player.js
+rm public/player.js.map
