@@ -17,5 +17,5 @@
 ## 致谢
 
 - [PCC-Studio](https://www.pccstudio.com)：编写原始项目
-- [AUIOC](https://www.auioc.com)：技术支持
+- [AUIOC](https://www.auioc.org)：技术支持
 - [CommentCoreLibrary](https://github.com/jabbany/CommentCoreLibrary)：弹幕支持
