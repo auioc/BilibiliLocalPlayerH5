@@ -31,6 +31,10 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>Size Offset:</td>
+                    <td><input id="danmaku-size-offset" type="number" value="-3" /></td>
+                </tr>
+                <tr>
                     <td>Auto Play:</td>
                     <td><input id="auto-play" type="checkbox" /></td>
                 </tr>
@@ -77,6 +81,7 @@
                     fullscreen: id('fullscreen').checked,
                     muted: id('muted').checked,
                     danmakuTimeOffset: parseFloat(id('danmaku-time-offset').value),
+                    danmakuSizeOffset: parseInt(id('danmaku-size-offset').value),
                 });
                 window.player = player;
                 id('start-panel').remove();

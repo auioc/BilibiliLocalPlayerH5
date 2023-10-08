@@ -252,6 +252,17 @@ const __player_metadata__: PlayerMetadata = {
                     .selfEvents({
                         create: (P, E) => {
                             P.commentManager = initDanmaku(E, P.danmakuUrl, () => P.firePlayerEvent('danmakuload'));
+                            if (P.options.danmakuSizeOffset) {
+                                P.commentManager.filter.addModifier(function (commentData: StrAnyKV) {
+                                    const override = commentData;
+                                    const size = commentData['size'];
+                                    if (size && !override['sizeOverridden']) {
+                                        override['size'] = size + P.options.danmakuSizeOffset;
+                                        override['sizeOverridden'] = true;
+                                    }
+                                    return override;
+                                });
+                            }
                             P._dyn.danmakuOn = true;
                             P.setContainerData('danmakuOn', true);
                             if (!P.options.danmakuTimeOffset) P.options.danmakuTimeOffset = 0;
