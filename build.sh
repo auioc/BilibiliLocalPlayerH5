@@ -1,6 +1,7 @@
 #!/bin/sh
 
 mkdir public/lib
+mkdir src/lib
 
 npm install -g typescript
 
