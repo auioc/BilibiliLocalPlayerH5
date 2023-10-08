@@ -1,4 +1,9 @@
 {
     "cSpell.words": ["danmaku", "danmakuload", "stime"],
-    "conventionalCommits.scopes": ["repo", "utils", "player", "pages"]
+    "conventionalCommits.scopes": ["repo", "utils", "player", "pages"],
+    "markdownlint.config": {
+        "MD001": false,
+        "MD033": false,
+        "MD041": false
+    }
 }
