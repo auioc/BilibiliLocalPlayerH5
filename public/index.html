@@ -10,11 +10,94 @@
         <link rel="stylesheet" href="lib/CommentCoreLibrary.css" />
     </head>
     <body>
+        <table id="start-panel">
+            <tbody>
+                <tr>
+                    <td><label for="video-file">Video: </label></td>
+                    <td>
+                        <input
+                            id="video-file"
+                            type="file"
+                            accept="video/mp4,.flv"
+                        />
+                    </td>
+                    <td>
+                        (Last: <span id="last-video-file"> <i>None</i> </span>)
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="danmaku-file">Danmaku: </label></td>
+                    <td>
+                        <input id="danmaku-file" type="file" accept=".xml" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Time Offset:</td>
+                    <td>
+                        <input
+                            id="danmaku-time-offset"
+                            type="number"
+                            value="0"
+                        />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Auto Play:</td>
+                    <td><input id="auto-play" type="checkbox" /></td>
+                </tr>
+                <tr>
+                    <td>Muted:</td>
+                    <td><input id="muted" type="checkbox" /></td>
+                </tr>
+                <tr>
+                    <td>Fullscreen:</td>
+                    <td><input id="fullscreen" type="checkbox" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        <button id="load-button" onclick="load()">Load</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         <div id="player" style="display: none"></div>
         <script src="player.js"></script>
         <script>
             window.__title__ = 'BilibiliLocalPlayerH5';
             document.title = window.__title__;
+            function id(id) {
+                return document.getElementById(id);
+            }
+            function load() {
+                const video = id('video-file').files[0];
+                if (!video) return;
+                const videoUrl = URL.createObjectURL(video);
+
+                const danmaku = id('danmaku-file').files[0];
+                const danmakuUrl = danmaku
+                    ? URL.createObjectURL(danmaku)
+                    : null;
+
+                const player = new Player(
+                    id('player'),
+                    __player_metadata__,
+                    video.name,
+                    videoUrl,
+                    danmakuUrl,
+                    {
+                        autoPlay: id('auto-play').checked,
+                        fullscreen: id('fullscreen').checked,
+                        muted: id('muted').checked,
+                        danmakuTimeOffset: parseFloat(
+                            id('danmaku-time-offset').value
+                        ),
+                    }
+                );
+                window.player = player;
+                id('start-panel').remove();
+                id('player').removeAttribute('style');
+                document.title = `${video.name} | ${__title__}`;
+            }
         </script>
     </body>
 </html>
