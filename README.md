@@ -18,3 +18,4 @@
 
 - [PCC-Studio](https://www.pccstudio.com)：编写原始项目
 - [AUIOC](https://www.auioc.com)：技术支持
+- [CommentCoreLibrary](https://github.com/jabbany/CommentCoreLibrary)：弹幕支持
