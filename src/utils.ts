@@ -12,25 +12,18 @@ interface StrKV {
 
 type AnyFunction = (...args: any[]) => any;
 
-type AppendArguments<F extends AnyFunction, A extends any[]> = F extends (
-    ...arg: [...infer P]
-) => infer R
+type AppendArguments<F extends AnyFunction, A extends any[]> = F extends (...arg: [...infer P]) => infer R
     ? (...args: [...P, ...A]) => R
     : never;
 
-type PrependArguments<F extends AnyFunction, A extends any[]> = F extends (
-    ...arg: [...infer P]
-) => infer R
+type PrependArguments<F extends AnyFunction, A extends any[]> = F extends (...arg: [...infer P]) => infer R
     ? (...args: [...A, ...P]) => R
     : never;
 
 type ExtendedHTMLEventMap = StrAnyKV & HTMLElementEventMap;
 
 type EventListenerMap<F extends AnyFunction> = {
-    [key in keyof ExtendedHTMLEventMap]?: AppendArguments<
-        F,
-        [ExtendedHTMLEventMap[key]]
-    >;
+    [key in keyof ExtendedHTMLEventMap]?: AppendArguments<F, [ExtendedHTMLEventMap[key]]>;
 };
 
 type HTMLTagNames = keyof HTMLElementTagNameMap;
@@ -115,11 +108,7 @@ function timeToSeconds(time: string): number {
     return time.split(':').reduce((acc, time) => 60 * acc + parseInt(time));
 }
 
-function bindEvent(
-    target: HTMLElement,
-    entries: { [s: string]: Function },
-    params: any[]
-) {
+function bindEvent(target: HTMLElement, entries: { [s: string]: Function }, params: any[]) {
     for (const [type, listener] of Object.entries(entries)) {
         target.addEventListener(type, (event) => listener(...params, event));
     }
@@ -127,14 +116,8 @@ function bindEvent(
 
 function initDanmaku(stage: HTMLElement, url: string, onload: () => void) {
     const provider = new CommentProvider();
-    provider.addStaticSource(
-        CommentProvider.XMLProvider('GET', url, null, null),
-        CommentProvider.SOURCE_XML
-    );
-    provider.addParser(
-        new BilibiliFormat.XMLParser(),
-        CommentProvider.SOURCE_XML
-    );
+    provider.addStaticSource(CommentProvider.XMLProvider('GET', url, null, null), CommentProvider.SOURCE_XML);
+    provider.addParser(new BilibiliFormat.XMLParser(), CommentProvider.SOURCE_XML);
     const commentManager = new CommentManager(stage);
     // @ts-expect-error
     provider.addTarget(commentManager);

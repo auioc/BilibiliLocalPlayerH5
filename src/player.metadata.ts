@@ -1,18 +1,12 @@
 type MetaEventTypes = 'selfEvent' | 'playerEvent' | 'videoEvent';
 
-type MetaEvents<F extends AnyFunction> =
-    | EventListenerMap<F>
-    | (() => EventListenerMap<F>);
+type MetaEvents<F extends AnyFunction> = EventListenerMap<F> | (() => EventListenerMap<F>);
 
 type ElementMetaEvents<T extends HTMLTagNames> = MetaEvents<
     (player: Player, element: HTMLElementTagNameMap[T]) => void
 >;
 type ElementVideoMetaEvents<T extends HTMLTagNames> = MetaEvents<
-    (
-        player: Player,
-        element: HTMLElementTagNameMap[T],
-        video: HTMLVideoElement
-    ) => void
+    (player: Player, element: HTMLElementTagNameMap[T], video: HTMLVideoElement) => void
 >;
 
 function bindMetadataEvents( // TODO improve
@@ -112,10 +106,7 @@ class EDC<T extends HTMLTagNames> {
             {
                 selfEvent: [element, () => [player, element]],
                 playerEvent: [player.container, () => [player, element]],
-                videoEvent: [
-                    player.video,
-                    () => [player, element, player.video],
-                ],
+                videoEvent: [player.video, () => [player, element, player.video]],
             }
         );
         for (const childBulder of this._childrenBuilders) {

@@ -53,9 +53,7 @@ class Player {
         {
             this.options.autoPlay ? this.play() : this.pause();
             this.options.muted ? this.mute() : this.unmute();
-            this.options.fullscreen
-                ? this.requestFullscreen()
-                : this.setContainerData('fullscreen', false);
+            this.options.fullscreen ? this.requestFullscreen() : this.setContainerData('fullscreen', false);
         }
         this.constructed = true;
         if (this.options.autoPlay) this.toast('Autoplay');
@@ -71,15 +69,9 @@ class Player {
             this.setContainerData('paused', this.video.paused);
             this.overHour = this.video.duration >= 60 * 60;
         });
-        this.onVideoEvent('play', () =>
-            this.setContainerData('paused', this.video.paused)
-        );
-        this.onVideoEvent('pause', () =>
-            this.setContainerData('paused', this.video.paused)
-        );
-        this.onVideoEvent('volumechange', () =>
-            this.setContainerData('muted', this.video.muted)
-        );
+        this.onVideoEvent('play', () => this.setContainerData('paused', this.video.paused));
+        this.onVideoEvent('pause', () => this.setContainerData('paused', this.video.paused));
+        this.onVideoEvent('volumechange', () => this.setContainerData('muted', this.video.muted));
         this.onPlayerEvent('fullscreenchange', () => {
             const fullscreen = document.fullscreenElement === this.container;
             this.setContainerData('fullscreen', fullscreen ? true : false);
@@ -118,9 +110,7 @@ class Player {
         this.container.addEventListener(type, listener);
     }
     firePlayerEvent(type: string, detail?: any) {
-        this.container.dispatchEvent(
-            new CustomEvent(type, detail ? { detail: detail } : null)
-        );
+        this.container.dispatchEvent(new CustomEvent(type, detail ? { detail: detail } : null));
     }
     toast(html: string) {
         if (this.constructed) {
@@ -129,11 +119,7 @@ class Player {
     }
     seek(time: number) {
         const fixedTime = clamp(time, 0, this.video.duration);
-        this.toast(
-            `Seek: ${fTime(fixedTime, this.overHour)} / ${fTime(
-                this.video.duration
-            )}`
-        );
+        this.toast(`Seek: ${fTime(fixedTime, this.overHour)} / ${fTime(this.video.duration)}`);
         this.video.currentTime = fixedTime;
     }
     seekPercent(percent: number) {

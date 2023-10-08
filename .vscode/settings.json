@@ -1,6 +1,7 @@
 {
     "cSpell.words": ["danmaku", "danmakuload", "stime"],
     "conventionalCommits.scopes": ["repo", "utils", "player", "pages", "start"],
+    "prettier.printWidth": 120,
     "markdownlint.config": {
         "MD001": false,
         "MD033": false,

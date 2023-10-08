@@ -2,10 +2,7 @@
 <html>
     <head>
         <meta charset="utf-8" />
-        <meta
-            name="viewport"
-            content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"
-        />
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
         <link rel="stylesheet" href="player.css" />
         <link rel="stylesheet" href="lib/CommentCoreLibrary.css" />
     </head>
@@ -15,11 +12,7 @@
                 <tr>
                     <td><label for="video-file">Video: </label></td>
                     <td>
-                        <input
-                            id="video-file"
-                            type="file"
-                            accept="video/mp4,.flv"
-                        />
+                        <input id="video-file" type="file" accept="video/mp4,.flv" />
                     </td>
                     <td>
                         (Last: <span id="last-video-file"> <i>None</i> </span>)
@@ -34,11 +27,7 @@
                 <tr>
                     <td>Time Offset:</td>
                     <td>
-                        <input
-                            id="danmaku-time-offset"
-                            type="number"
-                            value="0"
-                        />
+                        <input id="danmaku-time-offset" type="number" value="0" />
                     </td>
                 </tr>
                 <tr>
@@ -69,8 +58,7 @@
                 return document.getElementById(id);
             }
             (function () {
-                const lastVideoFile =
-                    window.localStorage.getItem('lastVideoFile');
+                const lastVideoFile = window.localStorage.getItem('lastVideoFile');
                 if (lastVideoFile) {
                     id('last-video-file').textContent = lastVideoFile;
                 }
@@ -82,25 +70,14 @@
                 window.localStorage.setItem('lastVideoFile', video.name);
 
                 const danmaku = id('danmaku-file').files[0];
-                const danmakuUrl = danmaku
-                    ? URL.createObjectURL(danmaku)
-                    : null;
+                const danmakuUrl = danmaku ? URL.createObjectURL(danmaku) : null;
 
-                const player = new Player(
-                    id('player'),
-                    __player_metadata__,
-                    video.name,
-                    videoUrl,
-                    danmakuUrl,
-                    {
-                        autoPlay: id('auto-play').checked,
-                        fullscreen: id('fullscreen').checked,
-                        muted: id('muted').checked,
-                        danmakuTimeOffset: parseFloat(
-                            id('danmaku-time-offset').value
-                        ),
-                    }
-                );
+                const player = new Player(id('player'), __player_metadata__, video.name, videoUrl, danmakuUrl, {
+                    autoPlay: id('auto-play').checked,
+                    fullscreen: id('fullscreen').checked,
+                    muted: id('muted').checked,
+                    danmakuTimeOffset: parseFloat(id('danmaku-time-offset').value),
+                });
                 window.player = player;
                 id('start-panel').remove();
                 id('player').removeAttribute('style');

@@ -17,10 +17,7 @@ const __player_metadata__: PlayerMetadata = {
                     E.innerHTML = T.detail.content;
                     opacityVisible(E);
                     clearTimeout(P._dyn.toastTimer);
-                    P._dyn.toastTimer = setTimeout(
-                        () => opacityInvisible(E),
-                        800
-                    );
+                    P._dyn.toastTimer = setTimeout(() => opacityInvisible(E), 800);
                 },
             }),
         new EDC('div')
@@ -43,9 +40,7 @@ const __player_metadata__: PlayerMetadata = {
                     .children(
                         new EDC('button', 'playToggle') //
                             .attr({ class: 'play-toggle' })
-                            .css((s) =>
-                                toggleByPlayerData('paused', s.attributes.class)
-                            )
+                            .css((s) => toggleByPlayerData('paused', s.attributes.class))
                             .selfEvents({ click: (P) => P.togglePlay() })
                             .children(...newSpans('⏵', '⏸')),
                         new EDC('div') //
@@ -53,18 +48,11 @@ const __player_metadata__: PlayerMetadata = {
                             .children(
                                 new EDC('button', 'muteToggle')
                                     .attr({ class: 'mute-toggle' })
-                                    .css((s) =>
-                                        toggleByPlayerData(
-                                            'muted',
-                                            s.attributes.class
-                                        )
-                                    )
+                                    .css((s) => toggleByPlayerData('muted', s.attributes.class))
                                     .selfEvents({
                                         click: (P) => P.toggleMute(),
                                     })
-                                    .children(
-                                        ...newSpans('<s>Mute</s>', 'Mute')
-                                    ),
+                                    .children(...newSpans('<s>Mute</s>', 'Mute')),
                                 new EDC('input', 'volume')
                                     .attr({
                                         class: 'volume',
@@ -75,18 +63,14 @@ const __player_metadata__: PlayerMetadata = {
                                         value: '100',
                                     })
                                     .selfEvents({
-                                        input: (P, E) =>
-                                            P.setVolume(E.valueAsNumber / 100),
+                                        input: (P, E) => P.setVolume(E.valueAsNumber / 100),
                                     })
                                     .playerEvents({
                                         mute: (_, E) => (E.disabled = true),
                                         unmute: (_, E) => (E.disabled = false),
                                     })
                                     .videoEvents({
-                                        volumechange: (_, E, V) =>
-                                            (E.valueAsNumber = Math.round(
-                                                V.volume * 100
-                                            )),
+                                        volumechange: (_, E, V) => (E.valueAsNumber = Math.round(V.volume * 100)),
                                     })
                             ),
                         new EDC('div')
@@ -106,36 +90,23 @@ const __player_metadata__: PlayerMetadata = {
                                         create: (_, E) => (E.valueAsNumber = 0),
                                         change: (P, E) => {
                                             P.seekPercent(E.valueAsNumber);
-                                            opacityInvisible(
-                                                P.elements.progressPopup
-                                            );
+                                            opacityInvisible(P.elements.progressPopup);
                                             P._dyn.progressInputting = false;
                                         },
                                         input: (P, E) => {
                                             P._dyn.progressInputting = true;
                                             const value = E.valueAsNumber;
-                                            const popup =
-                                                P.elements.progressPopup;
-                                            popup.textContent = fTime(
-                                                P.video.duration * value
-                                            );
-                                            popup.style.left = `calc(${
-                                                value * 100
-                                            }% + (${
-                                                8 - value * 100 * 0.15
-                                            }px))`;
-                                            popup.style.transform =
-                                                'translateX(' +
-                                                -popup.offsetWidth / 2 +
-                                                'px)';
+                                            const popup = P.elements.progressPopup;
+                                            popup.textContent = fTime(P.video.duration * value);
+                                            popup.style.left = `calc(${value * 100}% + (${8 - value * 100 * 0.15}px))`;
+                                            popup.style.transform = 'translateX(' + -popup.offsetWidth / 2 + 'px)';
                                             opacityVisible(popup);
                                         },
                                     })
                                     .videoEvents({
                                         timeupdate: (P, E, V) => {
                                             if (!P._dyn.progressInputting) {
-                                                const v =
-                                                    V.currentTime / V.duration;
+                                                const v = V.currentTime / V.duration;
                                                 E.valueAsNumber = v ? v : 0;
                                             }
                                         },
@@ -148,16 +119,8 @@ const __player_metadata__: PlayerMetadata = {
                         new EDC('div')
                             .attr({ class: 'time-label' })
                             .selfEvents({
-                                mouseover: (P) =>
-                                    toggleDisplayBi(
-                                        P.elements.timeInput,
-                                        P.elements.timeCurrent
-                                    ),
-                                mouseleave: (P) =>
-                                    toggleDisplayBi(
-                                        P.elements.timeCurrent,
-                                        P.elements.timeInput
-                                    ),
+                                mouseover: (P) => toggleDisplayBi(P.elements.timeInput, P.elements.timeCurrent),
+                                mouseleave: (P) => toggleDisplayBi(P.elements.timeCurrent, P.elements.timeInput),
                             })
                             .children(
                                 new EDC('input', 'timeInput')
@@ -171,48 +134,31 @@ const __player_metadata__: PlayerMetadata = {
                                             if (E.validity.valid) {
                                                 P.seek(timeToSeconds(E.value));
                                             } else {
-                                                E.value = fTime(
-                                                    P.video.currentTime
-                                                );
+                                                E.value = fTime(P.video.currentTime);
                                             }
                                         },
                                     })
                                     .videoEvents({
                                         canplay: (P, E, V) => {
                                             E.step = P.overHour ? '1' : '0';
-                                            E.value = fTime(
-                                                V.currentTime,
-                                                P.overHour
-                                            );
+                                            E.value = fTime(V.currentTime, P.overHour);
                                             E.max = fTime(V.duration);
                                         },
                                         timeupdate: (P, E, V) => {
-                                            E.value = fTime(
-                                                V.currentTime,
-                                                P.overHour
-                                            );
+                                            E.value = fTime(V.currentTime, P.overHour);
                                         },
                                     }),
                                 new EDC('span', 'timeCurrent') //
                                     .html('--:--')
                                     .videoEvents({
-                                        canplay: (P, E, V) =>
-                                            (E.textContent = fTime(
-                                                V.currentTime,
-                                                P.overHour
-                                            )),
-                                        timeupdate: (P, E, V) =>
-                                            (E.textContent = fTime(
-                                                V.currentTime,
-                                                P.overHour
-                                            )),
+                                        canplay: (P, E, V) => (E.textContent = fTime(V.currentTime, P.overHour)),
+                                        timeupdate: (P, E, V) => (E.textContent = fTime(V.currentTime, P.overHour)),
                                     }),
                                 new EDC('span').html(' / '),
                                 new EDC('span')
                                     .html('--:--') //
                                     .videoEvents({
-                                        canplay: (_, E, V) =>
-                                            (E.textContent = fTime(V.duration)),
+                                        canplay: (_, E, V) => (E.textContent = fTime(V.duration)),
                                     })
                             ),
                         new EDC('div', 'danmaku-controls')
@@ -220,52 +166,33 @@ const __player_metadata__: PlayerMetadata = {
                             .attr({ class: 'danmaku-controls' })
                             .children(
                                 new EDC('button', 'danmakuToggle')
-                                    .condition((P) =>
-                                        P.danmakuUrl ? true : false
-                                    )
+                                    .condition((P) => (P.danmakuUrl ? true : false))
                                     .attr({ class: 'danmaku-toggle' })
-                                    .css((s) =>
-                                        toggleByPlayerData(
-                                            'danmaku-on',
-                                            s.attributes.class
-                                        )
-                                    )
+                                    .css((s) => toggleByPlayerData('danmaku-on', s.attributes.class))
                                     .selfEvents({
                                         click: (P) => {
                                             if (!P._dyn.danmakuOn) {
                                                 P._dyn.danmakuOn = true;
                                                 P.commentManager.start();
-                                                P.setContainerData(
-                                                    'danmakuOn',
-                                                    true
-                                                );
+                                                P.setContainerData('danmakuOn', true);
                                                 P.toast('Danmaku On');
                                             } else {
                                                 P._dyn.danmakuOn = false;
                                                 P.commentManager.clear();
                                                 P.commentManager.stop();
-                                                P.setContainerData(
-                                                    'danmakuOn',
-                                                    false
-                                                );
+                                                P.setContainerData('danmakuOn', false);
                                                 P.toast('Danmaku Off');
                                             }
                                         },
                                     })
-                                    .children(
-                                        ...newSpans('Danmaku', '<s>Danmaku</s>')
-                                    ),
+                                    .children(...newSpans('Danmaku', '<s>Danmaku</s>')),
                                 new EDC('button', 'danmakuListToggle') //
                                     .html('?') //
                                     .selfEvents({
-                                        click: (P) =>
-                                            toggleDisplay(
-                                                P.elements.danmakuList
-                                            ),
+                                        click: (P) => toggleDisplay(P.elements.danmakuList),
                                     })
                                     .playerEvents({
-                                        danmakuload: (P, E) =>
-                                            (E.innerHTML = `(${P.commentManager.timeline.length})`),
+                                        danmakuload: (P, E) => (E.innerHTML = `(${P.commentManager.timeline.length})`),
                                     }),
                                 new EDC('input')
                                     .attr({
@@ -276,26 +203,18 @@ const __player_metadata__: PlayerMetadata = {
                                     })
                                     .selfEvents({
                                         create: (P, E) => {
-                                            if (!P.options.danmakuTimeOffset)
-                                                P.options.danmakuTimeOffset = 0;
-                                            E.valueAsNumber =
-                                                P.options.danmakuTimeOffset;
+                                            if (!P.options.danmakuTimeOffset) P.options.danmakuTimeOffset = 0;
+                                            E.valueAsNumber = P.options.danmakuTimeOffset;
                                         },
                                         input: (P, E) => {
-                                            P.options.danmakuTimeOffset =
-                                                E.valueAsNumber;
+                                            P.options.danmakuTimeOffset = E.valueAsNumber;
                                             P.commentManager.clear();
                                         },
                                     })
                             ),
                         new EDC('button', 'fullscreenToggle')
                             .attr({ class: 'fullscreen-toggle' })
-                            .css((s) =>
-                                toggleByPlayerData(
-                                    'fullscreen',
-                                    s.attributes.class
-                                )
-                            )
+                            .css((s) => toggleByPlayerData('fullscreen', s.attributes.class))
                             .selfEvents({
                                 click: (P) => P.toggleFullscreen(),
                             })
@@ -310,16 +229,11 @@ const __player_metadata__: PlayerMetadata = {
                     .playerEvents({
                         danmakuload: async (P, E) => {
                             const timeline = P.commentManager.timeline;
-                            const overHour = timeline
-                                ? timeline[timeline.length - 1].stime >= 36e5
-                                : false;
+                            const overHour = timeline ? timeline[timeline.length - 1].stime >= 36e5 : false;
                             let html = '';
                             for (const data of timeline) {
                                 html += // for performance, do not use document.createElement
-                                    `<li><span>${fTime(
-                                        data.stime / 1e3,
-                                        overHour
-                                    )}</span>` +
+                                    `<li><span>${fTime(data.stime / 1e3, overHour)}</span>` +
                                     `<span title="${data.text}">${data.text}</span></li>`;
                             }
                             E.innerHTML = html;
@@ -337,31 +251,19 @@ const __player_metadata__: PlayerMetadata = {
                     .condition((P) => (P.danmakuUrl ? true : false))
                     .selfEvents({
                         create: (P, E) => {
-                            P.commentManager = initDanmaku(
-                                E,
-                                P.danmakuUrl,
-                                () => P.firePlayerEvent('danmakuload')
-                            );
+                            P.commentManager = initDanmaku(E, P.danmakuUrl, () => P.firePlayerEvent('danmakuload'));
                             P._dyn.danmakuOn = true;
                             P.setContainerData('danmakuOn', true);
-                            if (!P.options.danmakuTimeOffset)
-                                P.options.danmakuTimeOffset = 0;
+                            if (!P.options.danmakuTimeOffset) P.options.danmakuTimeOffset = 0;
                         },
                     })
                     .videoEvents({
                         timeupdate: (P, _, V) => {
                             if (!P._dyn.danmakuOn) return;
                             const cm = P.commentManager;
-                            const time = Math.floor(
-                                1e3 *
-                                    (V.currentTime -
-                                        P.options.danmakuTimeOffset)
-                            );
+                            const time = Math.floor(1e3 * (V.currentTime - P.options.danmakuTimeOffset));
                             const deltaTime = time - cm._lastPosition;
-                            if (
-                                deltaTime < 0 ||
-                                deltaTime > cm.options.seekTrigger
-                            ) {
+                            if (deltaTime < 0 || deltaTime > cm.options.seekTrigger) {
                                 cm.clear();
                             }
                             cm.time(time);
@@ -414,15 +316,13 @@ const __player_metadata__: PlayerMetadata = {
                         break;
                     case 73: // I
                         P.toast(
-                            `${new Date().toLocaleTimeString()}<br/>${fTime(
-                                P.video.currentTime,
-                                P.overHour
-                            )} / ${fTime(P.video.duration)}`
+                            `${new Date().toLocaleTimeString()}<br/>${fTime(P.video.currentTime, P.overHour)} / ${fTime(
+                                P.video.duration
+                            )}`
                         );
                         break;
                     case 68: // D
-                        if (P.elements.danmakuToggle)
-                            P.elements.danmakuToggle.click();
+                        if (P.elements.danmakuToggle) P.elements.danmakuToggle.click();
                         break;
                     default:
                         break;
