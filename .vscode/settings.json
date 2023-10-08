@@ -1,4 +1,4 @@
 {
     "cSpell.words": ["danmaku", "danmakuload", "stime"],
-    "conventionalCommits.scopes": ["repo", "utils"]
+    "conventionalCommits.scopes": ["repo", "utils", "player"]
 }
