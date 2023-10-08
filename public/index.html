@@ -68,10 +68,18 @@
             function id(id) {
                 return document.getElementById(id);
             }
+            (function () {
+                const lastVideoFile =
+                    window.localStorage.getItem('lastVideoFile');
+                if (lastVideoFile) {
+                    id('last-video-file').textContent = lastVideoFile;
+                }
+            })();
             function load() {
                 const video = id('video-file').files[0];
                 if (!video) return;
                 const videoUrl = URL.createObjectURL(video);
+                window.localStorage.setItem('lastVideoFile', video.name);
 
                 const danmaku = id('danmaku-file').files[0];
                 const danmakuUrl = danmaku
