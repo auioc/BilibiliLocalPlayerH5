@@ -108,6 +108,14 @@ function timeToSeconds(time: string): number {
     return time.split(':').reduce((acc, time) => 60 * acc + parseInt(time));
 }
 
+function randomInt(min: number, max: number) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+function randomStr() {
+    return Math.random().toString(36).slice(-8);
+}
+
 function bindEvent(target: HTMLElement, entries: { [s: string]: Function }, params: any[]) {
     for (const [type, listener] of Object.entries(entries)) {
         target.addEventListener(type, (event) => listener(...params, event));

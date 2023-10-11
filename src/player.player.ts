@@ -210,6 +210,25 @@ const __player_metadata__: PlayerMetadata = {
                                             P.options.danmakuTimeOffset = E.valueAsNumber;
                                             P.commentManager.clear();
                                         },
+                                    }),
+                                new EDC('input')
+                                    .attr({
+                                        class: 'danmaku-size-offset',
+                                        type: 'number',
+                                        step: '1',
+                                        value: '0',
+                                    })
+                                    .selfEvents({
+                                        create: (P, E) => {
+                                            if (!P.options.danmakuSizeOffset) P.options.danmakuSizeOffset = 0;
+                                            E.valueAsNumber = P.options.danmakuSizeOffset;
+                                            P._dyn.danmakuSizeFlag = randomStr();
+                                        },
+                                        input: (P, E) => {
+                                            P.options.danmakuSizeOffset = E.valueAsNumber;
+                                            P._dyn.danmakuSizeFlag = randomStr();
+                                            P.commentManager.clear();
+                                        },
                                     })
                             ),
                         new EDC('button', 'fullscreenToggle')
@@ -256,9 +275,14 @@ const __player_metadata__: PlayerMetadata = {
                                 P.commentManager.filter.addModifier(function (commentData: StrAnyKV) {
                                     const override = commentData;
                                     const size = commentData['size'];
-                                    if (size && !override['sizeOverridden']) {
-                                        override['size'] = size + P.options.danmakuSizeOffset;
-                                        override['sizeOverridden'] = true;
+                                    let sizeBak = commentData['sizeBackup'];
+                                    if (size && override['sizeFlag'] != P._dyn.danmakuSizeFlag) {
+                                        if (!sizeBak) {
+                                            override['sizeBackup'] = size;
+                                            sizeBak = size;
+                                        }
+                                        override['size'] = sizeBak + P.options.danmakuSizeOffset;
+                                        override['sizeFlag'] = P._dyn.danmakuSizeFlag;
                                     }
                                     return override;
                                 });

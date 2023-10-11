@@ -139,7 +139,7 @@ video {
     gap: 2px;
 }
 
-.danmaku-controls > .danmaku-time-offset {
+.danmaku-controls > input {
     max-width: 3em;
 }
 
