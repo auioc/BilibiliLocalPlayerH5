@@ -42,6 +42,12 @@
     text-wrap: nowrap;
 }
 
+#version {
+    font-weight: lighter;
+    font-size: smaller;
+    color: #7e7e7e;
+}
+
 body {
     margin: 0;
     background-color: #eee;

@@ -5,6 +5,7 @@ interface PlayerOptions extends StrAnyKV {
 }
 
 class Player {
+    readonly version = '{version}';
     options: PlayerOptions;
     private readonly metadata: PlayerMetadata;
     readonly title: string;
@@ -27,6 +28,7 @@ class Player {
         danmakuUrl: string,
         options: PlayerOptions
     ) {
+        console.log('Version:', this.version);
         this.metadata = metadata;
         this.options = options;
         container.classList.add('player');

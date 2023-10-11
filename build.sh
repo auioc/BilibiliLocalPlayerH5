@@ -3,6 +3,11 @@
 mkdir public/lib
 mkdir src/lib
 
+commit=$(git rev-parse --verify HEAD)
+branch=$(git branch --show-current)
+sed "s;{version};$branch@<span title=\"$commit\">$(printf '%s' "$commit" | cut -c 1-8)</span>;g" public/index.html
+sed "s;{version};$branch@$commit;g" src/player.main.ts
+
 npm install -g typescript
 npm install -g terser
 npm install -g html-minifier-terser
