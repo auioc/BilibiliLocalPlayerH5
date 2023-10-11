@@ -17,8 +17,29 @@
     /* transition: opacity 400ms ease, visibility 400ms ease; */
 }
 
-#start-form {
-    display: flex;
+.center {
+    text-align: center;
+}
+
+#start-panel {
+    margin: 2em auto;
+    max-width: 75%;
+}
+
+#start-panel,
+#start-panel tr,
+#start-panel td {
+    border: 1px solid;
+    border-collapse: collapse;
+    padding: 4px 6px;
+}
+
+#start-panel th {
+    padding: 0.5em;
+}
+
+#start-panel tr > td:nth-child(1) {
+    text-wrap: nowrap;
 }
 
 body {
