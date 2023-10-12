@@ -26,8 +26,6 @@ terser --config-file temp/terser.json public/player.js >temp/player.js
 html-minifier-terser --collapse-whitespace public/player.css >temp/player.css
 # Download CCL style
 curl -L https://github.com/jabbany/CommentCoreLibrary/raw/19db2962ed0ce637a2b99facdf8634d51bb1b503/dist/css/style.min.css >temp/ccl.css
-# Minify CCL style
-html-minifier-terser --collapse-whitespace temp/ccl.css >temp/CommentCoreLibrary.css
 # Build all.css
 cat public/player.css >temp/all.css
 cat temp/ccl.css >>temp/all.css
@@ -39,12 +37,19 @@ html-minifier-terser --minify-js --collapse-whitespace public/index.html >temp/i
 
 # Build AIO html
 cp temp/index.html temp/aio.html
+echo 'sed 1'
 sed -i 's;<link[^>]*>;;g' temp/aio.html
+echo 'sed 2'
 sed -i 's^\\^\\\\^g' temp/all.css
+echo 'sed 3'
 sed -i "s^<\!--allcss-->^<style>$(cat temp/all.css)</style>^g" temp/aio.html
+echo 'sed 4'
 sed -i 's;<script src="player.js"></script>;;g' temp/aio.html
+echo 'sed 5'
 sed 's^\\^\\\\^g' temp/player.js >temp/player.pathced.js
+echo 'sed 6'
 sed -i 's^\&^\\&^g' temp/player.pathced.js
+echo 'sed 7'
 sed -i "s@<\!--playerjs-->@<script>$(cat temp/player.pathced.js)</script>@g" temp/aio.html
 
 # Build public
@@ -52,5 +57,5 @@ cp -f temp/index.html public/index.html
 cp -f temp/player.js public/player.js
 cp -f temp/player.css public/player.css
 mkdir public/lib
-cp temp/CommentCoreLibrary.css public/lib/
+cp temp/ccl.css public/lib/CommentCoreLibrary.css
 cp temp/aio.html public/
