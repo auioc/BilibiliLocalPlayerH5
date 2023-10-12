@@ -43,9 +43,9 @@ sed -i 's;<link[^>]*>;;g' temp/aio.html
 sed -i 's^\\^\\\\^g' temp/all.css
 sed -i "s^<\!--allcss-->^<style>$(cat temp/all.css)</style>^g" temp/aio.html
 sed -i 's;<script src="player.js"></script>;;g' temp/aio.html
-sed -i 's^\\^\\\\^g' temp/player.js
-sed -i 's^\&^\\&^g' temp/player.js
-sed -i "s@<\!--playerjs-->@<script>$(cat temp/player.js)</script>@g" temp/aio.html
+sed 's^\\^\\\\^g' temp/player.js >temp/player.pathced.js
+sed -i 's^\&^\\&^g' temp/player.pathced.js
+sed -i "s@<\!--playerjs-->@<script>$(cat temp/player.pathced.js)</script>@g" temp/aio.html
 
 # Build public
 cp -f temp/index.html public/index.html
