@@ -37,20 +37,14 @@ html-minifier-terser --minify-js --collapse-whitespace public/index.html >temp/i
 
 # Build AIO html
 cp temp/index.html temp/aio.html
-echo 'sed 1'
 sed -i 's;<link[^>]*>;;g' temp/aio.html
-echo 'sed 2'
 sed -i 's^\\^\\\\^g' temp/all.css
-echo 'sed 3'
 sed -i "s^<\!--allcss-->^<style>$(cat temp/all.css)</style>^g" temp/aio.html
-echo 'sed 4'
 sed -i 's;<script src="player.js"></script>;;g' temp/aio.html
-echo 'sed 5'
 sed 's^\\^\\\\^g' temp/player.js >temp/player.pathced.js
-echo 'sed 6'
 sed -i 's^\&^\\&^g' temp/player.pathced.js
-echo 'sed 7'
-sed -i "s@<\!--playerjs-->@<script>$(cat temp/player.pathced.js)</script>@g" temp/aio.html
+sed -i 's^~^\\~^g' temp/player.pathced.js
+sed -i "s~<\!--playerjs-->~<script>$(cat temp/player.pathced.js)</script>~g" temp/aio.html
 
 # Build public
 cp -f temp/index.html public/index.html
