@@ -34,11 +34,11 @@ function clamp(number: number, min: number, max: number) {
     return Math.max(min, Math.min(number, max));
 }
 
-function ternaryWithCallback(
-    value: any,
-    predicate: (value: any) => boolean,
-    aOperator: (value: any) => any,
-    bOperator: (value: any) => any
+function ternaryWithCallback<T, A, B>(
+    value: T,
+    predicate: (value: T) => boolean,
+    aOperator: (value: T) => A,
+    bOperator: (value: T) => B
 ) {
     if (predicate(value)) {
         return aOperator(value);
@@ -116,8 +116,8 @@ function randomStr() {
     return Math.random().toString(36).slice(-8);
 }
 
-function bindEvent(target: HTMLElement, entries: { [s: string]: Function }, params: any[]) {
-    for (const [type, listener] of Object.entries(entries)) {
+function bindEvents<F extends AnyFunction>(target: HTMLElement, listeners: EventListenerMap<F>, params: any[]) {
+    for (const [type, listener] of Object.entries(listeners)) {
         target.addEventListener(type, (event) => listener(...params, event));
     }
 }

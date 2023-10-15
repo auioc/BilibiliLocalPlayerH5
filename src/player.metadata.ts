@@ -9,23 +9,10 @@ type ElementVideoMetaEvents<T extends HTMLTagNames> = MetaEvents<
     (player: Player, element: HTMLElementTagNameMap[T], video: HTMLVideoElement) => void
 >;
 
-function bindMetadataEvents( // TODO improve
-    data: { [s in MetaEventTypes]?: MetaEvents<any> },
-    settings: { [s in MetaEventTypes]?: [HTMLElement, () => any] }
-) {
-    for (const [name, target_params] of Object.entries(settings)) {
-        if (data[name as MetaEventTypes]) {
-            bindEvent(
-                target_params[0],
-                ternaryWithCallback(
-                    data[name as MetaEventTypes] as MetaEvents<any>,
-                    (v) => typeof v === 'function',
-                    (v) => v(),
-                    (v) => v
-                ),
-                target_params[1]()
-            );
-        }
+function bindMetaEvent<F extends AnyFunction>(target: HTMLElement, listeners: MetaEvents<F>, ...params: any[]) {
+    const _l = typeof listeners === 'function' ? listeners() : listeners;
+    if (_l) {
+        bindEvents(target, _l, params);
     }
 }
 
@@ -36,8 +23,8 @@ class EDC<T extends HTMLTagNames> {
     private _css: (data: EDC<T>) => string;
     attributes: StrKV = {};
     private _html: string;
-    private _selfEvent: ElementMetaEvents<T>;
-    private _playerEvent: ElementMetaEvents<T>;
+    private _selfEvents: ElementMetaEvents<T>;
+    private _playerEvents: ElementMetaEvents<T>;
     private _videoEvent: ElementVideoMetaEvents<T>;
     private _childrenBuilders: EDC<any>[] = [];
     private _children: HTMLElement[] = [];
@@ -72,11 +59,11 @@ class EDC<T extends HTMLTagNames> {
         return this;
     }
     selfEvents(map: ElementMetaEvents<T>) {
-        this._selfEvent = map;
+        this._selfEvents = map;
         return this;
     }
     playerEvents(map: ElementMetaEvents<T>) {
-        this._playerEvent = map;
+        this._playerEvents = map;
         return this;
     }
     videoEvents(map: ElementVideoMetaEvents<T>) {
@@ -97,18 +84,9 @@ class EDC<T extends HTMLTagNames> {
         if (this._css) {
             player.style.textContent += this._css(this);
         }
-        bindMetadataEvents(
-            {
-                selfEvent: this._selfEvent,
-                playerEvent: this._playerEvent,
-                videoEvent: this._videoEvent,
-            },
-            {
-                selfEvent: [element, () => [player, element]],
-                playerEvent: [player.container, () => [player, element]],
-                videoEvent: [player.video, () => [player, element, player.video]],
-            }
-        );
+        bindMetaEvent(element, this._selfEvents, player, element);
+        bindMetaEvent(player.container, this._playerEvents, player, element);
+        bindMetaEvent(player.video, this._videoEvent, player, element, player.video);
         for (const childBulder of this._childrenBuilders) {
             appendChild(element, childBulder.create(player));
         }

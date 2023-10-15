@@ -91,10 +91,8 @@ class Player {
                 );
             }).observe(this.video);
         }
-        bindMetadataEvents(this.metadata, {
-            playerEvent: [this.container, () => [this]],
-            videoEvent: [this.video, () => [this, this.video]],
-        });
+        bindMetaEvent(this.container, this.metadata.playerEvent, this);
+        bindMetaEvent(this.video, this.metadata.videoEvent, this, this.video);
     }
     focus() {
         this.container.focus();
