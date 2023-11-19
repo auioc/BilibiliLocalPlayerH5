@@ -346,14 +346,15 @@ const __player_metadata__: PlayerMetadata = {
                     case 39: // Right
                         P.skip(T.ctrlKey ? 1 : 5);
                         break;
-                    case 84: // T
-                        P.toast(P.title);
-                        break;
                     case 73: // I
                         P.toast(
-                            `${new Date().toLocaleTimeString()}<br/>${fTime(P.video.currentTime, P.overHour)} / ${fTime(
-                                P.video.duration
-                            )}`
+                            [
+                                ['LocalTime', new Date().toLocaleString()],
+                                ['File', `${P.title} @ ${P.video.videoWidth}x${P.video.videoHeight}`],
+                                ['Time', `${fTime(P.video.currentTime, P.overHour)} / ${fTime(P.video.duration)}`],
+                            ]
+                                .map(([l, t]) => `<b>${l}: </b>${t}`)
+                                .join('<br/>')
                         );
                         break;
                     case 68: // D
