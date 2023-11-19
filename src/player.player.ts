@@ -192,7 +192,7 @@ const __player_metadata__: PlayerMetadata = {
                                         click: (P) => toggleDisplay(P.elements.danmakuList),
                                     })
                                     .playerEvents({
-                                        danmakuload: (P, E) => (E.innerHTML = `(${P.commentManager.timeline.length})`),
+                                        danmakuload: (P, E) => (E.innerHTML = `(${danmakuCount(P)})`),
                                     }),
                                 new EDC('input')
                                     .attr({
@@ -241,7 +241,7 @@ const __player_metadata__: PlayerMetadata = {
                     )
             ),
         new EDC('div', 'danmakuList')
-            .condition((P) => (P.danmakuUrl ? true : false))
+            .condition(hasDanmaku)
             .attr({ class: 'danmaku-list box hide' })
             .children(
                 new EDC('ul') //
@@ -267,7 +267,7 @@ const __player_metadata__: PlayerMetadata = {
             .children(
                 new EDC('div', 'danmakuStage')
                     .attr({ class: 'danmaku-stage container' })
-                    .condition((P) => (P.danmakuUrl ? true : false))
+                    .condition(hasDanmaku)
                     .selfEvents({
                         create: (P, E) => {
                             P.commentManager = initDanmaku(E, P.danmakuUrl, () => P.firePlayerEvent('danmakuload'));

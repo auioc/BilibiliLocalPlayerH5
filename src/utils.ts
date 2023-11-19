@@ -139,3 +139,11 @@ function initDanmaku(stage: HTMLElement, url: string, onload: () => void) {
         .catch((e) => alert('DanmakuError: ' + e));
     return commentManager;
 }
+
+function hasDanmaku(p: Player) {
+    return p.danmakuUrl ? true : false;
+}
+
+function danmakuCount(p: Player) {
+    return p.commentManager.timeline.length;
+}
