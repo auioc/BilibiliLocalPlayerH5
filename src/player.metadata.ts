@@ -40,6 +40,10 @@ class EDC<T extends HTMLTagNames> {
         this._attrs[k] = v;
         return this;
     }
+    class(clazz: string) {
+        this.attr('class', clazz);
+        return this;
+    }
     children(...c: (EDC<any> | HTMLElement)[]) {
         for (const e of c) {
             if (e instanceof HTMLElement) {

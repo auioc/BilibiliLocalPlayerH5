@@ -34,8 +34,8 @@ function icon<K extends keyof typeof Icons>(p: K) {
 
 const __player_metadata__: PlayerMetadata = {
     elements: [
-        new EDC('div')
-            .attrs({ class: 'toast box visibility-transition invisible' }) //
+        new EDC('div') //
+            .class('toast box visibility-transition invisible')
             .playerEvents({
                 toast: (P, E, T: CustomEvent) => {
                     E.innerHTML = T.detail.content;
@@ -44,8 +44,8 @@ const __player_metadata__: PlayerMetadata = {
                     P._dyn.toastTimer = setTimeout(() => opacityInvisible(E), 800);
                 },
             }),
-        new EDC('div')
-            .attrs({ class: 'controls-wrapper' })
+        new EDC('div') //
+            .class('controls-wrapper')
             .selfEvents({
                 mousemove: (P) => opacityVisible(P.elements.controls),
                 mouseleave: (P) => {
@@ -54,24 +54,22 @@ const __player_metadata__: PlayerMetadata = {
                 },
             })
             .children(
-                new EDC('div', 'controls')
-                    .attrs({
-                        class: 'controls box visibility-transition invisible',
-                    })
+                new EDC('div', 'controls') //
+                    .class('controls box visibility-transition invisible')
                     .playerEvents({
                         fullscreen: (_, E) => opacityInvisible(E),
                     })
                     .children(
                         new EDC('button', 'playToggle') //
-                            .attrs({ class: 'play-toggle' })
+                            .class('play-toggle')
                             .css((s) => toggleByPlayerData('paused', s._attrs.class))
                             .selfEvents({ click: (P) => P.togglePlay() })
                             .children(...newSpans('⏵', '⏸')),
                         new EDC('div') //
-                            .attrs({ class: 'volume-wrapper' })
+                            .class('volume-wrapper')
                             .children(
                                 new EDC('button', 'muteToggle')
-                                    .attrs({ class: 'mute-toggle' })
+                                    .class('mute-toggle')
                                     .css((s) => toggleByPlayerData('muted', s._attrs.class))
                                     .selfEvents({
                                         click: (P) => P.toggleMute(),
@@ -97,8 +95,8 @@ const __player_metadata__: PlayerMetadata = {
                                         volumechange: (_, E, V) => (E.valueAsNumber = Math.round(V.volume * 100)),
                                     })
                             ),
-                        new EDC('div')
-                            .attrs({ class: 'progress-wrapper' }) //
+                        new EDC('div') //
+                            .class('progress-wrapper')
                             .children(
                                 new EDC('input', 'progress')
                                     .attrs({
@@ -136,12 +134,10 @@ const __player_metadata__: PlayerMetadata = {
                                         },
                                     }),
                                 new EDC('div', 'progressPopup') //
-                                    .attrs({
-                                        class: 'progress-popup box visibility-transition invisible',
-                                    })
+                                    .class('progress-popup box visibility-transition invisible')
                             ),
-                        new EDC('div')
-                            .attrs({ class: 'time-label' })
+                        new EDC('div') //
+                            .class('time-label')
                             .selfEvents({
                                 mouseover: (P) => toggleDisplayBi(P.elements.timeInput, P.elements.timeCurrent),
                                 mouseleave: (P) => toggleDisplayBi(P.elements.timeCurrent, P.elements.timeInput),
@@ -187,11 +183,11 @@ const __player_metadata__: PlayerMetadata = {
                             ),
                         new EDC('div', 'danmaku-controls')
                             .condition((P) => (P.danmakuUrl ? true : false))
-                            .attrs({ class: 'danmaku-controls' })
+                            .class('danmaku-controls')
                             .children(
                                 new EDC('button', 'danmakuToggle')
                                     .condition((P) => (P.danmakuUrl ? true : false))
-                                    .attrs({ class: 'danmaku-toggle' })
+                                    .class('danmaku-toggle')
                                     .css((s) => toggleByPlayerData('danmaku-on', s._attrs.class))
                                     .selfEvents({
                                         click: (P) => {
@@ -256,7 +252,7 @@ const __player_metadata__: PlayerMetadata = {
                                     })
                             ),
                         new EDC('button', 'fullscreenToggle')
-                            .attrs({ class: 'fullscreen-toggle' })
+                            .class('fullscreen-toggle')
                             .css((s) => toggleByPlayerData('fullscreen', s._attrs.class))
                             .selfEvents({
                                 click: (P) => P.toggleFullscreen(),
@@ -266,7 +262,7 @@ const __player_metadata__: PlayerMetadata = {
             ),
         new EDC('div', 'danmakuList')
             .condition(hasDanmaku)
-            .attrs({ class: 'danmaku-list box hide' })
+            .class('danmaku-list box hide')
             .children(
                 new EDC('ul') //
                     .playerEvents({
@@ -284,13 +280,13 @@ const __player_metadata__: PlayerMetadata = {
                     })
             ),
         new EDC('div')
-            .attrs({ class: 'overlays abp' })
+            .class('overlays abp')
             .selfEvents({
                 click: (P) => P.togglePlay(),
             })
             .children(
                 new EDC('div', 'danmakuStage')
-                    .attrs({ class: 'danmaku-stage container' })
+                    .class('danmaku-stage container')
                     .condition(hasDanmaku)
                     .selfEvents({
                         create: (P, E) => {
