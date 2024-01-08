@@ -21,7 +21,7 @@ class EDC<T extends HTMLTagNames> {
     private name: string;
     private _condition: (player: Player) => boolean;
     private _css: (data: EDC<T>) => string;
-    attributes: StrKV = {};
+    _attrs: StrKV = {};
     private _html: string;
     private _selfEvents: ElementMetaEvents<T>;
     private _playerEvents: ElementMetaEvents<T>;
@@ -32,8 +32,12 @@ class EDC<T extends HTMLTagNames> {
         this.tag = tag;
         this.name = name;
     }
-    attr(attributes: StrKV) {
-        this.attributes = attributes;
+    attrs(attrs: StrKV) {
+        this._attrs = { ...this._attrs, ...attrs };
+        return this;
+    }
+    attr(k: string, v: string) {
+        this._attrs[k] = v;
         return this;
     }
     children(...c: (EDC<any> | HTMLElement)[]) {
@@ -75,7 +79,7 @@ class EDC<T extends HTMLTagNames> {
             return null;
         }
         const element = document.createElement(this.tag);
-        for (const [key, value] of Object.entries(this.attributes)) {
+        for (const [key, value] of Object.entries(this._attrs)) {
             element.setAttribute(key, value);
         }
         if (this._html) {

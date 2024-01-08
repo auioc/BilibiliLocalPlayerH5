@@ -8,10 +8,34 @@ const toggleByPlayerData = (dataName: string, thisClass: string) => {
     return r;
 };
 
+const icon_danmaku_off =
+    '<path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>';
+
+const Icons = {
+    play: '',
+    pause: '',
+    fullscreen: '',
+    fullscreen_exit: '',
+    volume: '<path d="M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12zm3.025 4a4.5 4.5 0 0 1-1.318 3.182L10 10.475A3.5 3.5 0 0 0 11.025 8 3.5 3.5 0 0 0 10 5.525l.707-.707A4.5 4.5 0 0 1 12.025 8"/>',
+    mute: '<path d="M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06m7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0"/>',
+    danmaku_off: icon_danmaku_off,
+    danmaku_on:
+        icon_danmaku_off +
+        '<path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6m0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>',
+} as const;
+
+function icon<K extends keyof typeof Icons>(p: K) {
+    return (
+        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="display:block">' +
+        Icons[p] +
+        '</svg>'
+    );
+}
+
 const __player_metadata__: PlayerMetadata = {
     elements: [
         new EDC('div')
-            .attr({ class: 'toast box visibility-transition invisible' }) //
+            .attrs({ class: 'toast box visibility-transition invisible' }) //
             .playerEvents({
                 toast: (P, E, T: CustomEvent) => {
                     E.innerHTML = T.detail.content;
@@ -21,7 +45,7 @@ const __player_metadata__: PlayerMetadata = {
                 },
             }),
         new EDC('div')
-            .attr({ class: 'controls-wrapper' })
+            .attrs({ class: 'controls-wrapper' })
             .selfEvents({
                 mousemove: (P) => opacityVisible(P.elements.controls),
                 mouseleave: (P) => {
@@ -31,7 +55,7 @@ const __player_metadata__: PlayerMetadata = {
             })
             .children(
                 new EDC('div', 'controls')
-                    .attr({
+                    .attrs({
                         class: 'controls box visibility-transition invisible',
                     })
                     .playerEvents({
@@ -39,22 +63,22 @@ const __player_metadata__: PlayerMetadata = {
                     })
                     .children(
                         new EDC('button', 'playToggle') //
-                            .attr({ class: 'play-toggle' })
-                            .css((s) => toggleByPlayerData('paused', s.attributes.class))
+                            .attrs({ class: 'play-toggle' })
+                            .css((s) => toggleByPlayerData('paused', s._attrs.class))
                             .selfEvents({ click: (P) => P.togglePlay() })
                             .children(...newSpans('⏵', '⏸')),
                         new EDC('div') //
-                            .attr({ class: 'volume-wrapper' })
+                            .attrs({ class: 'volume-wrapper' })
                             .children(
                                 new EDC('button', 'muteToggle')
-                                    .attr({ class: 'mute-toggle' })
-                                    .css((s) => toggleByPlayerData('muted', s.attributes.class))
+                                    .attrs({ class: 'mute-toggle' })
+                                    .css((s) => toggleByPlayerData('muted', s._attrs.class))
                                     .selfEvents({
                                         click: (P) => P.toggleMute(),
                                     })
-                                    .children(...newSpans('<s>Mute</s>', 'Mute')),
+                                    .children(...newSpans(icon('mute'), icon('volume'))),
                                 new EDC('input', 'volume')
-                                    .attr({
+                                    .attrs({
                                         class: 'volume',
                                         type: 'number',
                                         min: '0',
@@ -74,10 +98,10 @@ const __player_metadata__: PlayerMetadata = {
                                     })
                             ),
                         new EDC('div')
-                            .attr({ class: 'progress-wrapper' }) //
+                            .attrs({ class: 'progress-wrapper' }) //
                             .children(
                                 new EDC('input', 'progress')
-                                    .attr({
+                                    .attrs({
                                         class: 'progress',
                                         type: 'range',
                                         min: '0',
@@ -112,19 +136,19 @@ const __player_metadata__: PlayerMetadata = {
                                         },
                                     }),
                                 new EDC('div', 'progressPopup') //
-                                    .attr({
+                                    .attrs({
                                         class: 'progress-popup box visibility-transition invisible',
                                     })
                             ),
                         new EDC('div')
-                            .attr({ class: 'time-label' })
+                            .attrs({ class: 'time-label' })
                             .selfEvents({
                                 mouseover: (P) => toggleDisplayBi(P.elements.timeInput, P.elements.timeCurrent),
                                 mouseleave: (P) => toggleDisplayBi(P.elements.timeCurrent, P.elements.timeInput),
                             })
                             .children(
                                 new EDC('input', 'timeInput')
-                                    .attr({
+                                    .attrs({
                                         class: 'time-input hide',
                                         type: 'time',
                                         step: '1',
@@ -163,12 +187,12 @@ const __player_metadata__: PlayerMetadata = {
                             ),
                         new EDC('div', 'danmaku-controls')
                             .condition((P) => (P.danmakuUrl ? true : false))
-                            .attr({ class: 'danmaku-controls' })
+                            .attrs({ class: 'danmaku-controls' })
                             .children(
                                 new EDC('button', 'danmakuToggle')
                                     .condition((P) => (P.danmakuUrl ? true : false))
-                                    .attr({ class: 'danmaku-toggle' })
-                                    .css((s) => toggleByPlayerData('danmaku-on', s.attributes.class))
+                                    .attrs({ class: 'danmaku-toggle' })
+                                    .css((s) => toggleByPlayerData('danmaku-on', s._attrs.class))
                                     .selfEvents({
                                         click: (P) => {
                                             if (!P._dyn.danmakuOn) {
@@ -185,7 +209,7 @@ const __player_metadata__: PlayerMetadata = {
                                             }
                                         },
                                     })
-                                    .children(...newSpans('Danmaku', '<s>Danmaku</s>')),
+                                    .children(...newSpans(icon('danmaku_on'), icon('danmaku_off'))),
                                 new EDC('button', 'danmakuListToggle') //
                                     .html('?') //
                                     .selfEvents({
@@ -195,7 +219,7 @@ const __player_metadata__: PlayerMetadata = {
                                         danmakuload: (P, E) => (E.innerHTML = `(${danmakuCount(P)})`),
                                     }),
                                 new EDC('input')
-                                    .attr({
+                                    .attrs({
                                         class: 'danmaku-time-offset',
                                         type: 'number',
                                         step: '1',
@@ -212,7 +236,7 @@ const __player_metadata__: PlayerMetadata = {
                                         },
                                     }),
                                 new EDC('input')
-                                    .attr({
+                                    .attrs({
                                         class: 'danmaku-size-offset',
                                         type: 'number',
                                         step: '1',
@@ -232,8 +256,8 @@ const __player_metadata__: PlayerMetadata = {
                                     })
                             ),
                         new EDC('button', 'fullscreenToggle')
-                            .attr({ class: 'fullscreen-toggle' })
-                            .css((s) => toggleByPlayerData('fullscreen', s.attributes.class))
+                            .attrs({ class: 'fullscreen-toggle' })
+                            .css((s) => toggleByPlayerData('fullscreen', s._attrs.class))
                             .selfEvents({
                                 click: (P) => P.toggleFullscreen(),
                             })
@@ -242,7 +266,7 @@ const __player_metadata__: PlayerMetadata = {
             ),
         new EDC('div', 'danmakuList')
             .condition(hasDanmaku)
-            .attr({ class: 'danmaku-list box hide' })
+            .attrs({ class: 'danmaku-list box hide' })
             .children(
                 new EDC('ul') //
                     .playerEvents({
@@ -260,13 +284,13 @@ const __player_metadata__: PlayerMetadata = {
                     })
             ),
         new EDC('div')
-            .attr({ class: 'overlays abp' })
+            .attrs({ class: 'overlays abp' })
             .selfEvents({
                 click: (P) => P.togglePlay(),
             })
             .children(
                 new EDC('div', 'danmakuStage')
-                    .attr({ class: 'danmaku-stage container' })
+                    .attrs({ class: 'danmaku-stage container' })
                     .condition(hasDanmaku)
                     .selfEvents({
                         create: (P, E) => {
@@ -367,4 +391,5 @@ const __player_metadata__: PlayerMetadata = {
         },
     },
 };
-(window as any).__player_metadata__ = __player_metadata__;
+
+Object.defineProperty(window, '__player_metadata__', __player_metadata__);
