@@ -365,7 +365,7 @@ const __player_metadata__: PlayerMetadata = {
                         P.adjustVolume(-0.05);
                         break;
                     case 37: // Left
-                        P.skip(T.ctrlKey ? -10 : T.shiftKey ? -1 : 5);
+                        P.skip(T.ctrlKey ? -10 : T.shiftKey ? -1 : -5);
                         break;
                     case 39: // Right
                         P.skip(T.ctrlKey ? 10 : T.shiftKey ? 1 : 5);
