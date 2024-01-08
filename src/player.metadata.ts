@@ -40,6 +40,10 @@ class EDC<T extends HTMLTagNames> {
         this._attrs[k] = v;
         return this;
     }
+    title(title: string) {
+        this.attr('title', title);
+        return this;
+    }
     class(clazz: string) {
         this.attr('class', clazz);
         return this;

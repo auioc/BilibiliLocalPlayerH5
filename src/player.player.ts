@@ -76,8 +76,9 @@ const __player_metadata__: PlayerMetadata = {
                                     })
                                     .children(...newSpans(icon('mute'), icon('volume'))),
                                 new EDC('input', 'volume')
+                                    .class('volume')
+                                    .title('Volume')
                                     .attrs({
-                                        class: 'volume',
                                         type: 'number',
                                         min: '0',
                                         max: '100',
@@ -99,8 +100,8 @@ const __player_metadata__: PlayerMetadata = {
                             .class('progress-wrapper')
                             .children(
                                 new EDC('input', 'progress')
+                                    .class('progress')
                                     .attrs({
-                                        class: 'progress',
                                         type: 'range',
                                         min: '0',
                                         max: '1',
@@ -144,8 +145,8 @@ const __player_metadata__: PlayerMetadata = {
                             })
                             .children(
                                 new EDC('input', 'timeInput')
+                                    .class('time-input hide')
                                     .attrs({
-                                        class: 'time-input hide',
                                         type: 'time',
                                         step: '1',
                                     })
@@ -207,7 +208,8 @@ const __player_metadata__: PlayerMetadata = {
                                     })
                                     .children(...newSpans(icon('danmaku_on'), icon('danmaku_off'))),
                                 new EDC('button', 'danmakuListToggle') //
-                                    .html('?') //
+                                    .html('?')
+                                    .title('Danmaku list')
                                     .selfEvents({
                                         click: (P) => toggleDisplay(P.elements.danmakuList),
                                     })
@@ -215,8 +217,9 @@ const __player_metadata__: PlayerMetadata = {
                                         danmakuload: (P, E) => (E.innerHTML = `(${danmakuCount(P)})`),
                                     }),
                                 new EDC('input')
+                                    .class('danmaku-time-offset')
+                                    .title('Danmaku time offset')
                                     .attrs({
-                                        class: 'danmaku-time-offset',
                                         type: 'number',
                                         step: '1',
                                         value: '0',
@@ -232,8 +235,9 @@ const __player_metadata__: PlayerMetadata = {
                                         },
                                     }),
                                 new EDC('input')
+                                    .class('danmaku-size-offset')
+                                    .title('Danmaku size offset')
                                     .attrs({
-                                        class: 'danmaku-size-offset',
                                         type: 'number',
                                         step: '1',
                                         value: '0',
