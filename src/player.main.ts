@@ -9,14 +9,13 @@ class Player {
     options: PlayerOptions;
     private readonly metadata: PlayerMetadata;
     readonly title: string;
-    readonly videoUrl: string;
     readonly video: HTMLVideoElement;
-    overHour: boolean;
+    private overHour: boolean;
     readonly style: HTMLStyleElement;
     readonly container: HTMLDivElement;
     readonly danmakuUrl: string;
     commentManager;
-    constructed: boolean;
+    private constructed: boolean;
     elements: StrGenKV<HTMLElement> = {};
     _dyn: StrAnyKV = {};
 
@@ -35,7 +34,6 @@ class Player {
         container.tabIndex = 10;
         {
             this.title = title;
-            this.videoUrl = videoUrl;
             const video = document.createElement('video');
             container.appendChild(video);
             video.src = videoUrl;
@@ -116,6 +114,9 @@ class Player {
         if (this.constructed) {
             this.firePlayerEvent('toast', { content: html });
         }
+    }
+    fCurrentTime() {
+        return fTime(this.video.currentTime, this.overHour);
     }
     seek(time: number) {
         const fixedTime = clamp(time, 0, this.video.duration);

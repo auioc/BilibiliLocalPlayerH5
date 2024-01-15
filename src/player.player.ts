@@ -161,19 +161,19 @@ const __player_metadata__: PlayerMetadata = {
                                     })
                                     .videoEvents({
                                         canplay: (P, E, V) => {
-                                            E.step = P.overHour ? '1' : '0';
-                                            E.value = fTime(V.currentTime, P.overHour);
+                                            E.step = V.duration >= 3600 ? '1' : '0';
+                                            E.value = P.fCurrentTime();
                                             E.max = fTime(V.duration);
                                         },
                                         timeupdate: (P, E, V) => {
-                                            E.value = fTime(V.currentTime, P.overHour);
+                                            E.value = P.fCurrentTime();
                                         },
                                     }),
                                 new EDC('span', 'timeCurrent') //
                                     .html('--:--')
                                     .videoEvents({
-                                        canplay: (P, E, V) => (E.textContent = fTime(V.currentTime, P.overHour)),
-                                        timeupdate: (P, E, V) => (E.textContent = fTime(V.currentTime, P.overHour)),
+                                        canplay: (P, E, V) => (E.textContent = P.fCurrentTime()),
+                                        timeupdate: (P, E, V) => (E.textContent = P.fCurrentTime()),
                                     }),
                                 new EDC('span').html(' / '),
                                 new EDC('span')
@@ -375,7 +375,7 @@ const __player_metadata__: PlayerMetadata = {
                             [
                                 ['LocalTime', new Date().toLocaleString()],
                                 ['File', `${P.title} @ ${P.video.videoWidth}x${P.video.videoHeight}`],
-                                ['Time', `${fTime(P.video.currentTime, P.overHour)} / ${fTime(P.video.duration)}`],
+                                ['Time', `${P.fCurrentTime()} / ${fTime(P.video.duration)}`],
                             ]
                                 .map(([l, t]) => `<b>${l}: </b>${t}`)
                                 .join('<br/>')
