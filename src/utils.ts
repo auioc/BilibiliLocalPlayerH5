@@ -75,11 +75,13 @@ function toggleDisplayBi(display: HTMLElement, hide: HTMLElement) {
     removeClass(display, 'hide');
 }
 
-function toggleDisplay(element: HTMLElement) {
-    if (element.classList.contains('hide')) {
-        removeClass(element, 'hide');
-    } else {
-        addClass(element, 'hide');
+function toggleDisplay(...element: HTMLElement[]) {
+    for (const el of element) {
+        if (el.classList.contains('hide')) {
+            removeClass(el, 'hide');
+        } else {
+            addClass(el, 'hide');
+        }
     }
 }
 

@@ -115,8 +115,8 @@ class Player {
             this.firePlayerEvent('toast', { content: html });
         }
     }
-    fCurrentTime() {
-        return fTime(this.video.currentTime, this.overHour);
+    fCurrentTime(alwaysHour?: boolean) {
+        return fTime(this.video.currentTime, alwaysHour === undefined ? this.overHour : alwaysHour);
     }
     seek(time: number) {
         const fixedTime = clamp(time, 0, this.video.duration);

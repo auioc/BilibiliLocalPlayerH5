@@ -140,7 +140,7 @@ const __player_metadata__: PlayerMetadata = {
                         new EDC('div') //
                             .class('time-label')
                             .selfEvents({
-                                mouseover: (P) => toggleDisplayBi(P.elements.timeInput, P.elements.timeCurrent),
+                                click: (P) => toggleDisplay(P.elements.timeInput, P.elements.timeCurrent),
                                 mouseleave: (P) => toggleDisplayBi(P.elements.timeCurrent, P.elements.timeInput),
                             })
                             .children(
@@ -155,18 +155,18 @@ const __player_metadata__: PlayerMetadata = {
                                             if (E.validity.valid) {
                                                 P.seek(timeToSeconds(E.value));
                                             } else {
-                                                E.value = fTime(P.video.currentTime);
+                                                E.value = fTime(P.video.currentTime, true);
                                             }
                                         },
                                     })
                                     .videoEvents({
                                         canplay: (P, E, V) => {
-                                            E.step = V.duration >= 3600 ? '1' : '0';
-                                            E.value = P.fCurrentTime();
-                                            E.max = fTime(V.duration);
+                                            E.step = '1';
+                                            E.value = P.fCurrentTime(true);
+                                            E.max = fTime(V.duration, true);
                                         },
                                         timeupdate: (P, E, V) => {
-                                            E.value = P.fCurrentTime();
+                                            E.value = P.fCurrentTime(true);
                                         },
                                     }),
                                 new EDC('span', 'timeCurrent') //
