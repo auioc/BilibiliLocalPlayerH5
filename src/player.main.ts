@@ -15,6 +15,8 @@ class Player {
     readonly container: HTMLDivElement;
     readonly danmakuUrl: string;
     commentManager;
+    readonly subtitleUrl: string;
+    subtitleManager: SubtitleManager;
     private constructed: boolean;
     elements: StrGenKV<HTMLElement> = {};
     _dyn: StrAnyKV = {};
@@ -25,6 +27,7 @@ class Player {
         title: string,
         videoUrl: string,
         danmakuUrl: string,
+        subtitleUrl: string,
         options: PlayerOptions
     ) {
         console.log('Version:', this.version);
@@ -48,6 +51,7 @@ class Player {
         this.container = container;
         this.danmakuUrl = danmakuUrl;
         if (0) this.commentManager = new CommentManager(); // for type intellisense
+        this.subtitleUrl = subtitleUrl;
         this.__bindElements();
         this.__bindEvents();
         {

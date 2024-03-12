@@ -92,7 +92,7 @@ video {
 }
 
 .overlays {
-    position: absolute !important;
+    position: fixed !important;
     bottom: 0;
     top: 0;
     left: 0;

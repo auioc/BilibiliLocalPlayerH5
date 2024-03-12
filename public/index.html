@@ -23,7 +23,7 @@
                 <tr>
                     <td><label for="video-file">Video:</label></td>
                     <td>
-                        <input id="video-file" type="file" accept="video/mp4,.flv,.mkv" style="width:100%" />
+                        <input id="video-file" type="file" accept="video/mp4,.flv,.mkv" style="width: 100%" />
                     </td>
                 </tr>
                 <tr>
@@ -35,7 +35,7 @@
                 <tr>
                     <td><label for="danmaku-file">Danmaku:</label></td>
                     <td>
-                        <input id="danmaku-file" type="file" accept=".xml" style="width:100%" />
+                        <input id="danmaku-file" type="file" accept=".xml" style="width: 100%" />
                     </td>
                 </tr>
                 <tr>
@@ -47,6 +47,12 @@
                 <tr>
                     <td>Size Offset:</td>
                     <td><input id="danmaku-size-offset" type="number" value="-3" /></td>
+                </tr>
+                <tr>
+                    <td><label for="subtitle-file">Subtitle:</label></td>
+                    <td>
+                        <input id="subtitle-file" type="file" accept=".ass" style="width: 100%" />
+                    </td>
                 </tr>
                 <tr>
                     <td>Auto Play:</td>
@@ -91,13 +97,24 @@
                 const danmaku = id('danmaku-file').files[0];
                 const danmakuUrl = danmaku ? URL.createObjectURL(danmaku) : null;
 
-                const player = new Player(id('player'), __player_metadata__, video.name, videoUrl, danmakuUrl, {
-                    autoPlay: id('auto-play').checked,
-                    fullscreen: id('fullscreen').checked,
-                    muted: id('muted').checked,
-                    danmakuTimeOffset: parseFloat(id('danmaku-time-offset').value),
-                    danmakuSizeOffset: parseInt(id('danmaku-size-offset').value),
-                });
+                const subtitle = id('subtitle-file').files[0];
+                const subtitleUrl = subtitle ? URL.createObjectURL(subtitle) : null;
+
+                const player = new Player(
+                    id('player'),
+                    __player_metadata__,
+                    video.name,
+                    videoUrl,
+                    danmakuUrl,
+                    subtitleUrl,
+                    {
+                        autoPlay: id('auto-play').checked,
+                        fullscreen: id('fullscreen').checked,
+                        muted: id('muted').checked,
+                        danmakuTimeOffset: parseFloat(id('danmaku-time-offset').value),
+                        danmakuSizeOffset: parseInt(id('danmaku-size-offset').value),
+                    }
+                );
                 window.player = player;
                 id('start-panel').remove();
                 id('player').removeAttribute('style');

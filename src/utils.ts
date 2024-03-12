@@ -28,6 +28,21 @@ type EventListenerMap<F extends AnyFunction> = {
 
 type HTMLTagNames = keyof HTMLElementTagNameMap;
 
+interface SubtitleManager {
+    new (
+        subtitle: string,
+        media: HTMLMediaElement,
+        options: {
+            container?: HTMLElement;
+            resampling?: 'video_width' | 'video_height' | 'script_width' | 'script_height';
+        }
+    ): SubtitleManager;
+    resize(): void;
+    hide(): void;
+    show(): void;
+    destory(): void;
+}
+
 // ================================================================================================================== //
 
 function clamp(number: number, min: number, max: number) {
@@ -144,6 +159,22 @@ function initDanmaku(stage: HTMLElement, url: string, onload: () => void) {
 
 function hasDanmaku(p: Player) {
     return p.danmakuUrl ? true : false;
+}
+
+function initSubtitle(stage: HTMLElement, video: HTMLVideoElement, url: string) {
+    const req = new XMLHttpRequest();
+    req.open('GET', url, false);
+    req.send();
+    if (req.status === 200) {
+        // @ts-expect-error
+        const ass = new ASS(req.responseText, video, { container: stage, resampling: 'video_height' });
+        return ass as SubtitleManager;
+    }
+    return null;
+}
+
+function hasSubtitle(p: Player) {
+    return p.subtitleUrl ? true : false;
 }
 
 function danmakuCount(p: Player) {

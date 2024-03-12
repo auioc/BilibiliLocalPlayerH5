@@ -1,4 +1,4 @@
-const toggleByPlayerData = (dataName: string, thisClass: string) => {
+const toggleDisplayByData = (dataName: string, thisClass: string) => {
     let r = '';
     for (let i = 0; i < 4; i++) {
         r += `.player[data-${dataName}='${i < 2 ? 'true' : 'false'}'] `;
@@ -8,8 +8,24 @@ const toggleByPlayerData = (dataName: string, thisClass: string) => {
     return r;
 };
 
+function toggleComponent(P: Player, key: string, on: () => void, onToast: string, off: () => void, offToast: string) {
+    if (!P._dyn[key]) {
+        P._dyn[key] = true;
+        on();
+        P.setContainerData(key, true);
+        P.toast(onToast);
+    } else {
+        P._dyn[key] = false;
+        off();
+        P.setContainerData(key, false);
+        P.toast(offToast);
+    }
+}
+
 const icon_danmaku_off =
     '<path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>';
+const icon_subtitle_on =
+    '<path d="M3.708 7.755c0-1.111.488-1.753 1.319-1.753.681 0 1.138.47 1.186 1.107H7.36V7c-.052-1.186-1.024-2-2.342-2C3.414 5 2.5 6.05 2.5 7.751v.747c0 1.7.905 2.73 2.518 2.73 1.314 0 2.285-.792 2.342-1.939v-.114H6.213c-.048.615-.496 1.05-1.186 1.05-.84 0-1.319-.62-1.319-1.727zm6.14 0c0-1.111.488-1.753 1.318-1.753.682 0 1.139.47 1.187 1.107H13.5V7c-.053-1.186-1.024-2-2.342-2C9.554 5 8.64 6.05 8.64 7.751v.747c0 1.7.905 2.73 2.518 2.73 1.314 0 2.285-.792 2.342-1.939v-.114h-1.147c-.048.615-.497 1.05-1.187 1.05-.839 0-1.318-.62-1.318-1.727z"/><path d="M14 3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>';
 
 const Icons = {
     play: '',
@@ -22,6 +38,8 @@ const Icons = {
     danmaku_on:
         icon_danmaku_off +
         '<path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6m0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>',
+    subtitle_on: icon_subtitle_on,
+    subtitle_off: icon_subtitle_on.replace('d=', 'fill="#7e7e7e" d='),
 } as const;
 
 function icon<K extends keyof typeof Icons>(p: K) {
@@ -62,7 +80,8 @@ const __player_metadata__: PlayerMetadata = {
                     .children(
                         new EDC('button', 'playToggle') //
                             .class('play-toggle')
-                            .css((s) => toggleByPlayerData('paused', s._attrs.class))
+                            .title('Play/Pause')
+                            .css((s) => toggleDisplayByData('paused', s._attrs.class))
                             .selfEvents({ click: (P) => P.togglePlay() })
                             .children(...newSpans('⏵', '⏸')),
                         new EDC('div') //
@@ -70,7 +89,8 @@ const __player_metadata__: PlayerMetadata = {
                             .children(
                                 new EDC('button', 'muteToggle')
                                     .class('mute-toggle')
-                                    .css((s) => toggleByPlayerData('muted', s._attrs.class))
+                                    .title('Mute/Unmute')
+                                    .css((s) => toggleDisplayByData('muted', s._attrs.class))
                                     .selfEvents({
                                         click: (P) => P.toggleMute(),
                                     })
@@ -182,29 +202,44 @@ const __player_metadata__: PlayerMetadata = {
                                         canplay: (_, E, V) => (E.textContent = fTime(V.duration)),
                                     })
                             ),
-                        new EDC('div', 'danmaku-controls')
-                            .condition((P) => (P.danmakuUrl ? true : false))
+                        new EDC('button', 'subtitleToggle')
+                            .condition(hasSubtitle)
+                            .class('subtitle-toggle')
+                            .title('Subtitle')
+                            .css((s) => toggleDisplayByData('subtitle-on', s._attrs.class))
+                            .selfEvents({
+                                click: (P) =>
+                                    toggleComponent(
+                                        P,
+                                        'subtitleOn',
+                                        () => P.subtitleManager.show(),
+                                        'Subtitle On',
+                                        () => P.subtitleManager.hide(),
+                                        'Subtitle Off'
+                                    ),
+                            })
+                            .children(...newSpans(icon('subtitle_on'), icon('subtitle_off'))),
+                        new EDC('div')
+                            .condition(hasDanmaku)
                             .class('danmaku-controls')
                             .children(
                                 new EDC('button', 'danmakuToggle')
-                                    .condition((P) => (P.danmakuUrl ? true : false))
                                     .class('danmaku-toggle')
-                                    .css((s) => toggleByPlayerData('danmaku-on', s._attrs.class))
+                                    .title('Danmaku')
+                                    .css((s) => toggleDisplayByData('danmaku-on', s._attrs.class))
                                     .selfEvents({
-                                        click: (P) => {
-                                            if (!P._dyn.danmakuOn) {
-                                                P._dyn.danmakuOn = true;
-                                                P.commentManager.start();
-                                                P.setContainerData('danmakuOn', true);
-                                                P.toast('Danmaku On');
-                                            } else {
-                                                P._dyn.danmakuOn = false;
-                                                P.commentManager.clear();
-                                                P.commentManager.stop();
-                                                P.setContainerData('danmakuOn', false);
-                                                P.toast('Danmaku Off');
-                                            }
-                                        },
+                                        click: (P) =>
+                                            toggleComponent(
+                                                P,
+                                                'danmakuOn',
+                                                () => P.commentManager.start(),
+                                                'Danmaku On',
+                                                () => {
+                                                    P.commentManager.clear();
+                                                    P.commentManager.stop();
+                                                },
+                                                'Danmaku Off'
+                                            ),
                                     })
                                     .children(...newSpans(icon('danmaku_on'), icon('danmaku_off'))),
                                 new EDC('button', 'danmakuListToggle') //
@@ -257,7 +292,8 @@ const __player_metadata__: PlayerMetadata = {
                             ),
                         new EDC('button', 'fullscreenToggle')
                             .class('fullscreen-toggle')
-                            .css((s) => toggleByPlayerData('fullscreen', s._attrs.class))
+                            .title('Fullscreen')
+                            .css((s) => toggleDisplayByData('fullscreen', s._attrs.class))
                             .selfEvents({
                                 click: (P) => P.toggleFullscreen(),
                             })
@@ -289,6 +325,20 @@ const __player_metadata__: PlayerMetadata = {
                 click: (P) => P.togglePlay(),
             })
             .children(
+                new EDC('div', 'subtitleStage')
+                    .class('subtitle-stage container')
+                    .condition(hasSubtitle)
+                    .selfEvents({
+                        create: (P, E) => {
+                            P.subtitleManager = initSubtitle(E, P.video, P.subtitleUrl);
+                            P.firePlayerEvent('subtitleload');
+                            P._dyn.subtitleOn = true;
+                            P.setContainerData('subtitleOn', true);
+                        },
+                    })
+                    .videoEvents({
+                        resize: (P) => P.subtitleManager.resize(),
+                    }),
                 new EDC('div', 'danmakuStage')
                     .class('danmaku-stage container')
                     .condition(hasDanmaku)
