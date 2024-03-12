@@ -16,7 +16,7 @@ sed -i "s;{version};$branch@$commit;g" src/player.main.ts
 # Build player.js
 mkdir src/lib
 curl -L https://github.com/jabbany/CommentCoreLibrary/raw/19db2962ed0ce637a2b99facdf8634d51bb1b503/dist/CommentCoreLibrary.js >src/lib/CommentCoreLibrary.js
-curl -L https://github.com/weizhenye/ASS/blob/e6a3605a2343655d9ef80bdd7e9fe92f92edca22/dist/ass.js >src/lib/ass.js
+curl -L https://github.com/weizhenye/ASS/raw/e6a3605a2343655d9ef80bdd7e9fe92f92edca22/dist/ass.js >src/lib/ass.js
 tsc
 rm public/player.js.map
 # Minify player.js
