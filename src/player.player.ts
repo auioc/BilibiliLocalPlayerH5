@@ -1,22 +1,22 @@
 const __player_metadata__ = (function () {
-    function toggleDisplayByData(dataName: string, thisClass: string) {
+    function toggleDisplayByData(dataName: string, clazz: string) {
         let r = '';
         for (let i = 0; i < 4; i++) {
             r += `.player[data-${dataName}='${i < 2 ? 'true' : 'false'}'] `;
-            r += `.${thisClass}>span:${i % 2 === 0 ? 'first' : 'last'}-child`;
+            r += `.${clazz}>span:${i % 2 === 0 ? 'first' : 'last'}-child`;
             r += `{display: ${i > 0 && i - 3 < 0 ? 'none' : 'unset'};}\n`;
         }
         return r;
     }
 
     function toggleComponent(P: Player, key: string, on: Function, onMsg: string, off: Function, offMsg: string) {
-        if (!P._dyn[key]) {
-            P._dyn[key] = true;
+        if (!P.temp[key]) {
+            P.temp[key] = true;
             on();
             P.setContainerData(key, true);
             P.toast(onMsg);
         } else {
-            P._dyn[key] = false;
+            P.temp[key] = false;
             off();
             P.setContainerData(key, false);
             P.toast(offMsg);
@@ -95,15 +95,15 @@ const __player_metadata__ = (function () {
             toast: (P, E, T: CustomEvent) => {
                 E.innerHTML = T.detail.content;
                 opacityVisible(E);
-                clearTimeout(P._dyn.toastTimer);
-                P._dyn.toastTimer = setTimeout(() => opacityInvisible(E), 800);
+                clearTimeout(P.temp.toastTimer);
+                P.temp.toastTimer = setTimeout(() => opacityInvisible(E), 800);
             },
         });
 
     const playToggle = new EDC('button', 'playToggle') //
         .class('play-toggle')
         .title('Play/Pause')
-        .css((s) => toggleDisplayByData('paused', s._attrs.class))
+        .css(() => toggleDisplayByData('paused', 'play-toggle'))
         .selfEvents({
             click: (P) => P.togglePlay(),
         })
@@ -112,7 +112,7 @@ const __player_metadata__ = (function () {
     const muteToggle = new EDC('button', 'muteToggle')
         .class('mute-toggle')
         .title('Mute/Unmute')
-        .css((s) => toggleDisplayByData('muted', s._attrs.class))
+        .css(() => toggleDisplayByData('muted', 'mute-toggle'))
         .selfEvents({
             click: (P) => P.toggleMute(),
         })
@@ -148,10 +148,10 @@ const __player_metadata__ = (function () {
             change: (P, E) => {
                 P.seekPercent(E.valueAsNumber);
                 opacityInvisible(P.elements.progressPopup);
-                P._dyn.progressInputting = false;
+                P.temp.progressInputting = false;
             },
             input: (P, E) => {
-                P._dyn.progressInputting = true;
+                P.temp.progressInputting = true;
                 const value = E.valueAsNumber;
                 const popup = P.elements.progressPopup;
                 popup.textContent = fTime(P.video.duration * value);
@@ -162,7 +162,7 @@ const __player_metadata__ = (function () {
         })
         .videoEvents({
             timeupdate: (P, E, V) => {
-                if (!P._dyn.progressInputting) {
+                if (!P.temp.progressInputting) {
                     const v = V.currentTime / V.duration;
                     E.valueAsNumber = v ? v : 0;
                 }
@@ -214,7 +214,7 @@ const __player_metadata__ = (function () {
         .condition(hasSubtitle)
         .class('subtitle-toggle')
         .title('Subtitle')
-        .css((s) => toggleDisplayByData('subtitle-on', s._attrs.class))
+        .css(() => toggleDisplayByData('subtitle-on', 'subtitle-toggle'))
         .selfEvents({
             click: (P) =>
                 toggleComponent(
@@ -231,7 +231,7 @@ const __player_metadata__ = (function () {
     const danmakuToggle = new EDC('button', 'danmakuToggle')
         .class('danmaku-toggle')
         .title('Danmaku')
-        .css((s) => toggleDisplayByData('danmaku-on', s._attrs.class))
+        .css(() => toggleDisplayByData('danmaku-on', 'danmaku-toggle'))
         .selfEvents({
             click: (P) =>
                 toggleComponent(
@@ -281,11 +281,11 @@ const __player_metadata__ = (function () {
             create: (P, E) => {
                 if (!P.options.danmakuSizeOffset) P.options.danmakuSizeOffset = 0;
                 E.valueAsNumber = P.options.danmakuSizeOffset;
-                P._dyn.danmakuSizeFlag = randomStr();
+                P.temp.danmakuSizeFlag = randomStr();
             },
             input: (P, E) => {
                 P.options.danmakuSizeOffset = E.valueAsNumber;
-                P._dyn.danmakuSizeFlag = randomStr();
+                P.temp.danmakuSizeFlag = randomStr();
                 P.commentManager.clear();
             },
         });
@@ -293,7 +293,7 @@ const __player_metadata__ = (function () {
     const fullscreenToggle = new EDC('button', 'fullscreenToggle')
         .class('fullscreen-toggle')
         .title('Fullscreen')
-        .css((s) => toggleDisplayByData('fullscreen', s._attrs.class))
+        .css(() => toggleDisplayByData('fullscreen', 'fullscreen-toggle'))
         .selfEvents({
             click: (P) => P.toggleFullscreen(),
         })
@@ -326,7 +326,7 @@ const __player_metadata__ = (function () {
             create: (P, E) => {
                 P.subtitleManager = initSubtitle(E, P.video, P.subtitleUrl);
                 P.firePlayerEvent('subtitleload');
-                P._dyn.subtitleOn = true;
+                P.temp.subtitleOn = true;
                 P.setContainerData('subtitleOn', true);
             },
         })
@@ -345,25 +345,25 @@ const __player_metadata__ = (function () {
                         const override = commentData;
                         const size = commentData['size'];
                         let sizeBak = commentData['sizeBackup'];
-                        if (size && override['sizeFlag'] != P._dyn.danmakuSizeFlag) {
+                        if (size && override['sizeFlag'] != P.temp.danmakuSizeFlag) {
                             if (!sizeBak) {
                                 override['sizeBackup'] = size;
                                 sizeBak = size;
                             }
                             override['size'] = sizeBak + P.options.danmakuSizeOffset;
-                            override['sizeFlag'] = P._dyn.danmakuSizeFlag;
+                            override['sizeFlag'] = P.temp.danmakuSizeFlag;
                         }
                         return override;
                     });
                 }
-                P._dyn.danmakuOn = true;
+                P.temp.danmakuOn = true;
                 P.setContainerData('danmakuOn', true);
                 if (!P.options.danmakuTimeOffset) P.options.danmakuTimeOffset = 0;
             },
         })
         .videoEvents({
             timeupdate: (P, _, V) => {
-                if (!P._dyn.danmakuOn) return;
+                if (!P.temp.danmakuOn) return;
                 const cm = P.commentManager;
                 const time = Math.floor(1e3 * (V.currentTime - P.options.danmakuTimeOffset));
                 const deltaTime = time - cm._lastPosition;
@@ -385,9 +385,9 @@ const __player_metadata__ = (function () {
     // ====================================================================== //
 
     const mouseIdle = (P: Player) => {
-        clearTimeout(P._dyn.mouseTimer);
+        clearTimeout(P.temp.mouseTimer);
         P.setContainerData('mouseIdle', false);
-        P._dyn.mouseTimer = setTimeout(() => {
+        P.temp.mouseTimer = setTimeout(() => {
             P.setContainerData('mouseIdle', true);
         }, 1e3);
     };

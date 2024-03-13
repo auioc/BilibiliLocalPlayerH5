@@ -14,7 +14,7 @@
         "rootDir": "./src",
         "sourceMap": true,
         "strictFunctionTypes": true,
-        "target": "ES2017"
+        "target": "ESNext"
     },
     "include": ["./src/**/*"]
 }

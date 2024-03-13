@@ -10,34 +10,35 @@ type ElementVideoMetaEvents<T extends HTMLTagNames> = MetaEvents<
 >;
 
 function bindMetaEvent<F extends AnyFunction>(target: HTMLElement, listeners: MetaEvents<F>, ...params: any[]) {
-    const _l = typeof listeners === 'function' ? listeners() : listeners;
-    if (_l) {
-        bindEvents(target, _l, params);
+    const l = typeof listeners === 'function' ? listeners() : listeners;
+    if (l) {
+        bindEvents(target, l, params);
     }
 }
 
 class EDC<T extends HTMLTagNames> {
-    private tag: T;
-    private name: string;
-    private _condition: (player: Player) => boolean;
-    private _css: (data: EDC<T>) => string;
-    _attrs: StrKV = {};
-    private _html: string;
-    private _selfEvents: ElementMetaEvents<T>;
-    private _playerEvents: ElementMetaEvents<T>;
-    private _videoEvent: ElementVideoMetaEvents<T>;
-    private _childrenBuilders: EDC<any>[] = [];
-    private _children: HTMLElement[] = [];
+    #tag: T;
+    #name: string;
+    #condition: (player: Player) => boolean;
+    #css: (data: EDC<T>) => string;
+    #attrs: StrKV = {};
+    #html: string;
+    #selfEvents: ElementMetaEvents<T>;
+    #playerEvents: ElementMetaEvents<T>;
+    #videoEvent: ElementVideoMetaEvents<T>;
+    #childrenBuilders: EDC<any>[] = [];
+    #children: HTMLElement[] = [];
+
     constructor(tag: T, name?: string) {
-        this.tag = tag;
-        this.name = name;
+        this.#tag = tag;
+        this.#name = name;
     }
     attrs(attrs: StrKV) {
-        this._attrs = { ...this._attrs, ...attrs };
+        this.#attrs = { ...this.#attrs, ...attrs };
         return this;
     }
     attr(k: string, v: string) {
-        this._attrs[k] = v;
+        this.#attrs[k] = v;
         return this;
     }
     title(title: string) {
@@ -51,62 +52,62 @@ class EDC<T extends HTMLTagNames> {
     children(...c: (EDC<any> | HTMLElement)[]) {
         for (const e of c) {
             if (e instanceof HTMLElement) {
-                this._children.push(e);
+                this.#children.push(e);
             } else {
-                this._childrenBuilders.push(e);
+                this.#childrenBuilders.push(e);
             }
         }
         return this;
     }
     condition(f: (player: Player) => boolean) {
-        this._condition = f;
+        this.#condition = f;
         return this;
     }
-    css(sup: (data: EDC<T>) => string) {
-        this._css = sup;
+    css(sup: () => string) {
+        this.#css = sup;
         return this;
     }
     html(html: string) {
-        this._html = html;
+        this.#html = html;
         return this;
     }
     selfEvents(map: ElementMetaEvents<T>) {
-        this._selfEvents = map;
+        this.#selfEvents = map;
         return this;
     }
     playerEvents(map: ElementMetaEvents<T>) {
-        this._playerEvents = map;
+        this.#playerEvents = map;
         return this;
     }
     videoEvents(map: ElementVideoMetaEvents<T>) {
-        this._videoEvent = map;
+        this.#videoEvent = map;
         return this;
     }
     create(player: Player): HTMLElementTagNameMap[T] | null {
-        if (this._condition && !this._condition(player)) {
+        if (this.#condition && !this.#condition(player)) {
             return null;
         }
-        const element = document.createElement(this.tag);
-        for (const [key, value] of Object.entries(this._attrs)) {
+        const element = document.createElement(this.#tag);
+        for (const [key, value] of Object.entries(this.#attrs)) {
             element.setAttribute(key, value);
         }
-        if (this._html) {
-            element.innerHTML = this._html;
+        if (this.#html) {
+            element.innerHTML = this.#html;
         }
-        if (this._css) {
-            player.style.textContent += this._css(this);
+        if (this.#css) {
+            player.style.textContent += this.#css(this);
         }
-        bindMetaEvent(element, this._selfEvents, player, element);
-        bindMetaEvent(player.container, this._playerEvents, player, element);
-        bindMetaEvent(player.video, this._videoEvent, player, element, player.video);
-        for (const childBulder of this._childrenBuilders) {
+        bindMetaEvent(element, this.#selfEvents, player, element);
+        bindMetaEvent(player.container, this.#playerEvents, player, element);
+        bindMetaEvent(player.video, this.#videoEvent, player, element, player.video);
+        for (const childBulder of this.#childrenBuilders) {
             appendChild(element, childBulder.create(player));
         }
-        for (const childElement of this._children) {
+        for (const childElement of this.#children) {
             appendChild(element, childElement);
         }
-        if (this.name) {
-            player.elements[this.name] = element;
+        if (this.#name) {
+            player.elements[this.#name] = element;
         }
         element.dispatchEvent(new CustomEvent('create'));
         return element;
