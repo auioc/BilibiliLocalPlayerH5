@@ -62,7 +62,9 @@ class Player {
             this.options.fullscreen ? this.requestFullscreen() : this.setContainerData('fullscreen', false);
         }
         this.#constructed = true;
-        if (this.options.autoPlay) this.toast('Autoplay');
+        if (this.options.autoPlay) {
+            this.toast('Autoplay');
+        }
         this.focus();
     }
 
@@ -77,6 +79,7 @@ class Player {
             this.setContainerData('paused', this.video.paused);
             this.#overHour = this.video.duration >= 60 * 60;
         });
+        this.onVideoEvent('canplay', () => this.focus());
         this.onVideoEvent('play', () => this.setContainerData('paused', this.video.paused));
         this.onVideoEvent('pause', () => this.setContainerData('paused', this.video.paused));
         this.onVideoEvent('volumechange', () => this.setContainerData('muted', this.video.muted));
@@ -85,18 +88,16 @@ class Player {
             this.setContainerData('fullscreen', fullscreen ? true : false);
             this.firePlayerEvent(fullscreen ? 'fullscreen' : 'fullscreenexit');
         });
-        {
-            new ResizeObserver(() => {
-                this.video.dispatchEvent(
-                    new CustomEvent('resize', {
-                        detail: {
-                            width: this.video.offsetWidth,
-                            height: this.video.offsetHeight,
-                        },
-                    })
-                );
-            }).observe(this.video);
-        }
+        new ResizeObserver(() => {
+            this.video.dispatchEvent(
+                new CustomEvent('resize', {
+                    detail: {
+                        width: this.video.offsetWidth,
+                        height: this.video.offsetHeight,
+                    },
+                })
+            );
+        }).observe(this.video);
         bindMetaEvent(this.container, this.#metadata.playerEvent, this);
         bindMetaEvent(this.video, this.#metadata.videoEvent, this, this.video);
     }
