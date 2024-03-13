@@ -49,6 +49,46 @@ const __player_metadata__ = (function () {
 
     // ====================================================================== //
 
+    function initDanmaku(stage: HTMLElement, url: string, onload: () => void) {
+        const provider = new CommentProvider();
+        provider.addStaticSource(CommentProvider.XMLProvider('GET', url, null, null), CommentProvider.SOURCE_XML);
+        provider.addParser(new BilibiliFormat.XMLParser(), CommentProvider.SOURCE_XML);
+        const commentManager = new CommentManager(stage);
+        // @ts-expect-error
+        provider.addTarget(commentManager);
+        commentManager.init('css');
+        provider
+            .load()
+            .then(() => {
+                commentManager.start();
+                onload();
+            })
+            .catch((e) => alert('DanmakuError: ' + e));
+        return commentManager;
+    }
+
+    function hasDanmaku(p: Player) {
+        return p.danmakuUrl ? true : false;
+    }
+
+    function initSubtitle(stage: HTMLElement, video: HTMLVideoElement, url: string) {
+        const req = new XMLHttpRequest();
+        req.open('GET', url, false);
+        req.send();
+        if (req.status === 200) {
+            // @ts-expect-error
+            const ass = new ASS(req.responseText, video, { container: stage, resampling: 'video_height' });
+            return ass as SubtitleManager;
+        }
+        return null;
+    }
+
+    function hasSubtitle(p: Player) {
+        return p.subtitleUrl ? true : false;
+    }
+
+    // ====================================================================== //
+
     const toastBox = new EDC('div') //
         .class('toast box visibility-transition invisible')
         .playerEvents({
@@ -215,7 +255,7 @@ const __player_metadata__ = (function () {
             click: (P) => toggleDisplay(P.elements.danmakuList),
         })
         .playerEvents({
-            danmakuload: (P, E) => (E.innerHTML = `(${danmakuCount(P)})`),
+            danmakuload: (P, E) => (E.innerHTML = `(${P.commentManager.timeline.length})`),
         });
 
     const danmakuTimeOffset = new EDC('input')
