@@ -160,7 +160,6 @@ const __player_metadata__: PlayerMetadata = {
                         new EDC('div') //
                             .class('time-label')
                             .selfEvents({
-                                click: (P) => toggleDisplay(P.elements.timeInput, P.elements.timeCurrent),
                                 mouseleave: (P) => toggleDisplayBi(P.elements.timeCurrent, P.elements.timeInput),
                             })
                             .children(
@@ -197,7 +196,10 @@ const __player_metadata__: PlayerMetadata = {
                                     }),
                                 new EDC('span').html(' / '),
                                 new EDC('span')
-                                    .html('--:--') //
+                                    .html('--:--')
+                                    .selfEvents({
+                                        click: (P) => toggleDisplay(P.elements.timeInput, P.elements.timeCurrent),
+                                    })
                                     .videoEvents({
                                         canplay: (_, E, V) => (E.textContent = fTime(V.duration)),
                                     })
