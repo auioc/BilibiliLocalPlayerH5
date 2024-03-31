@@ -450,6 +450,10 @@ const __player_metadata__ = (function () {
                 case 68: // D
                     if (P.elements.danmakuToggle) P.elements.danmakuToggle.click();
                     break;
+                case 81: // Q
+                    console.log(P.video.currentTime);
+                    P.toast(`Time: ${P.fCurrentTime()} (${P.video.currentTime})`);
+                    break;
                 default:
                     break;
             }
