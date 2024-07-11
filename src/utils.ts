@@ -81,14 +81,14 @@ function ternaryWithCallback<T, A, B>(
     return bOperator(value);
 }
 
-function newSpan(html: string) {
+function span(html: string) {
     const span = document.createElement('span');
     span.innerHTML = html;
     return span;
 }
 
-function newSpans(...html: string[]) {
-    return html.map(newSpan);
+function spans(...html: string[]) {
+    return html.map(span);
 }
 
 function appendChild(parent: HTMLElement, child?: HTMLElement) {

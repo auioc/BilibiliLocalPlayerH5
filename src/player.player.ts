@@ -43,6 +43,16 @@ const __player_metadata__ = (function () {
         }
     }
 
+    function option(value: string, text = value, selected = false) {
+        const option = document.createElement('option');
+        option.value = value;
+        option.innerHTML = text;
+        if (selected) {
+            option.selected = true;
+        }
+        return option;
+    }
+
     const icon_danmaku_off =
         '<path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>';
     const icon_subtitle_on =
@@ -127,7 +137,7 @@ const __player_metadata__ = (function () {
         .selfEvents({
             click: (P) => P.togglePlay(),
         })
-        .children(...newSpans('⏵', '⏸'));
+        .children(...spans('⏵', '⏸'));
 
     const muteToggle = new EDC('button', 'muteToggle')
         .class('mute-toggle')
@@ -136,7 +146,7 @@ const __player_metadata__ = (function () {
         .selfEvents({
             click: (P) => P.toggleMute(),
         })
-        .children(...newSpans(icon('mute'), icon('volume')));
+        .children(...spans(icon('mute'), icon('volume')));
 
     const volumeInput = new EDC('input', 'volume')
         .class('volume')
@@ -230,6 +240,24 @@ const __player_metadata__ = (function () {
             canplay: (_, E, V) => (E.textContent = fTime(V.duration)),
         });
 
+    const playbackRate = new EDC('select', 'playbackRate') //
+        .title('Playback Rate')
+        .videoEvents({
+            canplay: (_, E, V) => (V.playbackRate = parseFloat(E.value)),
+        })
+        .selfEvents({
+            change: (P, E) => {
+                P.video.playbackRate = parseFloat(E.value);
+                P.toast('Playback Rate: ' + E.value);
+            },
+        })
+        .children(
+            option('2.0'), //
+            option('1.5'),
+            option('1.0', '1.0', true),
+            option('0.5')
+        );
+
     const subtitleToggle = new EDC('button', 'subtitleToggle')
         .condition(hasSubtitle)
         .class('subtitle-toggle')
@@ -246,7 +274,7 @@ const __player_metadata__ = (function () {
                     'Subtitle Off'
                 ),
         })
-        .children(...newSpans(icon('subtitleOn'), icon('subtitleOff')));
+        .children(...spans(icon('subtitleOn'), icon('subtitleOff')));
 
     const danmakuToggle = new EDC('button', 'danmakuToggle')
         .class('danmaku-toggle')
@@ -266,7 +294,7 @@ const __player_metadata__ = (function () {
                     'Danmaku Off'
                 ),
         })
-        .children(...newSpans(icon('danmakuOn'), icon('danmakuOff')));
+        .children(...spans(icon('danmakuOn'), icon('danmakuOff')));
 
     const danmakuListToggle = new EDC('button', 'danmakuListToggle') //
         .html('?')
@@ -317,7 +345,7 @@ const __player_metadata__ = (function () {
         .selfEvents({
             click: (P) => P.toggleFullscreen(),
         })
-        .children(...newSpans('🡷', '🡵'));
+        .children(...spans('🡷', '🡵'));
 
     const danmakuList = new EDC('div', 'danmakuList')
         .condition(hasDanmaku)
@@ -494,6 +522,7 @@ const __player_metadata__ = (function () {
                                     mouseleave: (P) => toggleDisplayBi(P.elements.timeCurrent, P.elements.timeInput),
                                 })
                                 .children(timeInput, timeCurrent, new EDC('span').html(' / '), timeTotal),
+                            playbackRate,
                             subtitleToggle,
                             new EDC('div')
                                 .condition(hasDanmaku)
