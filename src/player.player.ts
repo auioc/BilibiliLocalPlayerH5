@@ -248,6 +248,7 @@ const __player_metadata__ = (function () {
 
     const playbackRate = new EDC('select', 'playbackRate') //
         .title('Playback Rate')
+        .class('playback-rate')
         .videoEvents({
             canplay: (_, E, V) => (V.playbackRate = parseFloat(E.value)),
         })

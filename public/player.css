@@ -134,6 +134,7 @@ video {
 .controls > .volume-wrapper {
     display: flex;
     gap: 2px;
+    height: 22px;
 }
 
 .volume-wrapper > .volume {
@@ -144,6 +145,7 @@ video {
     flex: 1;
     position: relative;
     display: flex;
+    height: 22px;
 }
 
 .progress-wrapper > .progress {
@@ -156,6 +158,10 @@ video {
     top: -40px;
 }
 
+.controls > .time-label {
+    line-height: 0;
+}
+
 .time-label > .time-input {
     font-family: auto;
     font-size: medium;
@@ -163,6 +169,10 @@ video {
     padding: 0;
     cursor: text;
     border: none;
+}
+
+.controls > .playback-rate {
+    height: 22px;
 }
 
 .controls > .danmaku-controls {
