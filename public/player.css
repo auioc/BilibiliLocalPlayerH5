@@ -127,6 +127,10 @@ video {
     border-width: 1px 0 0 0 !important;
 }
 
+.controls > button.play-toggle {
+    padding: 2px 5px;
+}
+
 .controls > .volume-wrapper {
     display: flex;
     gap: 2px;

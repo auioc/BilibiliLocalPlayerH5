@@ -40,6 +40,7 @@
 - [AUIOC](https://www.auioc.org)：技术支持
 - [CommentCoreLibrary](https://github.com/jabbany/CommentCoreLibrary)：弹幕支持
 - [ASS.JS](https://github.com/weizhenye/ASS)：字幕支持
+- [Bootstrap Icons](https://icons.getbootstrap.com)：控件图标
 
 ## 许可证
 
