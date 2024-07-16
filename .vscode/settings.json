@@ -1,6 +1,6 @@
 {
     "cSpell.words": ["assjs", "danmaku", "danmakuload", "stime"],
-    "conventionalCommits.scopes": ["repo", "utils", "player", "pages", "start"],
+    "conventionalCommits.scopes": ["repo", "utils", "player", "pages", "start", "build"],
     "prettier.printWidth": 120,
     "markdownlint.config": {
         "MD001": false,

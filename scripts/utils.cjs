@@ -9,7 +9,7 @@ const commitHash = (short = false) => {
 };
 const branch = () => execSync('git branch --show-current');
 const isDirty = () => execSync('git status --short').length !== 0;
-const version = (short = false) => `${branch()}@${commitHash(short)}${isDirty ? '(dirty)' : ''}`;
+const version = (short = false) => `${branch()}@${commitHash(short)}${isDirty() ? '(dirty)' : ''}`;
 
 const srcPath = (...p) => path.resolve(__dirname, '../src', ...p);
 const buildPath = (...p) => path.resolve(__dirname, '../build', ...p);
