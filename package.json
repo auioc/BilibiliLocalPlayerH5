@@ -7,14 +7,13 @@
     "scripts": {
         "dev:html": "cross-env NODE_ENV=development node scripts/build-html.cjs",
         "dev:script": "cross-env NODE_ENV=development rollup -c --bundleConfigAsCjs",
-        "dev:style": "cross-env NODE_ENV=development node scripts/build-style.cjs",
         "prod:html": "cross-env NODE_ENV=production node scripts/build-html.cjs",
         "prod:script": "cross-env NODE_ENV=production rollup -c --bundleConfigAsCjs",
         "prod:style": "cross-env NODE_ENV=production node scripts/build-style.cjs",
         "watch:html": "onchange -i \"src/html/*\" -- pnpm run dev:html",
         "watch:script": "rollup -c rollup.config.js --bundleConfigAsCjs --watch",
         "watch:style": "onchange -i \"src/style/*\" -- pnpm run dev:style",
-        "build:dev": "pnpm run dev:html && pnpm run dev:style && pnpm run dev:script",
+        "build:dev": "pnpm run dev:html && pnpm run dev:script",
         "build": "pnpm run prod:html && pnpm run prod:style && pnpm run prod:script"
     },
     "keywords": [],
