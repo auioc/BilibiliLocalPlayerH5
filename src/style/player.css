@@ -1,0 +1,226 @@
+.hide {
+    display: none !important;
+}
+.invisible {
+    visibility: hidden !important;
+}
+
+.visible {
+    opacity: 1;
+    visibility: visible;
+}
+.invisible {
+    opacity: 0;
+    visibility: hidden;
+}
+.visibility-transition {
+    /* transition: opacity 400ms ease, visibility 400ms ease; */
+}
+
+.center {
+    text-align: center;
+}
+
+#start-panel {
+    margin: 2em auto;
+    max-width: 75%;
+}
+
+#start-panel,
+#start-panel tr,
+#start-panel td {
+    border: 1px solid;
+    border-collapse: collapse;
+    padding: 4px 6px;
+}
+
+#start-panel th {
+    padding: 0.5em;
+}
+
+#start-panel th > div {
+    font-weight: lighter;
+    font-size: smaller;
+    color: #7e7e7e;
+}
+
+#start-panel tr > td:nth-child(1) {
+    text-wrap: nowrap;
+}
+
+body {
+    margin: 0;
+    background-color: #eee;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    opacity: 1;
+}
+
+input::-webkit-datetime-edit {
+    display: contents;
+}
+
+input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+input::-webkit-datetime-edit-fields-wrapper,
+input::-webkit-datetime-edit-hour-field,
+input::-webkit-datetime-edit-minute-field,
+input::-webkit-datetime-edit-second-field {
+    padding: 0;
+}
+
+li::marker {
+    display: none;
+}
+
+.player {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: black;
+    user-select: none;
+}
+
+video {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.overlays {
+    position: fixed !important;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.player[data-mouse-idle='true'] .overlays {
+    cursor: none;
+}
+
+.player .box {
+    background-color: white;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #7e7e7e;
+}
+
+.controls-wrapper {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999999;
+}
+
+.controls {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 4px;
+    border-width: 1px 0 0 0 !important;
+}
+
+.controls > button.play-toggle {
+    padding: 2px 5px;
+}
+
+.controls > .volume-wrapper {
+    display: flex;
+    gap: 2px;
+    height: 22px;
+}
+
+.volume-wrapper > .volume {
+    max-width: 3em;
+}
+
+.controls > .progress-wrapper {
+    flex: 1;
+    position: relative;
+    display: flex;
+    height: 22px;
+}
+
+.progress-wrapper > .progress {
+    width: 100%;
+}
+
+.progress-wrapper > .progress-popup {
+    position: absolute;
+    padding: 2px 4px;
+    top: -40px;
+}
+
+.controls > .time-label {
+    line-height: 0;
+}
+
+.time-label > .time-input {
+    font-family: auto;
+    font-size: medium;
+    height: 1em;
+    padding: 0;
+    cursor: text;
+    border: none;
+}
+
+.controls > .playback-rate {
+    height: 22px;
+}
+
+.controls > .danmaku-controls {
+    display: flex;
+    gap: 2px;
+}
+
+.danmaku-controls > input {
+    max-width: 3em;
+}
+
+.toast {
+    position: absolute;
+    padding: 2px 4px;
+    width: fit-content;
+    top: 4px;
+    left: 6px;
+    z-index: 999999;
+}
+
+.danmaku-list {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 12px 10px 12px 18px;
+    max-width: 460px;
+    max-height: 540px;
+    z-index: 999990;
+}
+
+.danmaku-list > ul {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    padding: 0;
+    margin: 0;
+}
+
+.danmaku-list li {
+    padding: 4px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.danmaku-list li > span:first-child {
+    margin-right: 12px;
+}

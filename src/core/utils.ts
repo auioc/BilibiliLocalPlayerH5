@@ -18,58 +18,43 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-interface StrAnyKV {
+export interface StrAnyKV {
     [x: string]: any;
 }
 
-interface StrGenKV<T> {
+export interface StrGenKV<T> {
     [x: string]: T;
 }
 
-interface StrKV {
+export interface StrKV {
     [x: string]: string;
 }
 
-type AnyFunction = (...args: any[]) => any;
+export type AnyFunction = (...args: any[]) => any;
 
-type AppendArguments<F extends AnyFunction, A extends any[]> = F extends (...arg: [...infer P]) => infer R
+export type AppendArguments<F extends AnyFunction, A extends any[]> = F extends (...arg: [...infer P]) => infer R
     ? (...args: [...P, ...A]) => R
     : never;
 
-type PrependArguments<F extends AnyFunction, A extends any[]> = F extends (...arg: [...infer P]) => infer R
+export type PrependArguments<F extends AnyFunction, A extends any[]> = F extends (...arg: [...infer P]) => infer R
     ? (...args: [...A, ...P]) => R
     : never;
 
-type ExtendedHTMLEventMap = StrAnyKV & HTMLElementEventMap;
+export type ExtendedHTMLEventMap = StrAnyKV & HTMLElementEventMap;
 
-type EventListenerMap<F extends AnyFunction> = {
+export type EventListenerMap<F extends AnyFunction> = {
     [key in keyof ExtendedHTMLEventMap]?: AppendArguments<F, [ExtendedHTMLEventMap[key]]>;
 };
 
-type HTMLTagNames = keyof HTMLElementTagNameMap;
-
-interface SubtitleManager {
-    new (
-        subtitle: string,
-        media: HTMLMediaElement,
-        options: {
-            container?: HTMLElement;
-            resampling?: 'video_width' | 'video_height' | 'script_width' | 'script_height';
-        }
-    ): SubtitleManager;
-    resize(): void;
-    hide(): void;
-    show(): void;
-    destory(): void;
-}
+export type HTMLTagNames = keyof HTMLElementTagNameMap;
 
 // ================================================================================================================== //
 
-function clamp(number: number, min: number, max: number) {
+export function clamp(number: number, min: number, max: number) {
     return Math.max(min, Math.min(number, max));
 }
 
-function ternaryWithCallback<T, A, B>(
+export function ternaryWithCallback<T, A, B>(
     value: T,
     predicate: (value: T) => boolean,
     aOperator: (value: T) => A,
@@ -81,36 +66,36 @@ function ternaryWithCallback<T, A, B>(
     return bOperator(value);
 }
 
-function span(html: string) {
+export function span(html: string) {
     const span = document.createElement('span');
     span.innerHTML = html;
     return span;
 }
 
-function spans(...html: string[]) {
+export function spans(...html: string[]) {
     return html.map(span);
 }
 
-function appendChild(parent: HTMLElement, child?: HTMLElement) {
+export function appendChild(parent: HTMLElement, child?: HTMLElement) {
     if (child instanceof HTMLElement) {
         parent.appendChild(child);
     }
 }
 
-function addClass(element: HTMLElement, clazz: string) {
+export function addClass(element: HTMLElement, clazz: string) {
     element.classList.add(clazz);
 }
 
-function removeClass(element: HTMLElement, clazz: string) {
+export function removeClass(element: HTMLElement, clazz: string) {
     element.classList.remove(clazz);
 }
 
-function toggleDisplayBi(display: HTMLElement, hide: HTMLElement) {
+export function toggleDisplayBi(display: HTMLElement, hide: HTMLElement) {
     addClass(hide, 'hide');
     removeClass(display, 'hide');
 }
 
-function toggleDisplay(...element: HTMLElement[]) {
+export function toggleDisplay(...element: HTMLElement[]) {
     for (const el of element) {
         if (el.classList.contains('hide')) {
             removeClass(el, 'hide');
@@ -120,17 +105,17 @@ function toggleDisplay(...element: HTMLElement[]) {
     }
 }
 
-function opacityVisible(element: HTMLElement) {
+export function opacityVisible(element: HTMLElement) {
     addClass(element, 'visible');
     removeClass(element, 'invisible');
 }
 
-function opacityInvisible(element: HTMLElement) {
+export function opacityInvisible(element: HTMLElement) {
     removeClass(element, 'visible');
     addClass(element, 'invisible');
 }
 
-function fTime(seconds: number, alwaysHour?: boolean) {
+export function fTime(seconds: number, alwaysHour?: boolean) {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor(seconds / 60) % 60;
     const s = Math.floor(seconds % 60);
@@ -140,20 +125,20 @@ function fTime(seconds: number, alwaysHour?: boolean) {
         .join(':');
 }
 
-function timeToSeconds(time: string): number {
+export function timeToSeconds(time: string): number {
     // @ts-expect-error
     return time.split(':').reduce((acc, time) => 60 * acc + parseInt(time));
 }
 
-function randomInt(min: number, max: number) {
+export function randomInt(min: number, max: number) {
     return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function randomStr() {
+export function randomStr() {
     return Math.random().toString(36).slice(-8);
 }
 
-function bindEvents<F extends AnyFunction>(target: HTMLElement, listeners: EventListenerMap<F>, params: any[]) {
+export function bindEvents<F extends AnyFunction>(target: HTMLElement, listeners: EventListenerMap<F>, params: any[]) {
     for (const [type, listener] of Object.entries(listeners)) {
         target.addEventListener(type, (event) => listener(...params, event));
     }

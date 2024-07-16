@@ -1,6 +1,8 @@
 #!/bin/sh
 
 mkdir temp
+mkdir public
+mkdir build
 
 # NPM
 npm install -g typescript

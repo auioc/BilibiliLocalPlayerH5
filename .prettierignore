@@ -1,3 +1,4 @@
-src/lib/*
-assets/lib/*
-assets/dist/*
+src/lib/*.js
+src/lib/*.css
+public/*
+build/*

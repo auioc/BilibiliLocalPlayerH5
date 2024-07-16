@@ -18,6 +18,9 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import Player from './player';
+import { AnyFunction, EventListenerMap, HTMLTagNames, StrKV, appendChild, bindEvents } from './utils';
+
 type MetaEventTypes = 'selfEvent' | 'playerEvent' | 'videoEvent';
 
 type MetaEvents<F extends AnyFunction> = EventListenerMap<F> | (() => EventListenerMap<F>);
@@ -29,14 +32,14 @@ type ElementVideoMetaEvents<T extends HTMLTagNames> = MetaEvents<
     (player: Player, element: HTMLElementTagNameMap[T], video: HTMLVideoElement) => void
 >;
 
-function bindMetaEvent<F extends AnyFunction>(target: HTMLElement, listeners: MetaEvents<F>, ...params: any[]) {
+export function bindMetaEvent<F extends AnyFunction>(target: HTMLElement, listeners: MetaEvents<F>, ...params: any[]) {
     const l = typeof listeners === 'function' ? listeners() : listeners;
     if (l) {
         bindEvents(target, l, params);
     }
 }
 
-class EDC<T extends HTMLTagNames> {
+export class EDC<T extends HTMLTagNames> {
     #tag: T;
     #name: string;
     #condition: (player: Player) => boolean;
@@ -134,7 +137,7 @@ class EDC<T extends HTMLTagNames> {
     }
 }
 
-interface PlayerMetadata {
+export interface PlayerMetadata {
     elements?: EDC<any>[];
     playerEvent?: MetaEvents<(player: Player) => void>;
     videoEvent?: MetaEvents<(player: Player, video: HTMLVideoElement) => void>;

@@ -18,19 +18,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
+import ASS from 'assjs';
+import { CommentManager } from '../lib/CommentCoreLibrary';
+import { bindMetaEvent, PlayerMetadata } from './metadata';
+import { appendChild, clamp, fTime, StrAnyKV, StrGenKV } from './utils';
+
 interface PlayerOptions extends StrAnyKV {
     autoPlay?: boolean;
     muted?: boolean;
     fullscreen?: boolean;
 }
 
-class Player {
-    /**
-     * This field will be automatically replaced to
-     * current version text during the CI build.
-     * Do not modify it!
-     **/
-    readonly version = '{version}';
+export default class Player {
     options: PlayerOptions;
     readonly #metadata: PlayerMetadata;
     readonly title: string;
@@ -40,9 +39,9 @@ class Player {
     readonly style: HTMLStyleElement;
     readonly container: HTMLDivElement;
     readonly danmakuUrl: string;
-    commentManager;
+    commentManager: CommentManager;
     readonly subtitleUrl: string;
-    subtitleManager: SubtitleManager;
+    subtitleManager: ASS;
     #constructed: boolean;
     elements: StrGenKV<HTMLElement> = {};
     temp: StrAnyKV = {};
@@ -56,7 +55,6 @@ class Player {
         subtitleUrl: string,
         options: PlayerOptions
     ) {
-        console.log('Version:', this.version);
         this.#metadata = metadata;
         this.options = options;
         container.classList.add('player');
@@ -77,7 +75,7 @@ class Player {
         }
         this.container = container;
         this.danmakuUrl = danmakuUrl;
-        if (0) this.commentManager = new CommentManager(); // for type intellisense
+        // if (0) this.commentManager = new CommentManager(); // for type intellisense
         this.subtitleUrl = subtitleUrl;
         this.#bindElements();
         this.#bindEvents();

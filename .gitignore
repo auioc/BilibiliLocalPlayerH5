@@ -2,8 +2,8 @@ temp
 
 node_modules
 
-public/lib
-src/lib
+src/lib/*
+!src/lib/*.d.ts
 
-public/*.js
-public/*.js.map
+public
+build

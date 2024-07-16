@@ -1,0 +1,61 @@
+{
+    "name": "bilibili-local-player-h5",
+    "version": "2.0.0",
+    "description": "bilibili-local-player-h5",
+    "main": "index.js",
+    "type": "module",
+    "scripts": {
+        "dev:html": "cross-env NODE_ENV=development node scripts/build-html.cjs",
+        "dev:script": "cross-env NODE_ENV=development rollup -c --bundleConfigAsCjs",
+        "dev:style": "cross-env NODE_ENV=development node scripts/build-style.cjs",
+        "prod:html": "cross-env NODE_ENV=production node scripts/build-html.cjs",
+        "prod:script": "cross-env NODE_ENV=production rollup -c --bundleConfigAsCjs",
+        "prod:style": "cross-env NODE_ENV=production node scripts/build-style.cjs",
+        "watch:html": "onchange -i \"src/html/*\" -- pnpm run dev:html",
+        "watch:script": "rollup -c rollup.config.js --bundleConfigAsCjs --watch",
+        "watch:style": "onchange -i \"src/style/*\" -- pnpm run dev:style",
+        "build:dev": "pnpm run dev:html && pnpm run dev:style && pnpm run dev:script",
+        "build": "pnpm run prod:html && pnpm run prod:style && pnpm run prod:script"
+    },
+    "keywords": [],
+    "homepage": "https://hi.auioc.org/BilibiliLocalPlayerH5/",
+    "author": {
+        "name": "PCC-Studio",
+        "url": "https://www.pccstudio.com"
+    },
+    "contributors": [
+        {
+            "name": "LainIO24",
+            "email": "lainio24@outlook.com",
+            "url": "https://github.com/lainio24"
+        },
+        {
+            "name": "WakelessSloth56",
+            "url": "https://github.com/WakelessSloth56"
+        },
+        {
+            "name": "AUIOC",
+            "url": "https://www.auioc.org"
+        }
+    ],
+    "license": "AGPL-3.0-or-later",
+    "dependencies": {
+        "assjs": "^0.0.11"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^26.0.1",
+        "@rollup/plugin-legacy": "^3.0.2",
+        "@rollup/plugin-replace": "^5.0.7",
+        "@rollup/plugin-terser": "^0.4.4",
+        "@rollup/plugin-typescript": "^11.1.6",
+        "@types/node": "^20.14.10",
+        "cross-env": "^7.0.3",
+        "html-minifier-terser": "^7.2.0",
+        "node-html-parser": "^6.1.13",
+        "onchange": "^7.1.0",
+        "rollup": "^4.18.1",
+        "terser": "^5.31.2",
+        "tslib": "^2.6.3",
+        "typescript": "^5.5.3"
+    }
+}
