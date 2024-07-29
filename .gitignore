@@ -2,6 +2,8 @@ temp
 
 node_modules
 
+.vscode
+
 src/lib/*
 !src/lib/*.d.ts
 
