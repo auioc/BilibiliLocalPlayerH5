@@ -487,7 +487,10 @@ const hotkeys = (P: Player, T: KeyboardEvent) => {
                     [
                         ['LocalTime', new Date().toLocaleString()],
                         ['File', `${P.title} @ ${P.video.videoWidth}x${P.video.videoHeight}`],
-                        ['Time', `${P.fCurrentTime()} / ${fTime(P.video.duration)}`],
+                        [
+                            'Time',
+                            `${P.fCurrentTime()} / ${fTime(P.video.duration)} (${P.video.playbackRate.toFixed(2)}x)`,
+                        ],
                     ]
                         .map(([l, t]) => `<b>${l}: </b>${t}`)
                         .join('<br/>')
