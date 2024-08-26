@@ -55,13 +55,13 @@ function toggleComponent(
     off: Function,
     offMsg: string
 ) {
-    if (!P.temp[key]) {
-        P.temp[key] = true;
+    if (!P.data[key]) {
+        P.data[key] = true;
         on();
         P.setData(key, true);
         P.toast(onMsg);
     } else {
-        P.temp[key] = false;
+        P.data[key] = false;
         off();
         P.setData(key, false);
         P.toast(offMsg);
@@ -166,8 +166,8 @@ const toastBox = new EDC('div') //
         toast: (P, E, T: CustomEvent) => {
             E.innerHTML = T.detail.content;
             opacityVisible(E);
-            clearTimeout(P.temp.toastTimer);
-            P.temp.toastTimer = setTimeout(() => opacityInvisible(E), 800);
+            clearTimeout(P.data.toastTimer);
+            P.data.toastTimer = setTimeout(() => opacityInvisible(E), 800);
         },
     });
 
@@ -220,10 +220,10 @@ const progressBar = new EDC('input', 'progress')
         change: (P, E) => {
             P.seekPercent(E.valueAsNumber);
             opacityInvisible(P.elements.progressPopup);
-            P.temp.progressInputting = false;
+            P.data.progressInputting = false;
         },
         input: (P, E) => {
-            P.temp.progressInputting = true;
+            P.data.progressInputting = true;
             const value = E.valueAsNumber;
             const popup = P.elements.progressPopup;
             popup.textContent = fTime(P.video.duration * value);
@@ -237,7 +237,7 @@ const progressBar = new EDC('input', 'progress')
     })
     .videoEvents({
         timeupdate: (P, E, V) => {
-            if (!P.temp.progressInputting) {
+            if (!P.data.progressInputting) {
                 const v = V.currentTime / V.duration;
                 E.valueAsNumber = v ? v : 0;
             }
@@ -377,11 +377,11 @@ const danmakuSizeOffset = new EDC('input')
         create: (P, E) => {
             if (!P.options.danmakuSizeOffset) P.options.danmakuSizeOffset = 0;
             E.valueAsNumber = P.options.danmakuSizeOffset;
-            P.temp.danmakuSizeFlag = randomStr();
+            P.data.danmakuSizeFlag = randomStr();
         },
         input: (P, E) => {
             P.options.danmakuSizeOffset = E.valueAsNumber;
-            P.temp.danmakuSizeFlag = randomStr();
+            P.data.danmakuSizeFlag = randomStr();
             P.commentManager.clear();
         },
     });
@@ -427,7 +427,7 @@ const subtitleStage = new EDC('div', 'subtitleStage')
         create: (P, E) => {
             P.subtitleManager = initSubtitle(E, P.video, P.subtitleUrl);
             P.firePlayerEvent('subtitleload');
-            P.temp.subtitleOn = true;
+            P.data.subtitleOn = true;
             P.setData('subtitleOn', true);
         },
     })
@@ -450,7 +450,7 @@ const danmakuStage = new EDC('div', 'danmakuStage')
                     let sizeBak = commentData['sizeBackup'];
                     if (
                         size &&
-                        override['sizeFlag'] != P.temp.danmakuSizeFlag
+                        override['sizeFlag'] != P.data.danmakuSizeFlag
                     ) {
                         if (!sizeBak) {
                             override['sizeBackup'] = size;
@@ -458,19 +458,18 @@ const danmakuStage = new EDC('div', 'danmakuStage')
                         }
                         override['size'] =
                             sizeBak + P.options.danmakuSizeOffset;
-                        override['sizeFlag'] = P.temp.danmakuSizeFlag;
+                        override['sizeFlag'] = P.data.danmakuSizeFlag;
                     }
                     return override;
                 });
             }
-            P.temp.danmakuOn = true;
             P.setData('danmakuOn', true);
             if (!P.options.danmakuTimeOffset) P.options.danmakuTimeOffset = 0;
         },
     })
     .videoEvents({
         timeupdate: (P, _, V) => {
-            if (!P.temp.danmakuOn) return;
+            if (!P.data.danmakuOn) return;
             const cm = P.commentManager;
             const time = Math.floor(
                 1e3 * (V.currentTime - P.options.danmakuTimeOffset)

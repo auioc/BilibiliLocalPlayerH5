@@ -36,22 +36,25 @@ interface PlayerOptions extends StrAnyKV {
     fullscreen?: boolean;
 }
 
+interface PlayerData extends StrAnyKV {
+    overHour?: boolean;
+    fullscreen?: boolean;
+}
+
 export default class Player {
     options: PlayerOptions;
     readonly #metadata: PlayerMetadata;
     readonly title: string;
     readonly videoUrl: string;
     readonly video: HTMLVideoElement;
-    #overHour: boolean;
     readonly style: HTMLStyleElement;
     readonly container: HTMLDivElement;
     readonly danmakuUrl: string;
     commentManager: CommentManager;
     readonly subtitleUrl: string;
     subtitleManager: ASS;
-    #constructed: boolean;
     elements: StrGenKV<HTMLElement> = {};
-    temp: StrAnyKV = {};
+    data: PlayerData = {};
 
     constructor(
         container: HTMLDivElement,
@@ -73,7 +76,6 @@ export default class Player {
             container.appendChild(video);
             video.src = videoUrl;
             this.video = video;
-            this.#overHour = false;
         }
         {
             const style = document.createElement('style');
@@ -92,7 +94,6 @@ export default class Player {
                 ? this.requestFullscreen()
                 : this.setData('fullscreen', false);
         }
-        this.#constructed = true;
         if (this.options.autoPlay) {
             this.toast('Autoplay');
         }
@@ -108,7 +109,7 @@ export default class Player {
     #bindEvents() {
         this.onVideoEvent('loadedmetadata', () => {
             this.setData('paused', this.video.paused);
-            this.#overHour = this.video.duration >= 60 * 60;
+            this.data.overHour = this.video.duration >= 60 * 60;
         });
         this.onVideoEvent('canplay', () => this.focus());
         this.onVideoEvent('play', () =>
@@ -127,9 +128,9 @@ export default class Player {
             toggleClass(this.container, 'fullscreen', fullscreen);
         });
         this.onPlayerEvent('mousemove', () => {
-            clearTimeout(this.temp.mouseTimer);
+            clearTimeout(this.data.mouseTimer);
             this.setData('mouseIdle', false);
-            this.temp.mouseTimer = setTimeout(() => {
+            this.data.mouseTimer = setTimeout(() => {
                 this.setData('mouseIdle', true);
                 this.firePlayerEvent('mouseidle');
             }, 1 * 1000);
@@ -152,12 +153,12 @@ export default class Player {
         this.container.focus();
     }
 
+    /**
+     * Sets both `Player.data` and `HTMLElement.dataset`
+     */
     setData(key: string, value: any) {
         this.container.dataset[key] = value;
-    }
-
-    getData(key: string) {
-        return this.container.dataset[key];
+        this.data[key] = value;
     }
 
     onVideoEvent(type: string, listener: EventListenerOrEventListenerObject) {
@@ -175,22 +176,20 @@ export default class Player {
     }
 
     toast(html: string) {
-        if (this.#constructed) {
-            this.firePlayerEvent('toast', { content: html });
-        }
+        this.firePlayerEvent('toast', { content: html });
     }
 
     fCurrentTime(alwaysHour?: boolean) {
         return fTime(
             this.video.currentTime,
-            alwaysHour === undefined ? this.#overHour : alwaysHour
+            alwaysHour === undefined ? this.data.overHour : alwaysHour
         );
     }
 
     seek(time: number) {
         const fixedTime = clamp(time, 0, this.video.duration);
         this.toast(
-            `Seek: ${fTime(fixedTime, this.#overHour)} / ${fTime(
+            `Seek: ${fTime(fixedTime, this.data.overHour)} / ${fTime(
                 this.video.duration
             )}`
         );
@@ -256,7 +255,7 @@ export default class Player {
     }
 
     toggleFullscreen() {
-        if (this.getData('fullscreen') === 'true') {
+        if (this.data.fullscreen) {
             this.exitFullscreen();
         } else {
             this.requestFullscreen();
