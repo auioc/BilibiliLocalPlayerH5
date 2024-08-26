@@ -126,6 +126,14 @@ export default class Player {
             this.firePlayerEvent(fullscreen ? 'fullscreen' : 'fullscreenexit');
             toggleClass(this.container, 'fullscreen', fullscreen);
         });
+        this.onPlayerEvent('mousemove', () => {
+            clearTimeout(this.temp.mouseTimer);
+            this.setData('mouseIdle', false);
+            this.temp.mouseTimer = setTimeout(() => {
+                this.setData('mouseIdle', true);
+                this.firePlayerEvent('mouseidle');
+            }, 1 * 1000);
+        });
         new ResizeObserver(() => {
             this.video.dispatchEvent(
                 new CustomEvent('resize', {

@@ -493,14 +493,6 @@ const danmakuStage = new EDC('div', 'danmakuStage')
 
 // ====================================================================== //
 
-const mouseIdle = (P: Player) => {
-    clearTimeout(P.temp.mouseTimer);
-    P.setData('mouseIdle', false);
-    P.temp.mouseTimer = setTimeout(() => {
-        P.setData('mouseIdle', true);
-    }, 1e3);
-};
-
 const hotkeys = (P: Player, T: KeyboardEvent) => {
     if (T.target === P.container) {
         switch (T.keyCode) {
@@ -623,7 +615,6 @@ export const defaultPlayerMetadata = {
             .children(subtitleStage, danmakuStage),
     ],
     playerEvent: {
-        mousemove: mouseIdle,
         keydown: hotkeys,
     },
 } as PlayerMetadata;
