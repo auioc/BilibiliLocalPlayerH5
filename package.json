@@ -12,7 +12,6 @@
         "prod:style": "cross-env NODE_ENV=production node scripts/build-style.cjs",
         "watch:html": "onchange -i \"src/html/*\" -- pnpm run dev:html",
         "watch:script": "rollup -c rollup.config.js --bundleConfigAsCjs --watch",
-        "watch:style": "onchange -i \"src/style/*\" -- pnpm run dev:style",
         "build:dev": "pnpm run dev:html && pnpm run dev:script",
         "build": "pnpm run prod:html && pnpm run prod:style && pnpm run prod:script"
     },
