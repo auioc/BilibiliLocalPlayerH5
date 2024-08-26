@@ -32,15 +32,11 @@
                 </tr>
                 <tr>
                     <td><label for="danmaku-file">Danmaku:</label></td>
-                    <td>
-                        <input id="danmaku-file" type="file" accept=".xml" style="width: 100%" />
-                    </td>
+                    <td><input id="danmaku-file" type="file" accept=".xml" style="width: 100%" /></td>
                 </tr>
                 <tr>
                     <td>Time Offset:</td>
-                    <td>
-                        <input id="danmaku-time-offset" type="number" value="0" />
-                    </td>
+                    <td><input id="danmaku-time-offset" type="number" value="0" /></td>
                 </tr>
                 <tr>
                     <td>Size Offset:</td>
@@ -48,9 +44,7 @@
                 </tr>
                 <tr>
                     <td><label for="subtitle-file">Subtitle:</label></td>
-                    <td>
-                        <input id="subtitle-file" type="file" accept=".ass" style="width: 100%" />
-                    </td>
+                    <td><input id="subtitle-file" type="file" accept=".ass" style="width: 100%" /></td>
                 </tr>
                 <tr>
                     <td>Auto Play:</td>
@@ -99,9 +93,9 @@
                 const subtitle = id('subtitle-file').files[0];
                 const subtitleUrl = subtitle ? URL.createObjectURL(subtitle) : null;
 
-                const player = new Player(
+                window.player.instance = new player.Player(
                     id('player'),
-                    __player_metadata__,
+                    player.playerMetadata,
                     video.name,
                     videoUrl,
                     danmakuUrl,
@@ -114,7 +108,6 @@
                         danmakuSizeOffset: parseInt(id('danmaku-size-offset').value),
                     }
                 );
-                window.player = player;
                 id('start-panel').remove();
                 id('player').removeAttribute('style');
                 document.title = `${video.name} | ${__title__}`;

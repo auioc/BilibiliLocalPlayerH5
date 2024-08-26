@@ -16,7 +16,7 @@ export default [
             {
                 file: dev ? 'public/player.js' : 'build/assets/player.min.js',
                 format: 'iife',
-                name: '__player__',
+                name: 'player',
                 sourcemap: dev,
                 globals: {
                     ['assjs']: 'ASS',

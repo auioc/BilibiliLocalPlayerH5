@@ -1,5 +1,17 @@
-import { defaultPlayerMetadata } from './data';
+import { playerMetadata } from './data';
+import { PlayerMetadata } from './metadata';
 import Player from './player';
+
+declare global {
+    interface Window {
+        player: {
+            version: string;
+            Player: typeof Player;
+            playerMetadata: PlayerMetadata;
+            instance?: Player;
+        };
+    }
+}
 
 /**
  * This field will be automatically replaced to
@@ -8,7 +20,4 @@ import Player from './player';
  **/
 const version = '_version_';
 
-Object.defineProperty(window, 'Player', { value: Player });
-Object.defineProperty(window, '__player_metadata__', { value: defaultPlayerMetadata });
-
-export { defaultPlayerMetadata, Player, version };
+export { Player, playerMetadata, version };

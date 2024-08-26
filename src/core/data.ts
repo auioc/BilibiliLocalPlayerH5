@@ -551,7 +551,7 @@ const hotkeys = (P: Player, T: KeyboardEvent) => {
 
 // ====================================================================== //
 
-export const defaultPlayerMetadata = {
+export const playerMetadata = {
     elements: [
         toastBox,
         new EDC('div') //
