@@ -227,11 +227,9 @@ const progressBar = new EDC('input', 'progress')
             const value = E.valueAsNumber;
             const popup = P.elements.progressPopup;
             popup.textContent = formatTime(P.video.duration * value);
-            popup.style.left = `calc(${value * 100}% + (${
-                8 - value * 100 * 0.15
-            }px))`;
-            popup.style.transform =
-                'translateX(' + -popup.offsetWidth / 2 + 'px)';
+            // prettier-ignore
+            popup.style.left = `calc(${value * 100}% + (${8 - value * 100 * 0.15}px))`;
+            popup.style.transform = `translateX(${-popup.offsetWidth / 2}px)`;
             opacityVisible(popup);
         },
     })
@@ -251,11 +249,15 @@ const timeInput = new EDC('input', 'timeInput')
     .class('time-input hide')
     .attrs({ type: 'time', step: '1' })
     .selfEvents({
-        change: (P, E) => {
-            if (E.validity.valid) {
-                P.seek(timeToSeconds(E.value));
-            } else {
-                E.value = formatTime(P.video.currentTime, true);
+        mouseleave: (P) =>
+            toggleDisplayBi(P.elements.timeCurrent, P.elements.timeInput),
+        keydown: (P, E, event) => {
+            if (event.key === 'Enter') {
+                if (E.validity.valid) {
+                    P.seek(timeToSeconds(E.value));
+                } else {
+                    E.value = P.currentTime(true);
+                }
             }
         },
     })
@@ -264,24 +266,26 @@ const timeInput = new EDC('input', 'timeInput')
             E.value = P.currentTime(true);
             E.max = formatTime(V.duration, true);
         },
-        timeupdate: (P, E, V) => {
-            E.value = P.currentTime(true);
+        timeupdate: (P, E) => {
+            if (E !== document.activeElement) {
+                E.value = P.currentTime(true);
+            }
         },
     });
 
 const timeCurrent = new EDC('span', 'timeCurrent') //
     .html('--:--')
+    .selfEvents({
+        click: (P) =>
+            toggleDisplay(P.elements.timeInput, P.elements.timeCurrent),
+    })
     .videoEvents({
         canplay: (P, E, V) => (E.textContent = P.currentTime()),
         timeupdate: (P, E, V) => (E.textContent = P.currentTime()),
     });
 
 const timeTotal = new EDC('span')
-    .html('--:--')
-    .selfEvents({
-        click: (P) =>
-            toggleDisplay(P.elements.timeInput, P.elements.timeCurrent),
-    })
+    .html('--:--') //
     .videoEvents({
         canplay: (_, E, V) => (E.textContent = formatTime(V.duration)),
     });
@@ -578,13 +582,7 @@ export const playerMetadata = {
                             .children(progressBar, progressPopup),
                         new EDC('div') //
                             .class('time-label')
-                            .selfEvents({
-                                mouseleave: (P) =>
-                                    toggleDisplayBi(
-                                        P.elements.timeCurrent,
-                                        P.elements.timeInput
-                                    ),
-                            })
+
                             .children(
                                 timeInput,
                                 timeCurrent,

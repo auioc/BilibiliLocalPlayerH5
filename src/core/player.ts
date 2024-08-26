@@ -198,9 +198,8 @@ export default class Player {
     seek(time: number) {
         const fixedTime = clamp(time, 0, this.video.duration);
         this.toast(
-            `Seek: ${formatTime(fixedTime, this.data.overHour)} / ${formatTime(
-                this.video.duration
-            )}`
+            `Seek: ${formatTime(fixedTime, this.data.overHour)} / ` +
+                formatTime(this.video.duration)
         );
         this.video.currentTime = fixedTime;
     }

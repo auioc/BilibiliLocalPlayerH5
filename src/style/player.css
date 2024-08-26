@@ -72,21 +72,6 @@ input[type='number']::-webkit-outer-spin-button {
     opacity: 1;
 }
 
-input::-webkit-datetime-edit {
-    display: contents;
-}
-
-input::-webkit-calendar-picker-indicator {
-    display: none;
-}
-
-input::-webkit-datetime-edit-fields-wrapper,
-input::-webkit-datetime-edit-hour-field,
-input::-webkit-datetime-edit-minute-field,
-input::-webkit-datetime-edit-second-field {
-    padding: 0;
-}
-
 li::marker {
     display: none;
 }
@@ -173,7 +158,7 @@ video {
 .progress-wrapper > .progress-popup {
     position: absolute;
     padding: 2px 4px;
-    top: -40px;
+    top: -32px;
 }
 
 .controls > .time-label {
@@ -182,11 +167,24 @@ video {
 
 .time-label > .time-input {
     font-family: auto;
-    font-size: medium;
-    height: 1em;
+    font-size: inherit;
     padding: 0;
     cursor: text;
     border: none;
+    background-color: var(--bg-color);
+}
+
+input.time-input::-webkit-datetime-edit {
+    display: contents;
+}
+input.time-input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+input.time-input::-webkit-datetime-edit-fields-wrapper,
+input.time-input::-webkit-datetime-edit-hour-field,
+input.time-input::-webkit-datetime-edit-minute-field,
+input.time-input::-webkit-datetime-edit-second-field {
+    padding: 0;
 }
 
 .controls > .playback-rate {
