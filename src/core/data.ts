@@ -19,7 +19,11 @@
  */
 
 import ASS from 'assjs';
-import { BilibiliFormat, CommentManager, CommentProvider } from '../lib/CommentCoreLibrary.js';
+import {
+    BilibiliFormat,
+    CommentManager,
+    CommentProvider,
+} from '../lib/CommentCoreLibrary.js';
 import { EDC, PlayerMetadata } from './metadata';
 import Player from './player';
 import {
@@ -43,16 +47,23 @@ function toggleDisplayByData(dataName: string, clazz: string) {
     return r;
 }
 
-function toggleComponent(P: Player, key: string, on: Function, onMsg: string, off: Function, offMsg: string) {
+function toggleComponent(
+    P: Player,
+    key: string,
+    on: Function,
+    onMsg: string,
+    off: Function,
+    offMsg: string
+) {
     if (!P.temp[key]) {
         P.temp[key] = true;
         on();
-        P.setContainerData(key, true);
+        P.setData(key, true);
         P.toast(onMsg);
     } else {
         P.temp[key] = false;
         off();
-        P.setContainerData(key, false);
+        P.setData(key, false);
         P.toast(offMsg);
     }
 }
@@ -101,8 +112,14 @@ function icon<K extends keyof typeof icons>(p: K) {
 
 function initDanmaku(stage: HTMLElement, url: string, onload: () => void) {
     const provider = new CommentProvider();
-    provider.addStaticSource(CommentProvider.XMLProvider('GET', url, null, null), CommentProvider.SOURCE_XML);
-    provider.addParser(new BilibiliFormat.XMLParser(), CommentProvider.SOURCE_XML);
+    provider.addStaticSource(
+        CommentProvider.XMLProvider('GET', url, null, null),
+        CommentProvider.SOURCE_XML
+    );
+    provider.addParser(
+        new BilibiliFormat.XMLParser(),
+        CommentProvider.SOURCE_XML
+    );
     const commentManager = new CommentManager(stage);
     provider.addTarget(commentManager);
     commentManager.init('css');
@@ -120,12 +137,19 @@ function hasDanmaku(p: Player) {
     return p.danmakuUrl ? true : false;
 }
 
-function initSubtitle(stage: HTMLElement, video: HTMLVideoElement, url: string) {
+function initSubtitle(
+    stage: HTMLElement,
+    video: HTMLVideoElement,
+    url: string
+) {
     const req = new XMLHttpRequest();
     req.open('GET', url, false);
     req.send();
     if (req.status === 200) {
-        return new ASS(req.responseText, video, { container: stage, resampling: 'video_height' });
+        return new ASS(req.responseText, video, {
+            container: stage,
+            resampling: 'video_height',
+        });
     }
     return null;
 }
@@ -177,7 +201,8 @@ const volumeInput = new EDC('input', 'volume')
         unmute: (_, E) => (E.disabled = false),
     })
     .videoEvents({
-        volumechange: (_, E, V) => (E.valueAsNumber = Math.round(V.volume * 100)),
+        volumechange: (_, E, V) =>
+            (E.valueAsNumber = Math.round(V.volume * 100)),
     });
 
 const progressBar = new EDC('input', 'progress')
@@ -202,8 +227,11 @@ const progressBar = new EDC('input', 'progress')
             const value = E.valueAsNumber;
             const popup = P.elements.progressPopup;
             popup.textContent = fTime(P.video.duration * value);
-            popup.style.left = `calc(${value * 100}% + (${8 - value * 100 * 0.15}px))`;
-            popup.style.transform = 'translateX(' + -popup.offsetWidth / 2 + 'px)';
+            popup.style.left = `calc(${value * 100}% + (${
+                8 - value * 100 * 0.15
+            }px))`;
+            popup.style.transform =
+                'translateX(' + -popup.offsetWidth / 2 + 'px)';
             opacityVisible(popup);
         },
     })
@@ -251,7 +279,8 @@ const timeCurrent = new EDC('span', 'timeCurrent') //
 const timeTotal = new EDC('span')
     .html('--:--')
     .selfEvents({
-        click: (P) => toggleDisplay(P.elements.timeInput, P.elements.timeCurrent),
+        click: (P) =>
+            toggleDisplay(P.elements.timeInput, P.elements.timeCurrent),
     })
     .videoEvents({
         canplay: (_, E, V) => (E.textContent = fTime(V.duration)),
@@ -321,7 +350,8 @@ const danmakuListToggle = new EDC('button', 'danmakuListToggle') //
         click: (P) => toggleDisplay(P.elements.danmakuList),
     })
     .playerEvents({
-        danmakuload: (P, E) => (E.innerHTML = `(${P.commentManager.timeline.length})`),
+        danmakuload: (P, E) =>
+            (E.innerHTML = `(${P.commentManager.timeline.length})`),
     });
 
 const danmakuTimeOffset = new EDC('input')
@@ -373,11 +403,16 @@ const danmakuList = new EDC('div', 'danmakuList')
             .playerEvents({
                 danmakuload: async (P, E) => {
                     const timeline = P.commentManager.timeline;
-                    const overHour = timeline ? timeline[timeline.length - 1].stime >= 36e5 : false;
+                    const overHour = timeline
+                        ? timeline[timeline.length - 1].stime >= 36e5
+                        : false;
                     let html = '';
                     for (const data of timeline) {
                         html += // for performance, do not use document.createElement
-                            `<li><span>${fTime(data.stime / 1e3, overHour)}</span>` +
+                            `<li><span>${fTime(
+                                data.stime / 1e3,
+                                overHour
+                            )}</span>` +
                             `<span title="${data.text}">${data.text}</span></li>`;
                     }
                     E.innerHTML = html;
@@ -393,7 +428,7 @@ const subtitleStage = new EDC('div', 'subtitleStage')
             P.subtitleManager = initSubtitle(E, P.video, P.subtitleUrl);
             P.firePlayerEvent('subtitleload');
             P.temp.subtitleOn = true;
-            P.setContainerData('subtitleOn', true);
+            P.setData('subtitleOn', true);
         },
     })
     .videoEvents({
@@ -405,25 +440,31 @@ const danmakuStage = new EDC('div', 'danmakuStage')
     .condition(hasDanmaku)
     .selfEvents({
         create: (P, E) => {
-            P.commentManager = initDanmaku(E, P.danmakuUrl, () => P.firePlayerEvent('danmakuload'));
+            P.commentManager = initDanmaku(E, P.danmakuUrl, () =>
+                P.firePlayerEvent('danmakuload')
+            );
             if (P.options.danmakuSizeOffset) {
                 P.commentManager.filter.addModifier(function (commentData) {
                     const override = commentData;
                     const size = commentData['size'];
                     let sizeBak = commentData['sizeBackup'];
-                    if (size && override['sizeFlag'] != P.temp.danmakuSizeFlag) {
+                    if (
+                        size &&
+                        override['sizeFlag'] != P.temp.danmakuSizeFlag
+                    ) {
                         if (!sizeBak) {
                             override['sizeBackup'] = size;
                             sizeBak = size;
                         }
-                        override['size'] = sizeBak + P.options.danmakuSizeOffset;
+                        override['size'] =
+                            sizeBak + P.options.danmakuSizeOffset;
                         override['sizeFlag'] = P.temp.danmakuSizeFlag;
                     }
                     return override;
                 });
             }
             P.temp.danmakuOn = true;
-            P.setContainerData('danmakuOn', true);
+            P.setData('danmakuOn', true);
             if (!P.options.danmakuTimeOffset) P.options.danmakuTimeOffset = 0;
         },
     })
@@ -431,7 +472,9 @@ const danmakuStage = new EDC('div', 'danmakuStage')
         timeupdate: (P, _, V) => {
             if (!P.temp.danmakuOn) return;
             const cm = P.commentManager;
-            const time = Math.floor(1e3 * (V.currentTime - P.options.danmakuTimeOffset));
+            const time = Math.floor(
+                1e3 * (V.currentTime - P.options.danmakuTimeOffset)
+            );
             const deltaTime = time - cm._lastPosition;
             if (deltaTime < 0 || deltaTime > cm.options.seekTrigger) {
                 cm.clear();
@@ -452,9 +495,9 @@ const danmakuStage = new EDC('div', 'danmakuStage')
 
 const mouseIdle = (P: Player) => {
     clearTimeout(P.temp.mouseTimer);
-    P.setContainerData('mouseIdle', false);
+    P.setData('mouseIdle', false);
     P.temp.mouseTimer = setTimeout(() => {
-        P.setContainerData('mouseIdle', true);
+        P.setData('mouseIdle', true);
     }, 1e3);
 };
 
@@ -486,10 +529,15 @@ const hotkeys = (P: Player, T: KeyboardEvent) => {
                 P.toast(
                     [
                         ['LocalTime', new Date().toLocaleString()],
-                        ['File', `${P.title} @ ${P.video.videoWidth}x${P.video.videoHeight}`],
+                        [
+                            'File',
+                            `${P.title} @ ${P.video.videoWidth}x${P.video.videoHeight}`,
+                        ],
                         [
                             'Time',
-                            `${P.fCurrentTime()} / ${fTime(P.video.duration)} (${P.video.playbackRate.toFixed(2)}x)`,
+                            `${P.fCurrentTime()} / ${fTime(
+                                P.video.duration
+                            )} (${P.video.playbackRate.toFixed(2)}x)`,
                         ],
                     ]
                         .map(([l, t]) => `<b>${l}: </b>${t}`)
@@ -540,15 +588,29 @@ export const defaultPlayerMetadata = {
                         new EDC('div') //
                             .class('time-label')
                             .selfEvents({
-                                mouseleave: (P) => toggleDisplayBi(P.elements.timeCurrent, P.elements.timeInput),
+                                mouseleave: (P) =>
+                                    toggleDisplayBi(
+                                        P.elements.timeCurrent,
+                                        P.elements.timeInput
+                                    ),
                             })
-                            .children(timeInput, timeCurrent, new EDC('span').html(' / '), timeTotal),
+                            .children(
+                                timeInput,
+                                timeCurrent,
+                                new EDC('span').html(' / '),
+                                timeTotal
+                            ),
                         playbackRate,
                         subtitleToggle,
                         new EDC('div')
                             .condition(hasDanmaku)
                             .class('danmaku-controls')
-                            .children(danmakuToggle, danmakuListToggle, danmakuTimeOffset, danmakuSizeOffset),
+                            .children(
+                                danmakuToggle,
+                                danmakuListToggle,
+                                danmakuTimeOffset,
+                                danmakuSizeOffset
+                            ),
                         fullscreenToggle
                     )
             ),

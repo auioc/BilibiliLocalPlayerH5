@@ -82,7 +82,6 @@ export default class Player {
         }
         this.container = container;
         this.danmakuUrl = danmakuUrl;
-        // if (0) this.commentManager = new CommentManager(); // for type intellisense
         this.subtitleUrl = subtitleUrl;
         this.#bindElements();
         this.#bindEvents();
@@ -91,7 +90,7 @@ export default class Player {
             this.options.muted ? this.mute() : this.unmute();
             this.options.fullscreen
                 ? this.requestFullscreen()
-                : this.setContainerData('fullscreen', false);
+                : this.setData('fullscreen', false);
         }
         this.#constructed = true;
         if (this.options.autoPlay) {
@@ -108,22 +107,22 @@ export default class Player {
 
     #bindEvents() {
         this.onVideoEvent('loadedmetadata', () => {
-            this.setContainerData('paused', this.video.paused);
+            this.setData('paused', this.video.paused);
             this.#overHour = this.video.duration >= 60 * 60;
         });
         this.onVideoEvent('canplay', () => this.focus());
         this.onVideoEvent('play', () =>
-            this.setContainerData('paused', this.video.paused)
+            this.setData('paused', this.video.paused)
         );
         this.onVideoEvent('pause', () =>
-            this.setContainerData('paused', this.video.paused)
+            this.setData('paused', this.video.paused)
         );
         this.onVideoEvent('volumechange', () =>
-            this.setContainerData('muted', this.video.muted)
+            this.setData('muted', this.video.muted)
         );
         this.onPlayerEvent('fullscreenchange', () => {
             const fullscreen = document.fullscreenElement === this.container;
-            this.setContainerData('fullscreen', fullscreen ? true : false);
+            this.setData('fullscreen', fullscreen ? true : false);
             this.firePlayerEvent(fullscreen ? 'fullscreen' : 'fullscreenexit');
             toggleClass(this.container, 'fullscreen', fullscreen);
         });
@@ -145,11 +144,11 @@ export default class Player {
         this.container.focus();
     }
 
-    setContainerData(key: string, value: any) {
+    setData(key: string, value: any) {
         this.container.dataset[key] = value;
     }
 
-    getContainerData(key: string) {
+    getData(key: string) {
         return this.container.dataset[key];
     }
 
@@ -218,14 +217,14 @@ export default class Player {
 
     mute() {
         this.video.muted = true;
-        this.setContainerData('muted', true);
+        this.setData('muted', true);
         this.firePlayerEvent('mute');
         this.toast('Mute');
     }
 
     unmute() {
         this.video.muted = false;
-        this.setContainerData('muted', false);
+        this.setData('muted', false);
         this.firePlayerEvent('unmute');
         this.toast('Unmute');
     }
@@ -249,7 +248,7 @@ export default class Player {
     }
 
     toggleFullscreen() {
-        if (this.getContainerData('fullscreen') === 'true') {
+        if (this.getData('fullscreen') === 'true') {
             this.exitFullscreen();
         } else {
             this.requestFullscreen();
