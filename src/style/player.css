@@ -1,3 +1,16 @@
+:root {
+    --border-color: #7e7e7e;
+    --bg-color: #f0f0f0;
+    --fg-color: #181818;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #181818;
+        --fg-color: #f0f0f0;
+    }
+}
+
 .hide {
     display: none !important;
 }
@@ -41,7 +54,7 @@
 #start-panel th > div {
     font-weight: lighter;
     font-size: smaller;
-    color: #7e7e7e;
+    color: var(--border-color);
 }
 
 #start-panel tr > td:nth-child(1) {
@@ -50,7 +63,8 @@
 
 body {
     margin: 0;
-    background-color: #eee;
+    background-color: var(--bg-color);
+    color: var(--fg-color);
 }
 
 input[type='number']::-webkit-inner-spin-button,
@@ -81,7 +95,7 @@ li::marker {
     position: absolute;
     height: 100%;
     width: 100%;
-    background-color: black;
+    background-color: black !important;
     user-select: none;
 }
 
@@ -104,10 +118,10 @@ video {
 }
 
 .player .box {
-    background-color: white;
+    background-color: var(--bg-color);
     border-width: 1px;
     border-style: solid;
-    border-color: #7e7e7e;
+    border-color: var(--border-color);
 }
 
 .controls-wrapper {
