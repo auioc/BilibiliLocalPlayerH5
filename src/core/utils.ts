@@ -136,7 +136,7 @@ export function opacityInvisible(element: HTMLElement) {
     addClass(element, 'invisible');
 }
 
-export function fTime(seconds: number, alwaysHour?: boolean) {
+export function formatTime(seconds: number, alwaysHour?: boolean) {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor(seconds / 60) % 60;
     const s = Math.floor(seconds % 60);

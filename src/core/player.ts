@@ -24,7 +24,7 @@ import { bindMetaEvent, PlayerMetadata } from './metadata';
 import {
     appendChild,
     clamp,
-    fTime,
+    formatTime,
     StrAnyKV,
     StrGenKV,
     toggleClass,
@@ -41,20 +41,24 @@ interface PlayerData extends StrAnyKV {
     fullscreen?: boolean;
 }
 
+interface MediaResources {
+    video: string;
+    danmaku?: string;
+    subtitle?: string;
+}
+
 export default class Player {
-    options: PlayerOptions;
+    readonly options: PlayerOptions;
     readonly #metadata: PlayerMetadata;
     readonly title: string;
-    readonly videoUrl: string;
+    readonly resources: Readonly<MediaResources>;
     readonly video: HTMLVideoElement;
     readonly style: HTMLStyleElement;
     readonly container: HTMLDivElement;
-    readonly danmakuUrl: string;
+    readonly elements: StrGenKV<HTMLElement> = {};
+    readonly data: PlayerData = {};
     commentManager: CommentManager;
-    readonly subtitleUrl: string;
     subtitleManager: ASS;
-    elements: StrGenKV<HTMLElement> = {};
-    data: PlayerData = {};
 
     constructor(
         container: HTMLDivElement,
@@ -69,9 +73,9 @@ export default class Player {
         this.options = options;
         container.classList.add('player');
         container.tabIndex = 10;
+        this.container = container;
+        this.title = title;
         {
-            this.title = title;
-            this.videoUrl = videoUrl;
             const video = document.createElement('video');
             container.appendChild(video);
             video.src = videoUrl;
@@ -82,9 +86,11 @@ export default class Player {
             this.style = style;
             container.appendChild(style);
         }
-        this.container = container;
-        this.danmakuUrl = danmakuUrl;
-        this.subtitleUrl = subtitleUrl;
+        this.resources = {
+            video: videoUrl,
+            danmaku: danmakuUrl,
+            subtitle: subtitleUrl,
+        };
         this.#bindElements();
         this.#bindEvents();
         {
@@ -154,7 +160,7 @@ export default class Player {
     }
 
     /**
-     * Sets both `Player.data` and `HTMLElement.dataset`
+     * Note: Sets both `Player.data` and `HTMLElement.dataset`
      */
     setData(key: string, value: any) {
         this.container.dataset[key] = value;
@@ -179,8 +185,11 @@ export default class Player {
         this.firePlayerEvent('toast', { content: html });
     }
 
-    fCurrentTime(alwaysHour?: boolean) {
-        return fTime(
+    /**
+     * @returns formatted current playback position
+     */
+    currentTime(alwaysHour?: boolean) {
+        return formatTime(
             this.video.currentTime,
             alwaysHour === undefined ? this.data.overHour : alwaysHour
         );
@@ -189,7 +198,7 @@ export default class Player {
     seek(time: number) {
         const fixedTime = clamp(time, 0, this.video.duration);
         this.toast(
-            `Seek: ${fTime(fixedTime, this.data.overHour)} / ${fTime(
+            `Seek: ${formatTime(fixedTime, this.data.overHour)} / ${formatTime(
                 this.video.duration
             )}`
         );

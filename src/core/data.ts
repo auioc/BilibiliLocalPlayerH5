@@ -27,7 +27,7 @@ import {
 import { EDC, PlayerMetadata } from './metadata';
 import Player from './player';
 import {
-    fTime,
+    formatTime,
     opacityInvisible,
     opacityVisible,
     randomStr,
@@ -134,7 +134,7 @@ function initDanmaku(stage: HTMLElement, url: string, onload: () => void) {
 }
 
 function hasDanmaku(p: Player) {
-    return p.danmakuUrl ? true : false;
+    return p.resources.danmaku ? true : false;
 }
 
 function initSubtitle(
@@ -155,7 +155,7 @@ function initSubtitle(
 }
 
 function hasSubtitle(p: Player) {
-    return p.subtitleUrl ? true : false;
+    return p.resources.subtitle ? true : false;
 }
 
 // ====================================================================== //
@@ -226,7 +226,7 @@ const progressBar = new EDC('input', 'progress')
             P.data.progressInputting = true;
             const value = E.valueAsNumber;
             const popup = P.elements.progressPopup;
-            popup.textContent = fTime(P.video.duration * value);
+            popup.textContent = formatTime(P.video.duration * value);
             popup.style.left = `calc(${value * 100}% + (${
                 8 - value * 100 * 0.15
             }px))`;
@@ -255,25 +255,25 @@ const timeInput = new EDC('input', 'timeInput')
             if (E.validity.valid) {
                 P.seek(timeToSeconds(E.value));
             } else {
-                E.value = fTime(P.video.currentTime, true);
+                E.value = formatTime(P.video.currentTime, true);
             }
         },
     })
     .videoEvents({
         canplay: (P, E, V) => {
-            E.value = P.fCurrentTime(true);
-            E.max = fTime(V.duration, true);
+            E.value = P.currentTime(true);
+            E.max = formatTime(V.duration, true);
         },
         timeupdate: (P, E, V) => {
-            E.value = P.fCurrentTime(true);
+            E.value = P.currentTime(true);
         },
     });
 
 const timeCurrent = new EDC('span', 'timeCurrent') //
     .html('--:--')
     .videoEvents({
-        canplay: (P, E, V) => (E.textContent = P.fCurrentTime()),
-        timeupdate: (P, E, V) => (E.textContent = P.fCurrentTime()),
+        canplay: (P, E, V) => (E.textContent = P.currentTime()),
+        timeupdate: (P, E, V) => (E.textContent = P.currentTime()),
     });
 
 const timeTotal = new EDC('span')
@@ -283,7 +283,7 @@ const timeTotal = new EDC('span')
             toggleDisplay(P.elements.timeInput, P.elements.timeCurrent),
     })
     .videoEvents({
-        canplay: (_, E, V) => (E.textContent = fTime(V.duration)),
+        canplay: (_, E, V) => (E.textContent = formatTime(V.duration)),
     });
 
 const playbackRate = new EDC('select', 'playbackRate') //
@@ -409,7 +409,7 @@ const danmakuList = new EDC('div', 'danmakuList')
                     let html = '';
                     for (const data of timeline) {
                         html += // for performance, do not use document.createElement
-                            `<li><span>${fTime(
+                            `<li><span>${formatTime(
                                 data.stime / 1e3,
                                 overHour
                             )}</span>` +
@@ -425,7 +425,7 @@ const subtitleStage = new EDC('div', 'subtitleStage')
     .condition(hasSubtitle)
     .selfEvents({
         create: (P, E) => {
-            P.subtitleManager = initSubtitle(E, P.video, P.subtitleUrl);
+            P.subtitleManager = initSubtitle(E, P.video, P.resources.subtitle);
             P.firePlayerEvent('subtitleload');
             P.data.subtitleOn = true;
             P.setData('subtitleOn', true);
@@ -440,7 +440,7 @@ const danmakuStage = new EDC('div', 'danmakuStage')
     .condition(hasDanmaku)
     .selfEvents({
         create: (P, E) => {
-            P.commentManager = initDanmaku(E, P.danmakuUrl, () =>
+            P.commentManager = initDanmaku(E, P.resources.danmaku, () =>
                 P.firePlayerEvent('danmakuload')
             );
             if (P.options.danmakuSizeOffset) {
@@ -526,7 +526,7 @@ const hotkeys = (P: Player, T: KeyboardEvent) => {
                         ],
                         [
                             'Time',
-                            `${P.fCurrentTime()} / ${fTime(
+                            `${P.currentTime()} / ${formatTime(
                                 P.video.duration
                             )} (${P.video.playbackRate.toFixed(2)}x)`,
                         ],
@@ -540,7 +540,7 @@ const hotkeys = (P: Player, T: KeyboardEvent) => {
                 break;
             case 81: // Q
                 console.log(P.video.currentTime);
-                P.toast(`Time: ${P.fCurrentTime()} (${P.video.currentTime})`);
+                P.toast(`Time: ${P.currentTime()} (${P.video.currentTime})`);
                 break;
             default:
                 break;
