@@ -21,7 +21,14 @@
 import ASS from 'assjs';
 import { CommentManager } from '../lib/CommentCoreLibrary';
 import { bindMetaEvent, PlayerMetadata } from './metadata';
-import { appendChild, clamp, fTime, StrAnyKV, StrGenKV } from './utils';
+import {
+    appendChild,
+    clamp,
+    fTime,
+    StrAnyKV,
+    StrGenKV,
+    toggleClass,
+} from './utils';
 
 interface PlayerOptions extends StrAnyKV {
     autoPlay?: boolean;
@@ -82,7 +89,9 @@ export default class Player {
         {
             this.options.autoPlay ? this.play() : this.pause();
             this.options.muted ? this.mute() : this.unmute();
-            this.options.fullscreen ? this.requestFullscreen() : this.setContainerData('fullscreen', false);
+            this.options.fullscreen
+                ? this.requestFullscreen()
+                : this.setContainerData('fullscreen', false);
         }
         this.#constructed = true;
         if (this.options.autoPlay) {
@@ -103,13 +112,20 @@ export default class Player {
             this.#overHour = this.video.duration >= 60 * 60;
         });
         this.onVideoEvent('canplay', () => this.focus());
-        this.onVideoEvent('play', () => this.setContainerData('paused', this.video.paused));
-        this.onVideoEvent('pause', () => this.setContainerData('paused', this.video.paused));
-        this.onVideoEvent('volumechange', () => this.setContainerData('muted', this.video.muted));
+        this.onVideoEvent('play', () =>
+            this.setContainerData('paused', this.video.paused)
+        );
+        this.onVideoEvent('pause', () =>
+            this.setContainerData('paused', this.video.paused)
+        );
+        this.onVideoEvent('volumechange', () =>
+            this.setContainerData('muted', this.video.muted)
+        );
         this.onPlayerEvent('fullscreenchange', () => {
             const fullscreen = document.fullscreenElement === this.container;
             this.setContainerData('fullscreen', fullscreen ? true : false);
             this.firePlayerEvent(fullscreen ? 'fullscreen' : 'fullscreenexit');
+            toggleClass(this.container, 'fullscreen', fullscreen);
         });
         new ResizeObserver(() => {
             this.video.dispatchEvent(
@@ -146,7 +162,9 @@ export default class Player {
     }
 
     firePlayerEvent(type: string, detail?: any) {
-        this.container.dispatchEvent(new CustomEvent(type, detail ? { detail: detail } : null));
+        this.container.dispatchEvent(
+            new CustomEvent(type, detail ? { detail: detail } : null)
+        );
     }
 
     toast(html: string) {
@@ -156,12 +174,19 @@ export default class Player {
     }
 
     fCurrentTime(alwaysHour?: boolean) {
-        return fTime(this.video.currentTime, alwaysHour === undefined ? this.#overHour : alwaysHour);
+        return fTime(
+            this.video.currentTime,
+            alwaysHour === undefined ? this.#overHour : alwaysHour
+        );
     }
 
     seek(time: number) {
         const fixedTime = clamp(time, 0, this.video.duration);
-        this.toast(`Seek: ${fTime(fixedTime, this.#overHour)} / ${fTime(this.video.duration)}`);
+        this.toast(
+            `Seek: ${fTime(fixedTime, this.#overHour)} / ${fTime(
+                this.video.duration
+            )}`
+        );
         this.video.currentTime = fixedTime;
     }
 

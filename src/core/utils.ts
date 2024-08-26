@@ -32,18 +32,27 @@ export interface StrKV {
 
 export type AnyFunction = (...args: any[]) => any;
 
-export type AppendArguments<F extends AnyFunction, A extends any[]> = F extends (...arg: [...infer P]) => infer R
+export type AppendArguments<
+    F extends AnyFunction,
+    A extends any[]
+> = F extends (...arg: [...infer P]) => infer R
     ? (...args: [...P, ...A]) => R
     : never;
 
-export type PrependArguments<F extends AnyFunction, A extends any[]> = F extends (...arg: [...infer P]) => infer R
+export type PrependArguments<
+    F extends AnyFunction,
+    A extends any[]
+> = F extends (...arg: [...infer P]) => infer R
     ? (...args: [...A, ...P]) => R
     : never;
 
 export type ExtendedHTMLEventMap = StrAnyKV & HTMLElementEventMap;
 
 export type EventListenerMap<F extends AnyFunction> = {
-    [key in keyof ExtendedHTMLEventMap]?: AppendArguments<F, [ExtendedHTMLEventMap[key]]>;
+    [key in keyof ExtendedHTMLEventMap]?: AppendArguments<
+        F,
+        [ExtendedHTMLEventMap[key]]
+    >;
 };
 
 export type HTMLTagNames = keyof HTMLElementTagNameMap;
@@ -88,6 +97,18 @@ export function addClass(element: HTMLElement, clazz: string) {
 
 export function removeClass(element: HTMLElement, clazz: string) {
     element.classList.remove(clazz);
+}
+
+export function toggleClass(
+    element: HTMLElement,
+    clazz: string,
+    bool: boolean
+) {
+    if (bool) {
+        addClass(element, clazz);
+    } else {
+        removeClass(element, clazz);
+    }
 }
 
 export function toggleDisplayBi(display: HTMLElement, hide: HTMLElement) {
@@ -138,7 +159,11 @@ export function randomStr() {
     return Math.random().toString(36).slice(-8);
 }
 
-export function bindEvents<F extends AnyFunction>(target: HTMLElement, listeners: EventListenerMap<F>, params: any[]) {
+export function bindEvents<F extends AnyFunction>(
+    target: HTMLElement,
+    listeners: EventListenerMap<F>,
+    params: any[]
+) {
     for (const [type, listener] of Object.entries(listeners)) {
         target.addEventListener(type, (event) => listener(...params, event));
     }
