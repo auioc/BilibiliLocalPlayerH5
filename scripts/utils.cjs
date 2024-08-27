@@ -12,8 +12,10 @@ const version = () => {
         commit: commitHash(),
         dirty: isDirty(),
         text: '',
+        textShort: '',
     };
-    r.text = `${r.branch}@${r.commit.slice(0, 8)}${r.dirty ? '(dirty)' : ''}`;
+    r.text = `${r.branch}@${r.commit}${r.dirty ? '(dirty)' : ''}`;
+    r.textShort = `${r.branch}@${r.commit.slice(0, 8)}${r.dirty ? '*' : ''}`;
     return r;
 };
 

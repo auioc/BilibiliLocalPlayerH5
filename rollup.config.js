@@ -31,7 +31,7 @@ export default [
                 include: 'src/core/index.ts',
                 // (!) [plugin replace] @rollup/plugin-replace: 'preventAssignment' currently defaults to false. It is recommended to set this option to `true`, as the next major version will default this option to `true`.
                 preventAssignment: true,
-                values: { _version_: version() },
+                values: { _version_: version().text },
             }),
             ...[dev ? [] : [terser(terserOptions)]],
         ],

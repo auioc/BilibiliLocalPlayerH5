@@ -37,7 +37,7 @@ const setVersion = () => {
         ?.setAttribute('href', github)
         .removeAttribute('id');
     html.getElementById('version')
-        ?.set_content(v.text)
+        ?.set_content(v.textShort)
         .setAttribute('href', github + (v.dirty ? '' : `/tree/${v.commit}`))
         .removeAttribute('id');
 };
