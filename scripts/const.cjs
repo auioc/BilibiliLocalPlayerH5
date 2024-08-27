@@ -1,10 +1,13 @@
-const { srcPath: src, buildPath: build, publicPath: pub } = require('./utils.cjs');
+const {
+    srcPath: src,
+    buildPath: build,
+    publicPath: pub,
+} = require('./utils.cjs');
 
 const DEV = process.env.NODE_ENV !== 'production';
 
 const inputs = {
     html: src('html/index.html'),
-    style: src('style/player.css'),
 };
 
 const outputs = {
@@ -12,15 +15,11 @@ const outputs = {
         dev: pub('index.html'),
         prod: build('index.html'),
     },
-    style: {
-        dev: pub('player.css'),
-        prod: build('assets/player.min.css'),
-    },
 };
 
 const styles = {
     player: [
-        '../src/style/player.css', //
+        'player.css', //
         'assets/player.min.css',
     ],
     ccl: [
