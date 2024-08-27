@@ -444,9 +444,10 @@ const danmakuStage = new EDC('div', 'danmakuStage')
     .condition(hasDanmaku)
     .selfEvents({
         create: (P, E) => {
-            P.commentManager = initDanmaku(E, P.resources.danmaku, () =>
-                P.firePlayerEvent('danmakuload')
-            );
+            P.commentManager = initDanmaku(E, P.resources.danmaku, () => {
+                P.elements.overlays.classList.add('abp');
+                P.firePlayerEvent('danmakuload');
+            });
             if (P.options.danmakuSizeOffset) {
                 P.commentManager.filter.addModifier(function (commentData) {
                     const override = commentData;
@@ -582,7 +583,6 @@ export const playerMetadata = {
                             .children(progressBar, progressPopup),
                         new EDC('div') //
                             .class('time-label')
-
                             .children(
                                 timeInput,
                                 timeCurrent,
@@ -604,8 +604,8 @@ export const playerMetadata = {
                     )
             ),
         danmakuList,
-        new EDC('div')
-            .class('overlays abp')
+        new EDC('div', 'overlays')
+            .class('overlays')
             .selfEvents({
                 click: (P) => P.togglePlay(),
             })
