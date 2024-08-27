@@ -18,7 +18,7 @@ tr > td:nth-child(1) {
 th {
     padding: 0.5em;
 
-    & > div {
+    & > div * {
         font-weight: lighter;
         font-size: smaller;
         color: var(--border-color);

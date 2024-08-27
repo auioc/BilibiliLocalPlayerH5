@@ -1,4 +1,11 @@
-const { DEV, inputs, outputs, styles, scripts } = require('./const.cjs');
+const {
+    DEV,
+    github,
+    inputs,
+    outputs,
+    styles,
+    scripts,
+} = require('./const.cjs');
 const HTMLParser = require('node-html-parser');
 const { minify } = require('html-minifier-terser');
 const { html: terserOptions } = require('./terser.config.cjs');
@@ -14,12 +21,27 @@ const html = HTMLParser.parse(
 
 const i = DEV ? 0 : 1;
 const setCss = (id, /** @type {keyof styles} */ type) =>
-    html.getElementById(id)?.setAttribute('href', styles[type][i]).removeAttribute('id');
+    html
+        .getElementById(id)
+        ?.setAttribute('href', styles[type][i])
+        .removeAttribute('id');
 const setScript = (id, /** @type {keyof scripts} */ type) =>
-    html.getElementById(id)?.setAttribute('src', scripts[type][i]).removeAttribute('id');
-const setVersion = (version) => html.getElementById('version')?.set_content(version).removeAttribute('id');
+    html
+        .getElementById(id)
+        ?.setAttribute('src', scripts[type][i])
+        .removeAttribute('id');
 
-setVersion(version(true));
+const setVersion = () => {
+    const v = version();
+    html.getElementById('github')
+        ?.setAttribute('href', github)
+        .removeAttribute('id');
+    html.getElementById('version')
+        ?.set_content(v.text)
+        .setAttribute('href', github + (v.dirty ? '' : `/tree/${v.commit}`))
+        .removeAttribute('id');
+};
+setVersion();
 
 setCss('css-player', 'player');
 setCss('css-ccl', 'ccl');

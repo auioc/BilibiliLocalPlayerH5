@@ -6,6 +6,8 @@ const {
 
 const DEV = process.env.NODE_ENV !== 'production';
 
+const github = 'https://github.com/auioc/BilibiliLocalPlayerH5';
+
 const inputs = {
     html: src('html/index.html'),
 };
@@ -43,4 +45,4 @@ const scripts = {
     ],
 };
 
-module.exports = { DEV, inputs, outputs, styles, scripts };
+module.exports = { DEV, github, inputs, outputs, styles, scripts };
