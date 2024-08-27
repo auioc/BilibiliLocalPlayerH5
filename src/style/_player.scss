@@ -35,7 +35,7 @@ video {
     }
 }
 
-&.fullscreen .controls {
+&.fullscreen .controls-wrapper .controls {
     padding: 2px 4px;
 }
 
@@ -91,6 +91,7 @@ video {
             .time-input {
                 font-family: auto;
                 font-size: inherit;
+                color: var(--fg-color);
                 padding: 0;
                 cursor: text;
                 border: none;
