@@ -36,7 +36,7 @@ video {
 }
 
 &.fullscreen .controls-wrapper .controls {
-    padding: 2px 4px;
+    padding: 3px 4px;
 }
 
 .controls-wrapper {
@@ -51,11 +51,33 @@ video {
         display: flex;
         align-items: center;
         gap: 4px;
-        padding: 2px 4px 4px 4px;
+        padding: 3px 4px 5px 4px;
         border-width: 1px 0 0 0 !important;
 
-        button.play-toggle {
-            padding: 2px 5px;
+        input,
+        select,
+        button {
+            color: var(--fg-color);
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 2px;
+            vertical-align: middle;
+            box-sizing: border-box;
+            height: 22px;
+        }
+
+        button {
+            padding: 2px 6px;
+        }
+
+        input,
+        select {
+            padding: 1px 4px;
+        }
+
+        input[type='number']::-webkit-inner-spin-button,
+        input[type='number']::-webkit-outer-spin-button {
+            opacity: 1;
         }
 
         .volume-wrapper {
@@ -64,7 +86,7 @@ video {
             height: 22px;
 
             .volume {
-                max-width: 3em;
+                max-width: 3.6em;
             }
         }
 
@@ -76,6 +98,7 @@ video {
 
             .progress {
                 width: 100%;
+                height: auto;
             }
 
             .progress-popup {
@@ -170,9 +193,4 @@ video {
             }
         }
     }
-}
-
-input[type='number']::-webkit-inner-spin-button,
-input[type='number']::-webkit-outer-spin-button {
-    opacity: 1;
 }
