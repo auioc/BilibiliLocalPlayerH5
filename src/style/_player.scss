@@ -109,16 +109,14 @@ video {
         }
 
         .time-label {
-            line-height: 0;
-
             .time-input {
+                height: auto;
                 font-family: auto;
                 font-size: inherit;
-                color: var(--fg-color);
                 padding: 0;
                 cursor: text;
                 border: none;
-                background-color: var(--bg-color);
+                vertical-align: baseline;
 
                 &::-webkit-datetime-edit {
                     display: contents;
@@ -132,6 +130,11 @@ video {
                 &::-webkit-datetime-edit-second-field {
                     padding: 0;
                 }
+            }
+
+            & > span {
+                display: inline-block;
+                vertical-align: bottom;
             }
         }
 
