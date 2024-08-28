@@ -9,3 +9,5 @@ src/lib/*
 
 public
 build
+
+rollup.config-*.cjs
