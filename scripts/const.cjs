@@ -1,10 +1,9 @@
 const {
+    DEV,
     srcPath: src,
     buildPath: build,
     publicPath: pub,
 } = require('./utils.cjs');
-
-const DEV = process.env.NODE_ENV !== 'production';
 
 const github = 'https://github.com/auioc/BilibiliLocalPlayerH5';
 

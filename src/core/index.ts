@@ -18,6 +18,7 @@ declare global {
  * current version text during build.
  * Do not modify it!
  **/
-const version = '_version_';
+// @ts-expect-error
+const version = _version_;
 
 export { Player, playerMetadata, version };

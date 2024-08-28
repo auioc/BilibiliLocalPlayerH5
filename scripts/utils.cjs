@@ -2,6 +2,8 @@ const path = require('path');
 const fs = require('fs');
 const _execSync = require('child_process').execSync;
 
+const DEV = process.env.NODE_ENV !== 'production';
+
 const execSync = (cmd) => _execSync(cmd).toString().trim();
 const commitHash = () => execSync('git rev-parse --verify HEAD');
 const branch = () => execSync('git branch --show-current');
@@ -11,11 +13,16 @@ const version = () => {
         branch: branch(),
         commit: commitHash(),
         dirty: isDirty(),
+        dev: DEV,
         text: '',
-        textShort: '',
     };
-    r.text = `${r.branch}@${r.commit}${r.dirty ? '(dirty)' : ''}`;
-    r.textShort = `${r.branch}@${r.commit.slice(0, 8)}${r.dirty ? '*' : ''}`;
+    r.text = `${r.branch}@${r.commit.slice(0, 8)}`;
+    if (r.dirty) {
+        r.text += '*';
+    }
+    if (DEV) {
+        r.text += '(dev)';
+    }
     return r;
 };
 
@@ -33,6 +40,7 @@ function readFile(file) {
 }
 
 module.exports = {
+    DEV,
     version,
     srcPath,
     buildPath,
