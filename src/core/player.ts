@@ -57,6 +57,7 @@ export default class Player {
     readonly container: HTMLDivElement;
     readonly elements: StrGenKV<HTMLElement> = {};
     readonly data: PlayerData = {};
+    readonly ready: boolean = false;
     commentManager: CommentManager;
     subtitleManager: ASS;
 
@@ -100,10 +101,8 @@ export default class Player {
                 ? this.requestFullscreen()
                 : this.setData('fullscreen', false);
         }
-        if (this.options.autoPlay) {
-            this.toast('Autoplay');
-        }
         this.focus();
+        this.ready = true;
     }
 
     #bindElements() {
@@ -182,7 +181,9 @@ export default class Player {
     }
 
     toast(html: string) {
-        this.firePlayerEvent('toast', { content: html });
+        if (this.ready) {
+            this.firePlayerEvent('toast', { content: html });
+        }
     }
 
     /**
