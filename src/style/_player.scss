@@ -64,6 +64,10 @@ video {
             vertical-align: middle;
             box-sizing: border-box;
             height: 22px;
+
+            &:disabled {
+                filter: opacity(0.6);
+            }
         }
 
         button {
