@@ -27,6 +27,7 @@ import {
 import { EDC, PlayerMetadata } from './metadata';
 import Player from './player';
 import {
+    calcVideoRenderedSize,
     formatTime,
     opacityInvisible,
     opacityVisible,
@@ -448,26 +449,26 @@ const danmakuStage = new EDC('div', 'danmakuStage')
                 P.elements.overlays.classList.add('abp');
                 P.firePlayerEvent('danmakuload');
             });
-            if (P.options.danmakuSizeOffset) {
-                P.commentManager.filter.addModifier(function (commentData) {
-                    const override = commentData;
-                    const size = commentData['size'];
-                    let sizeBak = commentData['sizeBackup'];
-                    if (
-                        size &&
-                        override['sizeFlag'] != P.data.danmakuSizeFlag
-                    ) {
-                        if (!sizeBak) {
-                            override['sizeBackup'] = size;
-                            sizeBak = size;
-                        }
-                        override['size'] =
-                            sizeBak + P.options.danmakuSizeOffset;
-                        override['sizeFlag'] = P.data.danmakuSizeFlag;
-                    }
-                    return override;
-                });
+
+            if (P.options.danmakuStageAbsoluteSize === undefined) {
+                P.options.danmakuStageAbsoluteSize = true;
             }
+
+            P.commentManager.filter.addModifier((data) => {
+                const override = data;
+                const size = data['size'];
+                let sizeBak = data['sizeBackup'];
+                if (size && override['sizeFlag'] != P.data.danmakuSizeFlag) {
+                    if (!sizeBak) {
+                        override['sizeBackup'] = size;
+                        sizeBak = size;
+                    }
+                    override['size'] = sizeBak + P.options.danmakuSizeOffset;
+                    override['sizeFlag'] = P.data.danmakuSizeFlag;
+                }
+                return override;
+            });
+
             P.setData('danmakuOn', true);
             if (!P.options.danmakuTimeOffset) P.options.danmakuTimeOffset = 0;
         },
@@ -487,7 +488,12 @@ const danmakuStage = new EDC('div', 'danmakuStage')
         },
         play: (P) => P.commentManager.start(),
         pause: (P) => P.commentManager.stop(),
-        resize: (P, _, V) => {
+        resize: (P, E, V) => {
+            if (P.options.danmakuStageAbsoluteSize) {
+                const d = calcVideoRenderedSize(V);
+                E.style.width = d[0] + 'px';
+                E.style.height = d[1] + 'px';
+            }
             const cm = P.commentManager;
             cm.clear();
             cm.setBounds();

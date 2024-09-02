@@ -19,11 +19,8 @@ video {
 }
 
 .overlays {
-    position: fixed !important;
-    bottom: 0;
-    top: 0;
-    left: 0;
-    right: 0;
+    height: 100%;
+    width: 100%;
 }
 
 .box {
@@ -164,6 +161,11 @@ video {
     top: 4px;
     left: 6px;
     z-index: 999999;
+}
+
+.danmaku-stage {
+    position: absolute;
+    margin: auto !important;
 }
 
 .danmaku-list {
