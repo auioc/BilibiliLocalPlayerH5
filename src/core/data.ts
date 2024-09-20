@@ -306,7 +306,9 @@ const playbackRate = new EDC('select', 'playbackRate') //
     .children(
         option('2.0'), //
         option('1.5'),
+        option('1.25'),
         option('1.0', '1.0', true),
+        option('0.75'),
         option('0.5')
     );
 
