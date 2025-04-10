@@ -1,9 +1,12 @@
 const {
     DEV,
+    version,
     srcPath: src,
     buildPath: build,
     publicPath: pub,
 } = require('./utils.cjs');
+
+const hash = version().commit.slice(0, 8);
 
 const github = 'https://github.com/auioc/BilibiliLocalPlayerH5';
 
@@ -16,12 +19,16 @@ const outputs = {
         dev: pub('index.html'),
         prod: build('index.html'),
     },
+    style: {
+        dev: pub('player.css'),
+        prod: build(`assets/player.${hash}.min.css`),
+    },
 };
 
 const styles = {
     player: [
         'player.css', //
-        'assets/player.min.css',
+        `assets/player.${hash}.min.css`,
     ],
     ccl: [
         '../src/lib/CommentCoreLibrary.css', //
@@ -32,7 +39,7 @@ const styles = {
 const scripts = {
     player: [
         'player.js', //
-        'assets/player.min.js',
+        `assets/player.${hash}.min.js`,
     ],
     ccl: [
         '../src/lib/CommentCoreLibrary.js',

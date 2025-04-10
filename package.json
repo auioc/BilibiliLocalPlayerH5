@@ -10,7 +10,7 @@
         "dev:style": "cross-env NODE_ENV=development sass src/style/main.scss:public/player.css",
         "prod:html": "cross-env NODE_ENV=production node scripts/build-html.cjs",
         "prod:script": "cross-env NODE_ENV=production rollup -c --bundleConfigAsCjs",
-        "prod:style": "cross-env NODE_ENV=production sass --style=compressed --no-source-map src/style/main.scss:build/assets/player.min.css",
+        "prod:style": "cross-env NODE_ENV=production node scripts/build-style.cjs",
         "watch:html": "onchange -i \"src/html/*\" -- pnpm run dev:html",
         "watch:script": "rollup -c rollup.config.js --bundleConfigAsCjs --watch",
         "watch:style": "sass --watch src/style/main.scss:public/player.css",

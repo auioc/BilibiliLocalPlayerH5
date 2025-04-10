@@ -16,7 +16,9 @@ export default [
         external: [ccl, 'assjs'],
         output: [
             {
-                file: dev ? 'public/player.js' : 'build/assets/player.min.js',
+                file: dev
+                    ? 'public/player.js'
+                    : `build/assets/player.${ver.commit.slice(0, 8)}.min.js`,
                 format: 'iife',
                 name: 'player',
                 sourcemap: dev,
