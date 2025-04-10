@@ -28,6 +28,7 @@ import { EDC, PlayerMetadata } from './metadata';
 import Player from './player';
 import {
     calcVideoRenderedSize,
+    formatDate,
     formatTime,
     opacityInvisible,
     opacityVisible,
@@ -414,12 +415,14 @@ const danmakuList = new EDC('div', 'danmakuList')
                         ? timeline[timeline.length - 1].stime >= 36e5
                         : false;
                     let html = '';
-                    for (const data of timeline) {
+                    for (const d of timeline) {
                         html += // for performance, do not use document.createElement
-                            `<tr><td title="${data.stime}">${formatTime(
-                                data.stime / 1000,
+                            `<tr><td title="${d.stime}">${formatTime(
+                                d.stime / 1000,
                                 overHour
-                            )}</td>` + `<td>${data.text}</td></tr>`;
+                            )}</td>` +
+                            `<td>${formatDate(d.date)}</td>` +
+                            `<td>${d.text}</td></tr>`;
                     }
                     E.innerHTML = html;
                 },

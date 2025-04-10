@@ -15,6 +15,7 @@ export interface ICommentData {
     stime: number;
     size: number;
     color: number;
+    date?: number;
 }
 
 export class CommentProvider {
@@ -24,10 +25,31 @@ export class CommentProvider {
     static readonly SOURCE_XML = 'XML';
     static readonly SOURCE_TEXT = 'TEXT';
 
-    static BaseHttpProvider(method: Method, url: string, type: string, args: Object, body: any): Promise<any>;
-    static JSONProvider(method: Method, url: string, args: Object, body: any): Promise<any>;
-    static XMLProvider(method: Method, url: string, args: Object, body: any): Promise<any>;
-    static TextProvider(method: Method, url: string, args: Object, body: any): Promise<any>;
+    static BaseHttpProvider(
+        method: Method,
+        url: string,
+        type: string,
+        args: Object,
+        body: any
+    ): Promise<any>;
+    static JSONProvider(
+        method: Method,
+        url: string,
+        args: Object,
+        body: any
+    ): Promise<any>;
+    static XMLProvider(
+        method: Method,
+        url: string,
+        args: Object,
+        body: any
+    ): Promise<any>;
+    static TextProvider(
+        method: Method,
+        url: string,
+        args: Object,
+        body: any
+    ): Promise<any>;
 
     addStaticSource(source: Promise<any>, type: SourceType): CommentProvider;
     addParser(parser: CommentParser, type: SourceType): CommentProvider;
@@ -57,7 +79,7 @@ interface CommentManagerOptions {
 
 export class CommentManager {
     options: CommentManagerOptions;
-    timeline: any[];
+    timeline: ICommentData[];
     filter: CommentFilter;
     _lastPosition: number;
 
