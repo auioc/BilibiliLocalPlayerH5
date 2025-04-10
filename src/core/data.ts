@@ -406,7 +406,7 @@ const danmakuList = new EDC('div', 'danmakuList')
     .condition(hasDanmaku)
     .class('danmaku-list box hide')
     .children(
-        new EDC('ul') //
+        new EDC('table') //
             .playerEvents({
                 danmakuload: async (P, E) => {
                     const timeline = P.commentManager.timeline;
@@ -416,11 +416,10 @@ const danmakuList = new EDC('div', 'danmakuList')
                     let html = '';
                     for (const data of timeline) {
                         html += // for performance, do not use document.createElement
-                            `<li><span>${formatTime(
-                                data.stime / 1e3,
+                            `<tr><td title="${data.stime}">${formatTime(
+                                data.stime / 1000,
                                 overHour
-                            )}</span>` +
-                            `<span title="${data.text}">${data.text}</span></li>`;
+                            )}</td>` + `<td>${data.text}</td></tr>`;
                     }
                     E.innerHTML = html;
                 },

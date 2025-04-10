@@ -182,25 +182,29 @@ video {
     max-height: 540px;
     z-index: 999990;
 
-    ul {
+    table,
+    tbody {
+        display: block;
         width: 100%;
         height: 100%;
         overflow-y: auto;
+        overflow-x: hidden;
         padding: 0;
         margin: 0;
 
-        li {
+        tr {
+            display: block;
             padding: 4px 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            vertical-align: top;
+            table-layout: fixed;
 
-            & > span:first-child {
-                margin-right: 12px;
-            }
+            td {
+                width: fit-content;
 
-            &::marker {
-                display: none;
+                &:last-child {
+                    padding-left: 12px;
+                    line-break: anywhere;
+                }
             }
         }
     }
