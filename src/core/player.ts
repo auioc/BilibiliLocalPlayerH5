@@ -196,7 +196,13 @@ export default class Player {
         );
     }
 
+    /**
+     * @param time seconds
+     */
     seek(time: number) {
+        if (time < 0) {
+            return;
+        }
         const fixedTime = clamp(time, 0, this.video.duration);
         this.toast(
             `Seek: ${formatTime(fixedTime, this.data.overHour)} / ` +

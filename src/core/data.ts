@@ -417,7 +417,7 @@ const danmakuList = new EDC('div', 'danmakuList')
                     let html = '';
                     for (const d of timeline) {
                         html += // for performance, do not use document.createElement
-                            `<tr><td title="${d.stime}">${formatTime(
+                            `<tr><td data-time="${d.stime}">${formatTime(
                                 d.stime / 1000,
                                 overHour
                             )}</td>` +
@@ -425,6 +425,16 @@ const danmakuList = new EDC('div', 'danmakuList')
                             `<td>${d.text}</td></tr>`;
                     }
                     E.innerHTML = html;
+                },
+            })
+            .selfEvents({
+                click: async (P, E, ev) => {
+                    if (
+                        ev.target instanceof HTMLElement &&
+                        ev.target.dataset.time
+                    ) {
+                        P.seek(parseInt(ev.target.dataset.time) / 1000);
+                    }
                 },
             })
     );
