@@ -79,9 +79,14 @@ interface CommentManagerOptions {
 
 export class CommentManager {
     options: CommentManagerOptions;
+    /** danmaku on stage now */
+    runline: any[];
     timeline: ICommentData[];
     filter: CommentFilter;
+    /** time (ms) */
     _lastPosition: number;
+    /** danmaku index in `timeline` */
+    position: number;
 
     constructor(stage: HTMLElement);
 

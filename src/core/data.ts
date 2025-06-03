@@ -528,6 +528,13 @@ function infoToast(P: Player) {
             )} (${P.video.playbackRate.toFixed(2)}x)`,
         ],
     ];
+    if (P.data.danmakuOn) {
+        const cm = P.commentManager;
+        lines.push([
+            'Danmaku',
+            `${cm.position} / ${cm.timeline.length} (${cm.runline.length} on stage)`,
+        ]);
+    }
     return (
         '<table>' +
         lines //
