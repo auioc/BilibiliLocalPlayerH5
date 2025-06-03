@@ -461,6 +461,7 @@ const danmakuStage = new EDC('div', 'danmakuStage')
         create: (P, E) => {
             P.commentManager = initDanmaku(E, P.resources.danmaku, () => {
                 P.elements.overlays.classList.add('abp');
+                P.setData('danmakuOn', true);
                 P.firePlayerEvent('danmakuload');
             });
 
@@ -483,7 +484,6 @@ const danmakuStage = new EDC('div', 'danmakuStage')
                 return override;
             });
 
-            P.setData('danmakuOn', true);
             if (!P.options.danmakuTimeOffset) P.options.danmakuTimeOffset = 0;
         },
     })
