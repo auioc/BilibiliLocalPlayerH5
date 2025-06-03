@@ -517,6 +517,26 @@ const danmakuStage = new EDC('div', 'danmakuStage')
 
 // ====================================================================== //
 
+function infoToast(P: Player) {
+    const lines = [
+        ['LocalTime', new Date().toLocaleString()],
+        ['File', `${P.title} @ ${P.video.videoWidth}x${P.video.videoHeight}`],
+        [
+            'Time',
+            `${P.currentTime()} / ${formatTime(
+                P.video.duration
+            )} (${P.video.playbackRate.toFixed(2)}x)`,
+        ],
+    ];
+    return (
+        '<table>' +
+        lines //
+            .map(([l, t]) => `<tr><th>${l}</th><td>${t}</td></tr>`)
+            .join('') +
+        '</table>'
+    );
+}
+
 const hotkeys = (P: Player, T: KeyboardEvent) => {
     if (T.target === P.container) {
         switch (T.keyCode) {
@@ -542,23 +562,7 @@ const hotkeys = (P: Player, T: KeyboardEvent) => {
                 P.skip(T.ctrlKey ? 10 : T.shiftKey ? 1 : 5);
                 break;
             case 73: // I
-                P.toast(
-                    [
-                        ['LocalTime', new Date().toLocaleString()],
-                        [
-                            'File',
-                            `${P.title} @ ${P.video.videoWidth}x${P.video.videoHeight}`,
-                        ],
-                        [
-                            'Time',
-                            `${P.currentTime()} / ${formatTime(
-                                P.video.duration
-                            )} (${P.video.playbackRate.toFixed(2)}x)`,
-                        ],
-                    ]
-                        .map(([l, t]) => `<b>${l}: </b>${t}`)
-                        .join('<br/>')
-                );
+                P.toast(infoToast(P));
                 break;
             case 68: // D
                 if (P.elements.danmakuToggle) P.elements.danmakuToggle.click();
