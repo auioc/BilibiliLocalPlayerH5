@@ -531,7 +531,12 @@ function infoToast(P: Player) {
     return (
         '<table>' +
         lines //
-            .map(([l, t]) => `<tr><th>${l}</th><td>${t}</td></tr>`)
+            .map(
+                ([l, t]) =>
+                    `<tr><th>${l}</th><td ${
+                        /^[『「【]/.test(t) ? 'class="fw-indent"' : ''
+                    }>${t}</td></tr>`
+            )
             .join('') +
         '</table>'
     );
