@@ -159,7 +159,7 @@ video {
 .toast {
     position: absolute;
     padding: 2px 4px;
-    margin: 4px 6px;
+    margin: 6px 6.5px;
     width: fit-content;
     top: 0;
     left: 0;
@@ -168,10 +168,15 @@ video {
 
     & > table {
         text-align: left;
+        line-height: 1.2em;
 
         th {
             vertical-align: top;
             padding-right: 0.5em;
+        }
+
+        td {
+            vertical-align: top;
         }
     }
 }
