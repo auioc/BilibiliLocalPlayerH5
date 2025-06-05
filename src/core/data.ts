@@ -185,10 +185,14 @@ const toastBox = new EDC('div') //
     })
     .selfEvents({
         mouseenter: (_, E, T) => {
-            toggleClass(E, 'peek', true);
+            if (T.ctrlKey) {
+                toggleClass(E, 'peek', true);
+            }
         },
         mouseleave: (_, E, T) => {
-            toggleClass(E, 'peek', false);
+            if (!T.ctrlKey) {
+                toggleClass(E, 'peek', false);
+            }
         },
     });
 
