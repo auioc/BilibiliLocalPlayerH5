@@ -35,6 +35,7 @@ import {
     randomStr,
     spans,
     timeToSeconds,
+    toggleClass,
     toggleDisplay,
     toggleDisplayBi,
 } from './utils';
@@ -180,6 +181,14 @@ const toastBox = new EDC('div') //
             } else {
                 opacityInvisible(E);
             }
+        },
+    })
+    .selfEvents({
+        mouseenter: (_, E, T) => {
+            toggleClass(E, 'peek', true);
+        },
+        mouseleave: (_, E, T) => {
+            toggleClass(E, 'peek', false);
         },
     });
 
