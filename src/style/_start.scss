@@ -6,7 +6,6 @@
 &,
 tr,
 td {
-    border: 1px solid;
     border-collapse: collapse;
     padding: 4px 6px;
 }
@@ -15,10 +14,16 @@ tr > td:nth-child(1) {
     text-wrap: nowrap;
 }
 
+tbody {
+    display: block;
+    padding: 2px 8px;
+    border: 1px solid;
+}
+
 th {
     padding: 0.5em;
 
-    & > div * {
+    * {
         font-weight: lighter;
         font-size: smaller;
         color: var(--border-color);
