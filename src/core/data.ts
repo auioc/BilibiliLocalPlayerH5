@@ -166,10 +166,20 @@ const toastBox = new EDC('div') //
     .class('toast box visibility-transition invisible')
     .playerEvents({
         toast: (P, E, T: CustomEvent) => {
-            E.innerHTML = T.detail.content;
-            opacityVisible(E);
-            clearTimeout(P.data.toastTimer);
-            P.data.toastTimer = setTimeout(() => opacityInvisible(E), 800);
+            const { content, duration } = T.detail;
+            if (content) {
+                E.innerHTML = content;
+                opacityVisible(E);
+                clearTimeout(P.data.toastTimer);
+                if (duration > 0) {
+                    P.data.toastTimer = setTimeout(
+                        () => opacityInvisible(E),
+                        duration
+                    );
+                }
+            } else {
+                opacityInvisible(E);
+            }
         },
     });
 
@@ -574,7 +584,21 @@ const hotkeys = (P: Player, T: KeyboardEvent) => {
                 P.skip(T.ctrlKey ? 10 : T.shiftKey ? 1 : 5);
                 break;
             case 73: // I
-                P.toast(infoToast(P));
+                if (T.ctrlKey) {
+                    if (!P.data.infoOn) {
+                        P.setData('infoOn', true);
+                        P.toast(infoToast(P), -1);
+                        P.data.infoTimer = setInterval(() => {
+                            P.toast(infoToast(P), -1);
+                        }, 500);
+                    } else {
+                        P.setData('infoOn', false);
+                        clearInterval(P.data.infoTimer);
+                        P.toast();
+                    }
+                } else {
+                    P.toast(infoToast(P));
+                }
                 break;
             case 68: // D
                 if (P.elements.danmakuToggle) P.elements.danmakuToggle.click();

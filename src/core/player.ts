@@ -180,9 +180,9 @@ export default class Player {
         );
     }
 
-    toast(html: string) {
+    toast(html: string = null, duration = 800) {
         if (this.ready) {
-            this.firePlayerEvent('toast', { content: html });
+            this.firePlayerEvent('toast', { content: html, duration });
         }
     }
 
