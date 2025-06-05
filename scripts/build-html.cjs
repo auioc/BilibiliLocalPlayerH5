@@ -1,6 +1,7 @@
 const {
     DEV,
     github,
+    license,
     inputs,
     outputs,
     styles,
@@ -35,6 +36,13 @@ const setVersion = () => {
     const v = version();
     html.getElementById('github')
         ?.setAttribute('href', github)
+        .removeAttribute('id');
+    html.getElementById('license')
+        ?.setAttribute('href', github + '/blob/main/LICENSE')
+        .set_content(license)
+        .removeAttribute('id');
+    html.getElementById('year')
+        .set_content('' + new Date().getFullYear())
         .removeAttribute('id');
     html.getElementById('version')
         ?.set_content(v.text)

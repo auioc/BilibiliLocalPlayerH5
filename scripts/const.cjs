@@ -9,6 +9,7 @@ const {
 const hash = version().commit.slice(0, 8);
 
 const github = 'https://github.com/auioc/BilibiliLocalPlayerH5';
+const license = 'AGPL-3.0';
 
 const inputs = {
     html: src('html/index.html'),
@@ -51,4 +52,4 @@ const scripts = {
     ],
 };
 
-module.exports = { DEV, github, inputs, outputs, styles, scripts };
+module.exports = { DEV, github, license, inputs, outputs, styles, scripts };
