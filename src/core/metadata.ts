@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2024 AUIOC.ORG
+ * Copyright (C) 2022-2025 AUIOC.ORG
  * Copyright (C) 2018-2022 PCC-Studio
  *
  * This file is part of BilibiliLocalPlayerH5.
@@ -19,20 +19,37 @@
  */
 
 import Player from './player';
-import { AnyFunction, EventListenerMap, HTMLTagNames, StrKV, appendChild, bindEvents } from './utils';
+import {
+    AnyFunction,
+    EventListenerMap,
+    HTMLTagNames,
+    StrKV,
+    appendChild,
+    bindEvents,
+} from './utils';
 
 type MetaEventTypes = 'selfEvent' | 'playerEvent' | 'videoEvent';
 
-type MetaEvents<F extends AnyFunction> = EventListenerMap<F> | (() => EventListenerMap<F>);
+type MetaEvents<F extends AnyFunction> =
+    | EventListenerMap<F>
+    | (() => EventListenerMap<F>);
 
 type ElementMetaEvents<T extends HTMLTagNames> = MetaEvents<
     (player: Player, element: HTMLElementTagNameMap[T]) => void
 >;
 type ElementVideoMetaEvents<T extends HTMLTagNames> = MetaEvents<
-    (player: Player, element: HTMLElementTagNameMap[T], video: HTMLVideoElement) => void
+    (
+        player: Player,
+        element: HTMLElementTagNameMap[T],
+        video: HTMLVideoElement
+    ) => void
 >;
 
-export function bindMetaEvent<F extends AnyFunction>(target: HTMLElement, listeners: MetaEvents<F>, ...params: any[]) {
+export function bindMetaEvent<F extends AnyFunction>(
+    target: HTMLElement,
+    listeners: MetaEvents<F>,
+    ...params: any[]
+) {
     const l = typeof listeners === 'function' ? listeners() : listeners;
     if (l) {
         bindEvents(target, l, params);
@@ -122,7 +139,13 @@ export class EDC<T extends HTMLTagNames> {
         }
         bindMetaEvent(element, this.#selfEvents, player, element);
         bindMetaEvent(player.container, this.#playerEvents, player, element);
-        bindMetaEvent(player.video, this.#videoEvent, player, element, player.video);
+        bindMetaEvent(
+            player.video,
+            this.#videoEvent,
+            player,
+            element,
+            player.video
+        );
         for (const childBulder of this.#childrenBuilders) {
             appendChild(element, childBulder.create(player));
         }
