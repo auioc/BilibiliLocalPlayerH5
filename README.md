@@ -38,6 +38,19 @@
 
 [^1]: <https://github.com/jabbany/CommentCoreLibrary/issues/94>
 
+### 输出
+
+| 脚本                         | 输出                                            |
+| ---------------------------- | ----------------------------------------------- |
+| `dev:html`(`watch:html`)     | `public/index.html`                             |
+| `dev:script`(`watch:script`) | `public/player.js`<br/>`public/player.js.map`   |
+| `dev:style`(`watch:style`)   | `public/player.css`<br/>`public/player.css.map` |
+| `build:dev`(`watch`)         | ( ↑3 )                                          |
+| `prod:html`                  | `build/index.html`                              |
+| `prod:script`                | `build/assets/player.<shorthash>.min.js`        |
+| `prod:style`                 | `build/assets/player.<shorthash>.min.css`       |
+| `build`                      | ( ↑3 )                                          |
+
 ## 致谢
 
 - [PCC-Studio](https://www.pccstudio.com)：编写原始项目

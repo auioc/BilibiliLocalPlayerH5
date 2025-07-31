@@ -1,0 +1,9 @@
+{
+    "conventionalCommits.scopes": ["player", "start"],
+    "cSpell.words": ["assjs", "danmaku", "danmakuload"],
+    "markdownlint.config": {
+        "MD033": {
+            "allowed_elements": ["br", "summary", "details", "h1", "div"]
+        }
+    }
+}
