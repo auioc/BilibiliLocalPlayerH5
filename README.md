@@ -47,8 +47,8 @@
 | `dev:style`(`watch:style`)   | `public/player.css`<br/>`public/player.css.map` |
 | `build:dev`(`watch`)         | ( ↑3 )                                          |
 | `prod:html`                  | `build/index.html`                              |
-| `prod:script`                | `build/assets/player.<shorthash>.min.js`        |
-| `prod:style`                 | `build/assets/player.<shorthash>.min.css`       |
+| `prod:script`                | `build/assets/player.<commit>.min.js`           |
+| `prod:style`                 | `build/assets/player.<commit>.min.css`          |
 | `build`                      | ( ↑3 )                                          |
 
 ## 致谢

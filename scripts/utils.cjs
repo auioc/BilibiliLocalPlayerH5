@@ -3,6 +3,7 @@ const fs = require('fs');
 const _execSync = require('child_process').execSync;
 
 const DEV = process.env.NODE_ENV !== 'production';
+const BUNDLEALL = process.env.BUNDLE_TYPE === 'all';
 
 const execSync = (cmd) => _execSync(cmd).toString().trim();
 const commitHash = () => execSync('git rev-parse --verify HEAD');
@@ -27,8 +28,8 @@ const version = () => {
 };
 
 const srcPath = (...p) => path.resolve(__dirname, '../src', ...p);
-const buildPath = (...p) => path.resolve(__dirname, '../build', ...p);
-const publicPath = (...p) => path.resolve(__dirname, '../public', ...p);
+const prodOutput = (...p) => path.resolve(__dirname, '../build', ...p);
+const devOutput = (...p) => path.resolve(__dirname, '../public', ...p);
 
 function writeFile(file, text) {
     fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -41,10 +42,11 @@ function readFile(file) {
 
 module.exports = {
     DEV,
+    BUNDLEALL,
     version,
     srcPath,
-    buildPath,
-    publicPath,
+    prodOutput,
+    devOutput,
     readFile,
     writeFile,
 };

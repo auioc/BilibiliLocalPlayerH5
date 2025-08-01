@@ -6,17 +6,17 @@
     "type": "module",
     "scripts": {
         "dev:html": "cross-env NODE_ENV=development node scripts/build-html.cjs",
-        "dev:script": "cross-env NODE_ENV=development rollup -c --bundleConfigAsCjs",
+        "dev:script": "cross-env NODE_ENV=development rollup --config scripts/rollup.config.js --bundleConfigAsCjs",
         "dev:style": "cross-env NODE_ENV=development sass src/style/main.scss:public/player.css",
         "prod:html": "cross-env NODE_ENV=production node scripts/build-html.cjs",
-        "prod:script": "cross-env NODE_ENV=production rollup -c --bundleConfigAsCjs",
+        "prod:script": "cross-env NODE_ENV=production rollup --config scripts/rollup.config.js --bundleConfigAsCjs",
         "prod:style": "cross-env NODE_ENV=production node scripts/build-style.cjs",
         "watch:html": "onchange -i \"src/html/*\" -- pnpm run dev:html",
-        "watch:script": "rollup -c rollup.config.js --bundleConfigAsCjs --watch",
+        "watch:script": "rollup --config scripts/rollup.config.js --bundleConfigAsCjs --watch",
         "watch:style": "sass --watch src/style/main.scss:public/player.css",
-        "build:dev": "pnpm run dev:html && pnpm run dev:script && pnpm run dev:style",
+        "build:dev": "pnpm run dev:script && pnpm run dev:style && pnpm run dev:html",
         "watch": "pnpm run --parallel \"/^watch:.*/\"",
-        "build": "pnpm run prod:html && pnpm run prod:style && pnpm run prod:script"
+        "build": "pnpm run prod:script && pnpm run prod:style && pnpm run prod:html"
     },
     "keywords": [],
     "homepage": "https://hi.auioc.org/BilibiliLocalPlayerH5/",
@@ -44,11 +44,12 @@
         "assjs": "^0.0.11"
     },
     "devDependencies": {
-        "@rollup/plugin-commonjs": "^26.0.1",
         "@rollup/plugin-legacy": "^3.0.2",
+        "@rollup/plugin-node-resolve": "^16.0.1",
         "@rollup/plugin-replace": "^5.0.7",
         "@rollup/plugin-terser": "^0.4.4",
         "@rollup/plugin-typescript": "^11.1.6",
+        "@types/html-minifier-terser": "^7.0.2",
         "@types/node": "^20.14.10",
         "cross-env": "^7.0.3",
         "html-minifier-terser": "^7.2.0",
