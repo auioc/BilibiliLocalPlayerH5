@@ -1,0 +1,41 @@
+// .danmaku-stage
+& {
+    display: block;
+    position: absolute;
+    margin: auto !important;
+    overflow: hidden;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    border: 0;
+}
+
+// TODO remove ccl.js in build scripts
+
+& .cmt {
+    color: white;
+    font-size: 25px;
+    font-family: sans-serif;
+    letter-spacing: 0;
+    line-height: 100%;
+    white-space: pre;
+    word-break: keep-all;
+    margin: 0;
+    padding: 3px 0 0 0;
+    position: absolute;
+    text-decoration: none;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+
+    &.no-shadow {
+        text-shadow: none;
+    }
+
+    &.reverse-shadow {
+        text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+    }
+
+    &.css-optimize {
+        will-change: transform;
+    }
+}

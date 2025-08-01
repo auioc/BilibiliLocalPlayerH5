@@ -182,8 +182,7 @@ video {
 }
 
 .danmaku-stage {
-    position: absolute;
-    margin: auto !important;
+    @import 'danmaku';
 }
 
 .danmaku-list {

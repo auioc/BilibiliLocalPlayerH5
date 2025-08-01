@@ -483,7 +483,6 @@ const danmakuStage = new EDC('div', 'danmakuStage')
     .selfEvents({
         create: (P, E) => {
             P.commentManager = initDanmaku(E, P.resources.danmaku, () => {
-                P.elements.overlays.classList.add('abp');
                 P.setData('danmakuOn', true);
                 P.firePlayerEvent('danmakuload');
             });
