@@ -31,7 +31,6 @@
 3. 下载 `CommentCoreLibrary` 到 `src/lib`[^1]：
 
     - [`CommentCoreLibrary.js`](https://unpkg.com/comment-core-library@0.11.1/dist/CommentCoreLibrary.js)
-    - [`CommentCoreLibrary.css`](https://unpkg.com/comment-core-library@0.11.1/dist/css/style.css)
 
 4. 运行 `pnpm run build:dev`
 5. 浏览器打开 `public/index.html`
