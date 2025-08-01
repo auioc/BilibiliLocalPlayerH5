@@ -39,6 +39,7 @@ jobs:
             - name: Install and Build
               run: |
                   pnpm install
+                  curl -o src/lib/CommentCoreLibrary.js https://unpkg.com/comment-core-library@0.11.1/dist/CommentCoreLibrary.js
                   pnpm run build
 
             - name: Archive Artifact
