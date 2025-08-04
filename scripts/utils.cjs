@@ -3,7 +3,6 @@ const fs = require('fs');
 const _execSync = require('child_process').execSync;
 
 const DEV = process.env.NODE_ENV !== 'production';
-const BUNDLEALL = process.env.BUNDLE_TYPE === 'all';
 
 const execSync = (cmd) => _execSync(cmd).toString().trim();
 const commitHash = () => execSync('git rev-parse --verify HEAD');
@@ -43,7 +42,6 @@ function readFile(file) {
 
 module.exports = {
     DEV,
-    BUNDLEALL,
     version,
     srcPath,
     prodOutput,

@@ -1,6 +1,5 @@
 const {
     DEV,
-    BUNDLEALL,
     version,
     srcPath: src,
     prodOutput: prod,
@@ -11,10 +10,6 @@ const commit = version().commit.slice(0, 8);
 
 const github = 'https://github.com/auioc/BilibiliLocalPlayerH5';
 const license = 'AGPL-3.0';
-
-const inputs = {
-    html: src('html/index.html'),
-};
 
 const outputs = {
     html: {
@@ -90,10 +85,8 @@ const externalAssets = [
 
 module.exports = {
     DEV,
-    BUNDLEALL,
     github,
     license,
-    inputs,
     outputs,
     projectAssets,
     externalAssets,

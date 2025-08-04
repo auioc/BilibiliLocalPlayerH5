@@ -1,5 +1,5 @@
 const fs = require('fs');
-// const rollup = require('rollup');
+const rollup = require('rollup');
 const { default: typescript } = require('@rollup/plugin-typescript');
 const { default: replace } = require('@rollup/plugin-replace');
 const { default: terser } = require('@rollup/plugin-terser');
@@ -121,6 +121,35 @@ const buildOptions = (dev, all) => {
     return { input, output };
 };
 
+/**
+ * @param {boolean} dev
+ * @param {boolean} all
+ */
+async function generate(dev, all) {
+    const {
+        input: inputOptions, //
+        output: outputOptions,
+    } = buildOptions(dev, all);
+
+    let bundle;
+    let output;
+    let error;
+    try {
+        bundle = await rollup.rollup(inputOptions);
+        output = (await bundle.generate(outputOptions)).output;
+    } catch (e) {
+        error = e;
+    }
+    if (bundle) {
+        await bundle.close();
+    }
+    if (error) {
+        throw error;
+    }
+    return output;
+}
+
 module.exports = {
     buildOptions,
+    generate,
 };
