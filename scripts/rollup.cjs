@@ -1,11 +1,11 @@
-import fs from 'fs';
-// import rollup from 'rollup';
-import typescript from '@rollup/plugin-typescript';
-import replace from '@rollup/plugin-replace';
-import terser from '@rollup/plugin-terser';
-import { nodeResolve } from '@rollup/plugin-node-resolve';
-import legacy from '@rollup/plugin-legacy';
-import license from 'rollup-plugin-license';
+const fs = require('fs');
+// const rollup = require('rollup');
+const { default: typescript } = require('@rollup/plugin-typescript');
+const { default: replace } = require('@rollup/plugin-replace');
+const { default: terser } = require('@rollup/plugin-terser');
+const { nodeResolve } = require('@rollup/plugin-node-resolve');
+const { default: legacy } = require('@rollup/plugin-legacy');
+const license = require('rollup-plugin-license');
 const { srcPath, version } = require('./utils.cjs');
 
 const ver = version();
@@ -57,6 +57,7 @@ Dependencies:
 assjs v0.0.11 - MIT - Copyright (c) 2014 weizhenye
 CommentCoreLibrary v0.11.1 - MIT Copyright (c) 2014 Jim Chen
 `;
+    // @ts-ignore
     return license({
         banner: {
             commentStyle: 'ignored',
@@ -79,7 +80,7 @@ ${withDependencies ? dependencies : ''}
  * @param {boolean} dev
  * @param {boolean} all
  */
-export const getRollupOptions = (dev, all) => {
+const buildOptions = (dev, all) => {
     if (!fs.existsSync(cclFile)) {
         throw new Error(
             "Dependency 'CommentCoreLibrary' not found, see README.md for more information"
@@ -118,4 +119,8 @@ export const getRollupOptions = (dev, all) => {
     input.plugins = plugins;
 
     return { input, output };
+};
+
+module.exports = {
+    buildOptions,
 };
