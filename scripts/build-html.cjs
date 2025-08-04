@@ -103,6 +103,8 @@ const generate = async (dev, noDep, allInOne) => {
     const buildType = dev ? 'dev' : 'prod';
     const bundleType = noDep ? 'all' : 'default';
 
+    html.setVersion();
+
     if (!allInOne) {
         if (bundleType !== 'all') {
             for (const a of externalAssets) {
