@@ -34,6 +34,7 @@ const devOutput = (...p) => path.resolve(__dirname, '../public', ...p);
 function writeFile(file, text) {
     fs.mkdirSync(path.dirname(file), { recursive: true });
     fs.writeFileSync(file, text, 'utf8');
+    console.log(`\x1b[0;32m create file \x1b[1;32m${file}\x1b[0m`);
 }
 
 function readFile(file) {

@@ -4,8 +4,20 @@ const { outputs } = require('./const.cjs');
 
 // TODO copyright notice
 
-const result = sass.compile(src('style/main.scss'), {
-    style: DEV ? 'expanded' : 'compressed',
-    sourceMap: DEV,
-});
-writeFile(outputs.style[DEV ? 'dev' : 'prod'], result.css);
+const INPUT = src('style/main.scss');
+
+const generate = (dev) => {
+    return sass.compile(INPUT, {
+        style: dev ? 'expanded' : 'compressed',
+        sourceMap: dev,
+    });
+};
+
+module.exports = {
+    generate,
+};
+
+if (require.main === module) {
+    const result = generate(DEV);
+    writeFile(outputs.style[DEV ? 'dev' : 'prod'], result.css);
+}
