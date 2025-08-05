@@ -14,17 +14,6 @@ const rev = ver.commit.slice(0, 8);
 const SRC = 'src/core/index.ts';
 const cclFile = srcPath('core', '../lib/CommentCoreLibrary.js');
 
-/** @type {import('rollup').InputOptions} */
-const input = { input: SRC, context: 'window' };
-
-/** @type {import('rollup').OutputOptions} */
-const output = {
-    format: 'iife',
-    name: 'player',
-};
-
-// const combined = (b1 ? 2 : 0) + (b2 ? 1 : 0)
-
 const outputFiles = [
     `build/assets/player.${rev}.min.js`, //     (prod, prj) false false
     `build/assets/player.${rev}.all.min.js`, // (prod, all) false true
@@ -38,18 +27,17 @@ const terserOptions = {
     format: { comments: false },
 };
 
-const plugins = [
-    typescript(),
-    replace({
+const replacePlugin = (ver) => {
+    return replace({
         include: 'src/core/index.ts',
         // (!) [plugin replace] @rollup/plugin-replace: 'preventAssignment' currently defaults to false. It is recommended to set this option to `true`, as the next major version will default this option to `true`.
         preventAssignment: true,
         values: {
             // _version_: `JSON.parse('${JSON.stringify(ver)}');`,
-            _version_: JSON.stringify(ver) + ';',
+            _version_: JSON.stringify(ver) + ';', // TODO version info includes bundle type
         },
-    }),
-];
+    });
+};
 
 const licensePlugin = (withDependencies = false) => {
     const dependencies = `
@@ -75,6 +63,16 @@ ${withDependencies ? dependencies : ''}
     });
 };
 
+/*
+Plugins order:
+legacy       (for all bundle)
+nodeResolve  (for all bundle)
+typescript
+replace
+terser       (for prod build)
+license
+*/
+
 /**
  *
  * @param {boolean} dev
@@ -87,17 +85,20 @@ const buildOptions = (dev, all) => {
         );
     }
 
+    /** @type {import('rollup').InputOptions} */
+    const input = { input: SRC, context: 'window' };
+
+    /** @type {import('rollup').OutputOptions} */
+    const output = { format: 'iife', name: 'player' };
+
     output.file = outputFiles[(dev ? 2 : 0) + (all ? 1 : 0)];
 
     output.sourcemap = dev;
 
-    if (!dev) {
-        plugins.push(terser(terserOptions));
-    }
+    const plugins = [];
 
     if (all) {
-        output.sourcemap = false;
-        plugins.unshift(
+        plugins.push(
             legacy({
                 'src/lib/CommentCoreLibrary.js': {
                     CommentProvider: 'CommentProvider',
@@ -115,7 +116,17 @@ const buildOptions = (dev, all) => {
         };
     }
 
+    plugins.push(
+        typescript({ sourceMap: dev }), //
+        replacePlugin(ver) // TODO
+    );
+
+    if (!dev) {
+        plugins.push(terser(terserOptions));
+    }
+
     plugins.push(licensePlugin(all));
+
     input.plugins = plugins;
 
     return { input, output };
