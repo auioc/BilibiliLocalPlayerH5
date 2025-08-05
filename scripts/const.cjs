@@ -15,13 +15,13 @@ const outputs = {
     html: {
         dev: {
             default: dev('index.html'), //
-            offline: dev('index.offline.html'), // TODO better name?
-            all: dev('index.all.html'),
+            offline: dev('bundled/index.html'), // TODO better name?
+            all: dev('all-in-one/index.html'),
         },
         prod: {
             default: prod('index.html'), //
-            offline: prod('index.offline.html'),
-            all: prod('index.all.html'),
+            offline: prod('bundled/index.html'),
+            all: prod('all-in-one/index.html'),
         },
     },
     style: {
@@ -38,11 +38,11 @@ const projectAssets = [
             {
                 dev: {
                     default: 'player.js', //
-                    all: 'player.full.js',
+                    all: '../player.all.js',
                 },
                 prod: {
                     default: `assets/player.${commit}.min.js`,
-                    all: `assets/player.${commit}.full.min.js`,
+                    all: `../assets/player.${commit}.all.min.js`,
                 },
             },
         ],
@@ -50,11 +50,11 @@ const projectAssets = [
             {
                 dev: {
                     default: 'player.css',
-                    all: 'player.css',
+                    all: '../player.css',
                 },
                 prod: {
                     default: `assets/player.${commit}.min.css`,
-                    all: `assets/player.${commit}.min.css`,
+                    all: `../assets/player.${commit}.min.css`,
                 },
             },
         ],

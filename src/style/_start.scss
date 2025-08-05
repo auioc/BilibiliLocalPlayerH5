@@ -23,6 +23,10 @@ tbody {
 th {
     padding: 0.5em;
 
+    &:first-of-type {
+        padding-bottom: 1em;
+    }
+
     * {
         font-weight: lighter;
         font-size: smaller;

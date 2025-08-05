@@ -23,6 +23,11 @@
 ## 使用
 
 - <https://hi.auioc.org/BilibiliLocalPlayerH5>
+  - 默认构建，依赖使用 UNPKG CDN 引入
+- 无 CDN 构建：[Bundled](https://hi.auioc.org/BilibiliLocalPlayerH5/bundled)
+  - 依赖包含在打包的 `player.all.js` 中
+- All-in-One 构建：[AllInOne](https://hi.auioc.org/BilibiliLocalPlayerH5/all-in-one)
+  - 样式和脚本内联在单个 HTML 文件中，可保存在本地离线使用
 
 ## 开发
 
@@ -39,16 +44,22 @@
 
 ### 输出
 
-| 脚本                         | 输出                                            |
-| ---------------------------- | ----------------------------------------------- |
-| `dev:html`(`watch:html`)     | `public/index.html`                             |
-| `dev:script`(`watch:script`) | `public/player.js`<br/>`public/player.js.map`   |
-| `dev:style`(`watch:style`)   | `public/player.css`<br/>`public/player.css.map` |
-| `build:dev`(`watch`)         | ( ↑3 )                                          |
-| `prod:html`                  | `build/index.html`                              |
-| `prod:script`                | `build/assets/player.<commit>.min.js`           |
-| `prod:style`                 | `build/assets/player.<commit>.min.css`          |
-| `build`                      | ( ↑3 )                                          |
+| 脚本                         | 输出                                                  | 前置                                  |
+| ---------------------------- | ----------------------------------------------------- | ------------------------------------- |
+| `dev:html`(`watch:html`)     | `public/index.html`                                   |                                       |
+| `dev:htmlBundled`            | `public/bundled/index.html`                           | `dev:scriptBundled`<br/>`dev:style`   |
+| `dev:script`(`watch:script`) | `public/player.js`<br/>`public/player.js.map`         |                                       |
+| `dev:scriptBundled`          | `public/player.all.js`<br/>`public/player.all.js.map` |                                       |
+| `dev:style`(`watch:style`)   | `public/player.css`<br/>`public/player.css.map`       |                                       |
+| `dev:allInOne`               | `public/all-in-one/index.html`                        |                                       |
+| `build:dev`(`watch`)         | ( ↑6 )                                                |                                       |
+| `prod:html`                  | `build/index.html`                                    |                                       |
+| `prod:htmlBundled`           | `build/bundled/index.html`                            | `prod:scriptBundled`<br/>`prod:style` |
+| `prod:script`                | `build/assets/player.<commit>.min.js`                 |                                       |
+| `prod:scriptBundled`         | `build/assets/player.<commit>.all.min.js`             |                                       |
+| `prod:style`                 | `build/assets/player.<commit>.min.css`                |                                       |
+| `prod:allInOne`              | `build/all-in-one/index.html`                         |                                       |
+| `build:prod`                 | ( ↑6 )                                                |                                       |
 
 ## 致谢
 

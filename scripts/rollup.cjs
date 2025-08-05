@@ -8,15 +8,15 @@ const { default: legacy } = require('@rollup/plugin-legacy');
 const license = require('rollup-plugin-license');
 const { srcPath, version } = require('./utils.cjs');
 
-const ver = version();
-const rev = ver.commit.slice(0, 8);
+const VER = version();
+const REV = VER.commit.slice(0, 8);
 
 const SRC = 'src/core/index.ts';
 const cclFile = srcPath('core', '../lib/CommentCoreLibrary.js');
 
 const outputFiles = [
-    `build/assets/player.${rev}.min.js`, //     (prod, prj) false false
-    `build/assets/player.${rev}.all.min.js`, // (prod, all) false true
+    `build/assets/player.${REV}.min.js`, //     (prod, prj) false false
+    `build/assets/player.${REV}.all.min.js`, // (prod, all) false true
     'public/player.js', //                      (dev,  prj) true  false
     'public/player.all.js', //                  (dev,  prj) true  true
 ];
@@ -34,12 +34,12 @@ const replacePlugin = (ver) => {
         preventAssignment: true,
         values: {
             // _version_: `JSON.parse('${JSON.stringify(ver)}');`,
-            _version_: JSON.stringify(ver) + ';', // TODO version info includes bundle type
+            _version_: JSON.stringify(ver) + ';',
         },
     });
 };
 
-const licensePlugin = (withDependencies = false) => {
+const licensePlugin = (verText, withDependencies = false) => {
     const dependencies = `
 Dependencies:
 assjs v0.0.11 - MIT - Copyright (c) 2014 weizhenye
@@ -53,7 +53,7 @@ CommentCoreLibrary v0.11.1 - MIT Copyright (c) 2014 Jim Chen
 Bundle of BilibiliLocalPlayerH5${withDependencies ? ' (with dependencies)' : ''}
 https://github.com/auioc/BilibiliLocalPlayerH5
 Generated at <%= moment().format() %>
-Version: v<%= pkg.version %> - ${ver.text}
+Version: v<%= pkg.version %> - ${verText}
 Copyright (C) 2022-<%= moment().format('YYYY') %> AUIOC.ORG
 Copyright (C) 2018-2022 PCC-Studio
 Licensed under GNU Affero General Public License v3.0 (https://github.com/auioc/BilibiliLocalPlayerH5/blob/main/LICENSE)
@@ -84,6 +84,9 @@ const buildOptions = (dev, all) => {
             "Dependency 'CommentCoreLibrary' not found, see README.md for more information"
         );
     }
+
+    const ver = Object.assign({}, VER);
+    ver.bundle = all ? 'all' : 'default';
 
     /** @type {import('rollup').InputOptions} */
     const input = { input: SRC, context: 'window' };
@@ -125,7 +128,7 @@ const buildOptions = (dev, all) => {
         plugins.push(terser(terserOptions));
     }
 
-    plugins.push(licensePlugin(all));
+    plugins.push(licensePlugin(ver.text, all));
 
     input.plugins = plugins;
 

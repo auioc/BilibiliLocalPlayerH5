@@ -37,7 +37,7 @@ class HTML {
         return this.html.toString();
     }
 
-    setVersion() {
+    setVersion(noDep, allInOne) {
         const v = version();
         this.html
             .getElementById('github')
@@ -56,6 +56,10 @@ class HTML {
             .getElementById('version')
             ?.set_content(v.text)
             .setAttribute('href', github + (v.dirty ? '' : `/tree/${v.commit}`))
+            .removeAttribute('id');
+        this.html
+            .getElementById('build')
+            ?.set_content(allInOne ? 'allinone' : noDep ? 'bundled' : 'default')
             .removeAttribute('id');
     }
 
@@ -103,7 +107,7 @@ const generate = async (dev, noDep, allInOne) => {
     const buildType = dev ? 'dev' : 'prod';
     const bundleType = noDep ? 'all' : 'default';
 
-    html.setVersion();
+    html.setVersion(noDep, allInOne);
 
     if (!allInOne) {
         if (bundleType !== 'all') {
@@ -146,7 +150,7 @@ module.exports = {
 // TODO without env, programmatically all in one build
 
 if (require.main === module) {
-    const buildType = DEV ? 'dev' : 'prod';
+    const buildType = DEV ? 'dev' : 'prod'; // TODO dev uses version()
     const allInOne = process.env.ALL_IN_ONE === 'true';
     const noDep = allInOne ? true : process.env.BUNDLE === 'all';
     const htmlType = allInOne ? 'all' : noDep ? 'offline' : 'default';
