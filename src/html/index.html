@@ -83,6 +83,10 @@
                 if (lastVideoFile) {
                     id('last-video-file').textContent = lastVideoFile;
                 }
+                if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+                    id('fullscreen').checked = true;
+                    id('auto-play').checked = true;
+                }
             })();
             function load() {
                 const video = id('video-file').files[0];
