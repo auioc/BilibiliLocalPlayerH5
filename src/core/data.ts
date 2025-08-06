@@ -38,6 +38,7 @@ import {
     toggleClass,
     toggleDisplay,
     toggleDisplayBi,
+    toggleVisibility,
 } from './utils';
 
 function toggleDisplayByData(dataName: string, clazz: string) {
@@ -679,7 +680,18 @@ export const playerMetadata = {
         new EDC('div', 'overlays')
             .class('overlays')
             .selfEvents({
-                click: (P) => P.togglePlay(),
+                pointerdown: (P, _, T) => {
+                    switch (T.pointerType) {
+                        case 'touch':
+                            toggleVisibility(P.elements.controls);
+                            break;
+                        case 'pen':
+                        case 'mouse':
+                        default:
+                            P.togglePlay();
+                            break;
+                    }
+                },
             })
             .children(subtitleStage, danmakuStage),
     ],

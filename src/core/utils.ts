@@ -136,6 +136,11 @@ export function opacityInvisible(element: HTMLElement) {
     addClass(element, 'invisible');
 }
 
+export function toggleVisibility(element: HTMLElement) {
+    element.classList.toggle('visible');
+    element.classList.toggle('invisible');
+}
+
 export function formatDate(ts: number) {
     if (ts <= 0) {
         return '0';
