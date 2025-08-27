@@ -574,29 +574,29 @@ function infoToast(P: Player) {
 
 const hotkeys = (P: Player, T: KeyboardEvent) => {
     if (T.target === P.container) {
-        switch (T.keyCode) {
-            case 32: // Space
+        switch (T.code) {
+            case 'Space':
                 P.togglePlay();
                 break;
-            case 77: // M
+            case 'KeyM':
                 P.toggleMute();
                 break;
-            case 70: // F
+            case 'KeyF':
                 P.toggleFullscreen();
                 break;
-            case 38: // Up
+            case 'ArrowUp':
                 P.adjustVolume(0.05);
                 break;
-            case 40: // Down
+            case 'ArrowDown':
                 P.adjustVolume(-0.05);
                 break;
-            case 37: // Left
+            case 'ArrowLeft':
                 P.skip(T.ctrlKey ? -10 : T.shiftKey ? -1 : -5);
                 break;
-            case 39: // Right
+            case 'ArrowRight':
                 P.skip(T.ctrlKey ? 10 : T.shiftKey ? 1 : 5);
                 break;
-            case 73: // I
+            case 'KeyI':
                 if (T.ctrlKey) {
                     if (!P.data.infoOn) {
                         P.setData('infoOn', true);
@@ -613,10 +613,10 @@ const hotkeys = (P: Player, T: KeyboardEvent) => {
                     P.toast(infoToast(P));
                 }
                 break;
-            case 68: // D
+            case 'KeyD':
                 if (P.elements.danmakuToggle) P.elements.danmakuToggle.click();
                 break;
-            case 81: // Q
+            case 'KeyQ':
                 console.log(P.video.currentTime);
                 P.toast(`Time: ${P.currentTime()} (${P.video.currentTime})`);
                 break;
