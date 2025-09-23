@@ -1,3 +1,4 @@
+// #start-panel
 & {
     margin: 2em auto;
     max-width: 75%;
@@ -12,6 +13,10 @@ td {
 
 tr > td:nth-child(1) {
     text-wrap: nowrap;
+}
+
+tr:has(#last-video-file:empty) {
+    display: none;
 }
 
 tbody {

@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+        <title>BilibiliLocalPlayerH5</title>
     </head>
     <body>
         <table id="start-panel">
@@ -79,10 +80,9 @@
                 return document.getElementById(id);
             }
             (function () {
-                const lastVideoFile = window.localStorage.getItem('lastVideoFile');
-                if (lastVideoFile) {
-                    id('last-video-file').textContent = lastVideoFile;
-                }
+                id('last-video-file').textContent = window.localStorage.getItem('lastVideoFile') ?? '';
+                id('last-video-file').onclick = () =>
+                    window.localStorage.removeItem('lastVideoFile') & location.reload();
                 if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
                     id('fullscreen').checked = true;
                     id('auto-play').checked = true;
