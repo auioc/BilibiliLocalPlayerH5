@@ -37,7 +37,7 @@
 
     - [`CommentCoreLibrary.js`](https://unpkg.com/comment-core-library@0.11.1/dist/CommentCoreLibrary.js)
 
-4. 运行 `pnpm run build:dev`
+4. 运行 `pnpm run build:dev` 或 `pnpm run watch`
 5. 浏览器打开 `public/index.html`
 
 [^1]: <https://github.com/jabbany/CommentCoreLibrary/issues/94>
@@ -52,7 +52,8 @@
 | `dev:scriptBundled`          | `public/player.all.js`<br/>`public/player.all.js.map` |                                       |
 | `dev:style`(`watch:style`)   | `public/player.css`<br/>`public/player.css.map`       |                                       |
 | `dev:allInOne`               | `public/all-in-one/index.html`                        |                                       |
-| `build:dev`(`watch`)         | ( ↑6 )                                                |                                       |
+| `build:dev`                  | ( ↑6 )                                                |                                       |
+| `watch`                      | ( `watch:html` + `watch:script` +`watch:style` )      |                                       |
 | `prod:html`                  | `build/index.html`                                    |                                       |
 | `prod:htmlBundled`           | `build/bundled/index.html`                            | `prod:scriptBundled`<br/>`prod:style` |
 | `prod:script`                | `build/assets/player.<commit>.min.js`                 |                                       |
