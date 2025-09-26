@@ -4,6 +4,59 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
         <title>BilibiliLocalPlayerH5</title>
+        <style id="start-style">
+            :root {
+                --border-color: #7e7e7e;
+                --bg-color: #f0f0f0;
+                --fg-color: #181818;
+            }
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --bg-color: #181818;
+                    --fg-color: #f0f0f0;
+                }
+            }
+            body {
+                margin: 0;
+                background-color: var(--bg-color);
+                color: var(--fg-color);
+            }
+            .c {
+                text-align: center;
+            }
+            #start-panel {
+                margin: 2em auto;
+                max-width: 75%;
+            }
+            #start-panel,
+            #start-panel tr,
+            #start-panel td {
+                border-collapse: collapse;
+                padding: 4px 6px;
+            }
+            #start-panel tr > td:nth-child(1) {
+                text-wrap: nowrap;
+            }
+            #start-panel tr:has(#last-video-file:empty) {
+                display: none;
+            }
+            #start-panel tbody {
+                display: block;
+                padding: 2px 8px;
+                border: 1px solid;
+            }
+            #start-panel th {
+                padding: 0.5em;
+            }
+            #start-panel th:first-of-type {
+                padding-bottom: 1em;
+            }
+            #start-panel th * {
+                font-weight: lighter;
+                font-size: smaller;
+                color: var(--border-color);
+            }
+        </style>
     </head>
     <body>
         <table id="start-panel">
@@ -116,6 +169,7 @@
                     }
                 );
                 id('start-panel').remove();
+                id('start-style').remove();
                 id('player').removeAttribute('style');
                 document.title = `${video.name} | ${__title__}`;
             }
