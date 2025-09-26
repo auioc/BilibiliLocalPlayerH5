@@ -114,6 +114,15 @@ function icon<K extends keyof typeof icons>(p: K) {
 
 // ====================================================================== //
 
+(() => {
+    if (!ASS) {
+        throw new Error('ASS.JS not loaded');
+    }
+    if (!CommentManager) {
+        throw new Error('CommentCoreLibrary not loaded');
+    }
+})();
+
 function initDanmaku(stage: HTMLElement, url: string, onload: () => void) {
     const provider = new CommentProvider();
     provider.addStaticSource(
