@@ -18,6 +18,7 @@ const INPUT = src('html/index.html');
 const TERSER_OPTIONS = {
     collapseWhitespace: true,
     minifyJS: true,
+    minifyCSS: true,
     removeComments: true,
 };
 
