@@ -129,8 +129,8 @@
                 </tr>
             </table>
             <div class="notice c">
-                <div class="hide">Loading Stylesheets...</div>
-                <div id="loading-scripts">Loading Scripts...</div>
+                <div id="loading-styles" class="hide"></div>
+                <div id="loading-scripts"></div>
             </div>
         </div>
         <div id="player" style="display: none"></div>
@@ -141,10 +141,12 @@
                 return document.getElementById(id);
             }
             (function () {
+                id('loading-styles').innerText = 'Loading Stylesheets...';
+                id('loading-scripts').innerText = 'Loading Scripts...';
                 const f = () => {
                     try {
                         if (player.version) {
-                            id('loading-scripts').remove();
+                            id('loading-scripts').style.display = 'none';
                             return true;
                         }
                     } catch (error) {
