@@ -488,8 +488,8 @@ const subtitleStage = new EDC('div', 'subtitleStage')
 
 const resizeDanmakuStage = (P: Player, stage: HTMLElement) => {
     if (P.options.danmakuStageAbsoluteSize) {
-        stage.style.width = P.data.renderedWidth! + 'px';
-        stage.style.height = P.data.renderedHeight! + 'px';
+        stage.style.width = P.data.renderedWidth + 'px';
+        stage.style.height = P.data.renderedHeight + 'px';
     }
     const cm = P.commentManager!;
     cm.clear();
@@ -555,12 +555,16 @@ const danmakuStage = new EDC('div', 'danmakuStage')
 function infoToast(P: Player) {
     const lines = [
         ['LocalTime', new Date().toLocaleString()],
-        ['File', `${P.title} @ ${P.video.videoWidth}x${P.video.videoHeight}`],
+        ['File', P.title],
         [
             'Time',
             `${P.currentTime()} / ${formatTime(
                 P.video.duration
             )} (${P.video.playbackRate.toFixed(2)}x)`,
+        ],
+        [
+            'Video',
+            `${P.video.videoWidth}x${P.video.videoHeight} -> ${Math.round(P.data.physicalWidth)}x${Math.round(P.data.physicalHeight)}`,
         ],
     ];
     if (P.data.danmakuOn) {

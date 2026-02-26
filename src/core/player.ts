@@ -38,10 +38,12 @@ interface PlayerOptions extends StrAnyKV {
 }
 
 interface PlayerData extends StrAnyKV {
-    overHour?: boolean;
-    fullscreen?: boolean;
-    renderedWidth?: number;
-    renderedHeight?: number;
+    overHour: boolean;
+    fullscreen: boolean;
+    renderedWidth: number;
+    renderedHeight: number;
+    physicalWidth: number;
+    physicalHeight: number;
 }
 
 interface MediaResources {
@@ -59,7 +61,14 @@ export default class Player {
     readonly style: HTMLStyleElement;
     readonly container: HTMLDivElement;
     readonly elements: StrGenKV<HTMLElement> = {};
-    readonly data: PlayerData = {};
+    readonly data: PlayerData = {
+        overHour: false,
+        fullscreen: false,
+        renderedWidth: 0,
+        renderedHeight: 0,
+        physicalWidth: 0,
+        physicalHeight: 0,
+    };
     #ready: boolean = false;
     commentManager?: CommentManager;
     subtitleManager?: ASS;
@@ -160,8 +169,11 @@ export default class Player {
     #calcVideoRenderedSize() {
         const d = calcVideoRenderedSize(this.video);
         if (d) {
+            const r = window.devicePixelRatio || 1;
             this.data.renderedWidth = d[0];
+            this.data.physicalWidth = d[0] * r;
             this.data.renderedHeight = d[1];
+            this.data.physicalHeight = d[1] * r;
         }
     }
 
