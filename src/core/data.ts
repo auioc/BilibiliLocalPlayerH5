@@ -27,7 +27,6 @@ import {
 import { EDC, PlayerMetadata } from './metadata';
 import Player from './player';
 import {
-    calcVideoRenderedSize,
     formatDate,
     formatTime,
     opacityInvisible,
@@ -487,6 +486,17 @@ const subtitleStage = new EDC('div', 'subtitleStage')
         resize: (P) => P.subtitleManager!.resize(),
     });
 
+const resizeDanmakuStage = (P: Player, stage: HTMLElement) => {
+    if (P.options.danmakuStageAbsoluteSize) {
+        stage.style.width = P.data.renderedWidth! + 'px';
+        stage.style.height = P.data.renderedHeight! + 'px';
+    }
+    const cm = P.commentManager!;
+    cm.clear();
+    cm.setBounds();
+    cm.options.scroll.scale = P.video.offsetWidth / 680 / 1;
+};
+
 const danmakuStage = new EDC('div', 'danmakuStage')
     .class('danmaku-stage container')
     .condition(hasDanmaku)
@@ -519,6 +529,10 @@ const danmakuStage = new EDC('div', 'danmakuStage')
             if (!P.options.danmakuTimeOffset) P.options.danmakuTimeOffset = 0;
         },
     })
+    .playerEvents({
+        ready: resizeDanmakuStage,
+        resized: resizeDanmakuStage,
+    })
     .videoEvents({
         timeupdate: (P, _, V) => {
             if (!P.data.danmakuOn) return;
@@ -534,17 +548,6 @@ const danmakuStage = new EDC('div', 'danmakuStage')
         },
         play: (P) => P.commentManager!.start(),
         pause: (P) => P.commentManager!.stop(),
-        resize: (P, E, V) => {
-            if (P.options.danmakuStageAbsoluteSize) {
-                const d = calcVideoRenderedSize(V);
-                E.style.width = d[0] + 'px';
-                E.style.height = d[1] + 'px';
-            }
-            const cm = P.commentManager!;
-            cm.clear();
-            cm.setBounds();
-            cm.options.scroll.scale = V.offsetWidth / 680 / 1;
-        },
     });
 
 // ====================================================================== //

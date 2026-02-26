@@ -23,6 +23,7 @@ import { CommentManager } from '../lib/CommentCoreLibrary';
 import { bindMetaEvent, PlayerMetadata } from './metadata';
 import {
     appendChild,
+    calcVideoRenderedSize,
     clamp,
     formatTime,
     StrAnyKV,
@@ -39,6 +40,8 @@ interface PlayerOptions extends StrAnyKV {
 interface PlayerData extends StrAnyKV {
     overHour?: boolean;
     fullscreen?: boolean;
+    renderedWidth?: number;
+    renderedHeight?: number;
 }
 
 interface MediaResources {
@@ -57,7 +60,7 @@ export default class Player {
     readonly container: HTMLDivElement;
     readonly elements: StrGenKV<HTMLElement> = {};
     readonly data: PlayerData = {};
-    readonly ready: boolean = false;
+    #ready: boolean = false;
     commentManager?: CommentManager;
     subtitleManager?: ASS;
 
@@ -102,7 +105,6 @@ export default class Player {
                 : this.setData('fullscreen', false);
         }
         this.focus();
-        this.ready = true;
     }
 
     #bindElements() {
@@ -117,6 +119,9 @@ export default class Player {
         this.onVideoEvent('loadedmetadata', () => {
             this.setData('paused', this.video.paused);
             this.data.overHour = this.video.duration >= 60 * 60;
+            this.#calcVideoRenderedSize();
+            this.#ready = true;
+            this.firePlayerEvent('ready');
         });
         this.onVideoEvent('canplay', () => this.focus());
         this.onVideoEvent('play', () =>
@@ -143,17 +148,25 @@ export default class Player {
             }, 1 * 1000);
         });
         new ResizeObserver(() => {
-            this.video.dispatchEvent(
-                new CustomEvent('resize', {
-                    detail: {
-                        width: this.video.offsetWidth,
-                        height: this.video.offsetHeight,
-                    },
-                })
-            );
+            if (this.#ready) {
+                this.#calcVideoRenderedSize();
+                this.firePlayerEvent('resized');
+            }
         }).observe(this.video);
         bindMetaEvent(this.container, this.#metadata.playerEvent, this);
         bindMetaEvent(this.video, this.#metadata.videoEvent, this, this.video);
+    }
+
+    #calcVideoRenderedSize() {
+        const d = calcVideoRenderedSize(this.video);
+        if (d) {
+            this.data.renderedWidth = d[0];
+            this.data.renderedHeight = d[1];
+        }
+    }
+
+    ready() {
+        return this.#ready;
     }
 
     focus() {
@@ -183,7 +196,7 @@ export default class Player {
     }
 
     toast(html: string | null = null, duration = 800) {
-        if (this.ready) {
+        if (this.#ready) {
             this.firePlayerEvent('toast', { content: html, duration });
         }
     }

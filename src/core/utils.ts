@@ -195,7 +195,7 @@ export function bindEvents<F extends AnyFunction>(
 
 export function calcVideoRenderedSize(
     video: HTMLVideoElement
-): [number, number] {
+): [number, number] | null {
     const rect = video.getBoundingClientRect();
     const cW = rect.width;
     const cH = rect.height;
@@ -204,6 +204,10 @@ export function calcVideoRenderedSize(
     const vW = video.videoWidth;
     const vH = video.videoHeight;
     const vR = vW / vH;
+
+    if (!vR) {
+        return null;
+    }
 
     let w = cW;
     let h = cH;
