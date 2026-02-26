@@ -47,7 +47,7 @@ type ElementVideoMetaEvents<T extends HTMLTagNames> = MetaEvents<
 
 export function bindMetaEvent<F extends AnyFunction>(
     target: HTMLElement,
-    listeners: MetaEvents<F>,
+    listeners?: MetaEvents<F>,
     ...params: any[]
 ) {
     const l = typeof listeners === 'function' ? listeners() : listeners;
@@ -58,9 +58,9 @@ export function bindMetaEvent<F extends AnyFunction>(
 
 export class EDC<T extends HTMLTagNames> {
     #tag: T;
-    #name: string;
-    #condition: (player: Player) => boolean;
-    #css: (data: EDC<T>) => string;
+    #name?: string;
+    #condition?: (player: Player) => boolean;
+    #css?: (data: EDC<T>) => string;
     #attrs: StrKV = {};
     #html: string;
     #selfEvents: ElementMetaEvents<T>;

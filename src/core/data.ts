@@ -164,7 +164,7 @@ function initSubtitle(
             resampling: 'video_height',
         });
     }
-    return null;
+    return undefined;
 }
 
 function hasSubtitle(p: Player) {
@@ -356,9 +356,9 @@ const subtitleToggle = new EDC('button', 'subtitleToggle')
             toggleComponent(
                 P,
                 'subtitleOn',
-                () => P.subtitleManager.show(),
+                () => P.subtitleManager!.show(),
                 'Subtitle On',
-                () => P.subtitleManager.hide(),
+                () => P.subtitleManager!.hide(),
                 'Subtitle Off'
             ),
     })
@@ -373,11 +373,11 @@ const danmakuToggle = new EDC('button', 'danmakuToggle')
             toggleComponent(
                 P,
                 'danmakuOn',
-                () => P.commentManager.start(),
+                () => P.commentManager!.start(),
                 'Danmaku On',
                 () => {
-                    P.commentManager.clear();
-                    P.commentManager.stop();
+                    P.commentManager!.clear();
+                    P.commentManager!.stop();
                 },
                 'Danmaku Off'
             ),
@@ -392,7 +392,7 @@ const danmakuListToggle = new EDC('button', 'danmakuListToggle') //
     })
     .playerEvents({
         danmakuload: (P, E) =>
-            (E.innerHTML = `(${P.commentManager.timeline.length})`),
+            (E.innerHTML = `(${P.commentManager!.timeline.length})`),
     });
 
 const danmakuTimeOffset = new EDC('input')
@@ -406,7 +406,7 @@ const danmakuTimeOffset = new EDC('input')
         },
         input: (P, E) => {
             P.options.danmakuTimeOffset = E.valueAsNumber;
-            P.commentManager.clear();
+            P.commentManager!.clear();
         },
     });
 
@@ -423,7 +423,7 @@ const danmakuSizeOffset = new EDC('input')
         input: (P, E) => {
             P.options.danmakuSizeOffset = E.valueAsNumber;
             P.data.danmakuSizeFlag = randomStr();
-            P.commentManager.clear();
+            P.commentManager!.clear();
         },
     });
 
@@ -443,7 +443,7 @@ const danmakuList = new EDC('div', 'danmakuList')
         new EDC('table') //
             .playerEvents({
                 danmakuload: async (P, E) => {
-                    const timeline = P.commentManager.timeline;
+                    const timeline = P.commentManager!.timeline;
                     const overHour = timeline
                         ? timeline[timeline.length - 1].stime >= 36e5
                         : false;
@@ -477,14 +477,14 @@ const subtitleStage = new EDC('div', 'subtitleStage')
     .condition(hasSubtitle)
     .selfEvents({
         create: (P, E) => {
-            P.subtitleManager = initSubtitle(E, P.video, P.resources.subtitle);
+            P.subtitleManager = initSubtitle(E, P.video, P.resources.subtitle!);
             P.firePlayerEvent('subtitleload');
             P.data.subtitleOn = true;
             P.setData('subtitleOn', true);
         },
     })
     .videoEvents({
-        resize: (P) => P.subtitleManager.resize(),
+        resize: (P) => P.subtitleManager!.resize(),
     });
 
 const danmakuStage = new EDC('div', 'danmakuStage')
@@ -492,7 +492,7 @@ const danmakuStage = new EDC('div', 'danmakuStage')
     .condition(hasDanmaku)
     .selfEvents({
         create: (P, E) => {
-            P.commentManager = initDanmaku(E, P.resources.danmaku, () => {
+            P.commentManager = initDanmaku(E, P.resources.danmaku!, () => {
                 P.setData('danmakuOn', true);
                 P.firePlayerEvent('danmakuload');
             });
@@ -522,7 +522,7 @@ const danmakuStage = new EDC('div', 'danmakuStage')
     .videoEvents({
         timeupdate: (P, _, V) => {
             if (!P.data.danmakuOn) return;
-            const cm = P.commentManager;
+            const cm = P.commentManager!;
             const time = Math.floor(
                 1e3 * (V.currentTime - P.options.danmakuTimeOffset)
             );
@@ -532,15 +532,15 @@ const danmakuStage = new EDC('div', 'danmakuStage')
             }
             cm.time(time);
         },
-        play: (P) => P.commentManager.start(),
-        pause: (P) => P.commentManager.stop(),
+        play: (P) => P.commentManager!.start(),
+        pause: (P) => P.commentManager!.stop(),
         resize: (P, E, V) => {
             if (P.options.danmakuStageAbsoluteSize) {
                 const d = calcVideoRenderedSize(V);
                 E.style.width = d[0] + 'px';
                 E.style.height = d[1] + 'px';
             }
-            const cm = P.commentManager;
+            const cm = P.commentManager!;
             cm.clear();
             cm.setBounds();
             cm.options.scroll.scale = V.offsetWidth / 680 / 1;
@@ -561,7 +561,7 @@ function infoToast(P: Player) {
         ],
     ];
     if (P.data.danmakuOn) {
-        const cm = P.commentManager;
+        const cm = P.commentManager!;
         lines.push([
             'Danmaku',
             `${cm.position} / ${cm.timeline.length} (${cm.runline.length} on stage)`,

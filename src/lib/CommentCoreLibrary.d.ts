@@ -29,25 +29,25 @@ export class CommentProvider {
         method: Method,
         url: string,
         type: string,
-        args: Object,
+        args: any,
         body: any
     ): Promise<any>;
     static JSONProvider(
         method: Method,
         url: string,
-        args: Object,
+        args: any,
         body: any
     ): Promise<any>;
     static XMLProvider(
         method: Method,
         url: string,
-        args: Object,
+        args: any,
         body: any
     ): Promise<any>;
     static TextProvider(
         method: Method,
         url: string,
-        args: Object,
+        args: any,
         body: any
     ): Promise<any>;
 

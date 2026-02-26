@@ -58,8 +58,8 @@ export default class Player {
     readonly elements: StrGenKV<HTMLElement> = {};
     readonly data: PlayerData = {};
     readonly ready: boolean = false;
-    commentManager: CommentManager;
-    subtitleManager: ASS;
+    commentManager?: CommentManager;
+    subtitleManager?: ASS;
 
     constructor(
         container: HTMLDivElement,
@@ -106,8 +106,10 @@ export default class Player {
     }
 
     #bindElements() {
-        for (const data of this.#metadata.elements) {
-            appendChild(this.container, data.create(this));
+        if (this.#metadata.elements) {
+            for (const data of this.#metadata.elements) {
+                appendChild(this.container, data.create(this));
+            }
         }
     }
 
@@ -176,11 +178,11 @@ export default class Player {
 
     firePlayerEvent(type: string, detail?: any) {
         this.container.dispatchEvent(
-            new CustomEvent(type, detail ? { detail: detail } : null)
+            new CustomEvent(type, detail ? { detail: detail } : undefined)
         );
     }
 
-    toast(html: string = null, duration = 800) {
+    toast(html: string | null = null, duration = 800) {
         if (this.ready) {
             this.firePlayerEvent('toast', { content: html, duration });
         }

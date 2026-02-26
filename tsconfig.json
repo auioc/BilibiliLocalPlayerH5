@@ -7,6 +7,7 @@
         "moduleResolution": "Node10",
         "noImplicitAny": true,
         "noImplicitReturns": true,
+        "strictNullChecks": true,
         "outDir": "./public",
         "removeComments": true,
         "rootDir": "./src",

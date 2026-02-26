@@ -141,8 +141,8 @@ export function toggleVisibility(element: HTMLElement) {
     element.classList.toggle('invisible');
 }
 
-export function formatDate(ts: number) {
-    if (ts <= 0) {
+export function formatDate(ts?: number) {
+    if (!ts || ts <= 0) {
         return '0';
     }
     return new Date(ts * 1000).toLocaleString(navigator.language, {
@@ -185,7 +185,11 @@ export function bindEvents<F extends AnyFunction>(
     params: any[]
 ) {
     for (const [type, listener] of Object.entries(listeners)) {
-        target.addEventListener(type, (event) => listener(...params, event));
+        if (listener) {
+            target.addEventListener(type, (event) =>
+                listener(...params, event)
+            );
+        }
     }
 }
 
