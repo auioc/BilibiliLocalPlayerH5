@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022-2025 AUIOC.ORG
+ * Copyright (C) 2022-2026 AUIOC.ORG
  * Copyright (C) 2018-2022 PCC-Studio
  *
  * This file is part of BilibiliLocalPlayerH5.
@@ -34,14 +34,14 @@ export type AnyFunction = (...args: any[]) => any;
 
 export type AppendArguments<
     F extends AnyFunction,
-    A extends any[]
+    A extends any[],
 > = F extends (...arg: [...infer P]) => infer R
     ? (...args: [...P, ...A]) => R
     : never;
 
 export type PrependArguments<
     F extends AnyFunction,
-    A extends any[]
+    A extends any[],
 > = F extends (...arg: [...infer P]) => infer R
     ? (...args: [...A, ...P]) => R
     : never;
