@@ -153,6 +153,16 @@ video {
                 max-width: 3em;
             }
         }
+
+        .touch-controls {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            padding: 3px 4px 5px 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
     }
 }
 
@@ -165,6 +175,11 @@ video {
     left: 0;
     z-index: 999999;
     font-family: monospace;
+
+    @media (pointer: coarse) {
+        right: 0;
+        left: unset;
+    }
 
     & > table {
         text-align: left;

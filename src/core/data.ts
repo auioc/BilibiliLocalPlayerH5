@@ -122,6 +122,12 @@ const icons: StrGenKV<string | string[]> = {
         '<path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm10.096 3.146a.5.5 0 1 1 .707.708L6.707 9.95h2.768a.5.5 0 1 1 0 1H5.5a.5.5 0 0 1-.5-.5V6.475a.5.5 0 1 1 1 0v2.768z"/>',
     fullscreen:
         '<path fill-rule="evenodd" d="M15 2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.854 8.803a.5.5 0 1 1-.708-.707L9.243 6H6.475a.5.5 0 1 1 0-1h3.975a.5.5 0 0 1 .5.5v3.975a.5.5 0 1 1-1 0V6.707z"/>',
+    leftCaret:
+        'm3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z',
+    rightCaret:
+        'm12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z',
+    activity:
+        'M6 2a.5.5 0 0 1 .47.33L10 12.036l1.53-4.208A.5.5 0 0 1 12 7.5h3.5a.5.5 0 0 1 0 1h-3.15l-1.88 5.17a.5.5 0 0 1-.94 0L6 3.964 4.47 8.171A.5.5 0 0 1 4 8.5H.5a.5.5 0 0 1 0-1h3.15l1.88-5.17A.5.5 0 0 1 6 2',
 } as const;
 
 function icon<K extends keyof typeof icons>(name: K) {
@@ -229,6 +235,58 @@ const toastBox = new EDC('div') //
             }
         },
     });
+
+function infoToast(P: Player) {
+    const lines = [
+        ['LocalTime', new Date().toLocaleString()],
+        ['File', P.title],
+        [
+            'Time',
+            `${P.currentTime()} / ${formatTime(
+                P.video.duration
+            )} (${P.video.playbackRate.toFixed(2)}x)`,
+        ],
+        [
+            'Video',
+            `${P.video.videoWidth}x${P.video.videoHeight} -> ${Math.round(P.data.physicalWidth)}x${Math.round(P.data.physicalHeight)}`,
+        ],
+    ];
+    if (P.data.danmakuOn) {
+        const cm = P.commentManager!;
+        lines.push([
+            'Danmaku',
+            `${cm.position} / ${cm.timeline.length} (${cm.runline.length} on stage)`,
+        ]);
+    }
+    return (
+        '<table>' +
+        lines //
+            .map(
+                ([l, t]) =>
+                    `<tr><th>${l}</th><td ${
+                        /^[『「【]/.test(t) ? 'class="fw-indent"' : ''
+                    }>${t}</td></tr>`
+            )
+            .join('') +
+        '</table>'
+    );
+}
+
+function toggleInfoToast(P: Player) {
+    if (!P.data.infoOn) {
+        P.setData('infoOn', true);
+        P.toast(infoToast(P), -1);
+        P.data.infoTimer = setInterval(() => {
+            P.toast(infoToast(P), -1);
+        }, 500);
+    } else {
+        P.setData('infoOn', false);
+        clearInterval(P.data.infoTimer);
+        P.toast();
+    }
+}
+
+// ====================================================================== //
 
 const playToggle = new EDC('button', 'playToggle') //
     .class('play-toggle')
@@ -480,6 +538,32 @@ const fullscreenToggle = new EDC('button', 'fullscreenToggle')
     })
     .children(...spans(icon('exitFullscreen'), icon('fullscreen')));
 
+const touchControls = new EDC('div') // TODO use touch actions (eg. double-click pause/play) instead
+    .class('touch-controls')
+    .condition(() => window.matchMedia('(pointer: coarse)').matches)
+    .children(
+        new EDC('button', 'toggleInfo')
+            .title('Toggle Info')
+            .selfEvents({
+                click: (P) => toggleInfoToast(P),
+            })
+            .html(icon('activity')),
+        new EDC('button', 'skipBackward')
+            .title('Skip Backward')
+            .selfEvents({
+                click: (P) => P.skip(-5),
+            })
+            .html(icon('leftCaret')),
+        new EDC('button', 'skipForward')
+            .title('Skip Forward')
+            .selfEvents({
+                click: (P) => P.skip(5),
+            })
+            .html(icon('rightCaret'))
+    );
+
+// ====================================================================== //
+
 const danmakuList = new EDC('div', 'danmakuList')
     .condition(hasDanmaku)
     .class('danmaku-list box hide')
@@ -531,7 +615,7 @@ const subtitleStage = new EDC('div', 'subtitleStage')
         resize: (P) => P.subtitleManager!.resize(),
     });
 
-const resizeDanmakuStage = (P: Player, stage: HTMLElement) => {
+function resizeDanmakuStage(P: Player, stage: HTMLElement) {
     if (P.options.danmakuStageAbsoluteSize) {
         stage.style.width = P.data.renderedWidth + 'px';
         stage.style.height = P.data.renderedHeight + 'px';
@@ -540,7 +624,7 @@ const resizeDanmakuStage = (P: Player, stage: HTMLElement) => {
     cm.clear();
     cm.setBounds();
     cm.options.scroll.scale = P.video.offsetWidth / 680 / 1;
-};
+}
 
 const danmakuStage = new EDC('div', 'danmakuStage')
     .class('danmaku-stage container')
@@ -597,42 +681,6 @@ const danmakuStage = new EDC('div', 'danmakuStage')
 
 // ====================================================================== //
 
-function infoToast(P: Player) {
-    const lines = [
-        ['LocalTime', new Date().toLocaleString()],
-        ['File', P.title],
-        [
-            'Time',
-            `${P.currentTime()} / ${formatTime(
-                P.video.duration
-            )} (${P.video.playbackRate.toFixed(2)}x)`,
-        ],
-        [
-            'Video',
-            `${P.video.videoWidth}x${P.video.videoHeight} -> ${Math.round(P.data.physicalWidth)}x${Math.round(P.data.physicalHeight)}`,
-        ],
-    ];
-    if (P.data.danmakuOn) {
-        const cm = P.commentManager!;
-        lines.push([
-            'Danmaku',
-            `${cm.position} / ${cm.timeline.length} (${cm.runline.length} on stage)`,
-        ]);
-    }
-    return (
-        '<table>' +
-        lines //
-            .map(
-                ([l, t]) =>
-                    `<tr><th>${l}</th><td ${
-                        /^[『「【]/.test(t) ? 'class="fw-indent"' : ''
-                    }>${t}</td></tr>`
-            )
-            .join('') +
-        '</table>'
-    );
-}
-
 const hotkeys = (P: Player, T: KeyboardEvent) => {
     if (T.target === P.container) {
         switch (T.code) {
@@ -659,17 +707,7 @@ const hotkeys = (P: Player, T: KeyboardEvent) => {
                 break;
             case 'KeyI':
                 if (T.ctrlKey) {
-                    if (!P.data.infoOn) {
-                        P.setData('infoOn', true);
-                        P.toast(infoToast(P), -1);
-                        P.data.infoTimer = setInterval(() => {
-                            P.toast(infoToast(P), -1);
-                        }, 500);
-                    } else {
-                        P.setData('infoOn', false);
-                        clearInterval(P.data.infoTimer);
-                        P.toast();
-                    }
+                    toggleInfoToast(P);
                 } else {
                     P.toast(infoToast(P));
                 }
@@ -734,7 +772,8 @@ export const playerMetadata = {
                                 danmakuTimeOffset,
                                 danmakuSizeOffset
                             ),
-                        fullscreenToggle
+                        fullscreenToggle,
+                        touchControls
                     )
             ),
         danmakuList,
