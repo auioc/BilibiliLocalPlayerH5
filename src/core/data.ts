@@ -42,16 +42,6 @@ import {
     toggleVisibility,
 } from './utils';
 
-function toggleDisplayByData(dataName: string, clazz: string) {
-    let r = '';
-    for (let i = 0; i < 4; i++) {
-        r += `.player[data-${dataName}='${i < 2 ? 'true' : 'false'}'] `;
-        r += `.${clazz}>span:${i % 2 === 0 ? 'first' : 'last'}-child`;
-        r += `{display: ${i > 0 && i - 3 < 0 ? 'none' : 'unset'};}\n`;
-    }
-    return r;
-}
-
 function toggleDisplayByDataValues(
     dataName: string,
     values: string[],
@@ -63,6 +53,10 @@ function toggleDisplayByDataValues(
         r += `.${clazz}>:nth-child(${i + 1}){display:unset}\n`;
     });
     return r;
+}
+
+function toggleDisplayByDataBool(dataName: string, clazz: string) {
+    return toggleDisplayByDataValues(dataName, ['true', 'false'], clazz);
 }
 
 function toggleComponent(
@@ -239,7 +233,7 @@ const toastBox = new EDC('div') //
 const playToggle = new EDC('button', 'playToggle') //
     .class('play-toggle')
     .title('Play/Pause')
-    .css(() => toggleDisplayByData('paused', 'play-toggle'))
+    .css(() => toggleDisplayByDataBool('paused', 'play-toggle'))
     .selfEvents({
         click: (P) => P.togglePlay(),
     })
@@ -248,19 +242,19 @@ const playToggle = new EDC('button', 'playToggle') //
 const muteToggle = new EDC('button', 'muteToggle')
     .class('mute-toggle')
     .title('Mute/Unmute')
-    .css(() => toggleDisplayByData('muted', 'mute-toggle'))
+    .css(() => toggleDisplayByDataBool('muted', 'mute-toggle'))
     .selfEvents({
         click: (P) => P.toggleMute(),
     })
     .children(
-        new EDC('span').children(span(icon('mute'))),
-        new EDC('span', 'volume-levels')
-            .class('volume-levels')
+        new EDC('span').class('mute-icon').children(span(icon('mute'))),
+        new EDC('span')
+            .class('volume-icons')
             .css(() =>
                 toggleDisplayByDataValues(
                     'volume',
                     ['zero', 'low', 'medium', 'high', 'max'],
-                    'volume-levels'
+                    'volume-icons'
                 )
             )
             .children(
@@ -400,7 +394,7 @@ const subtitleToggle = new EDC('button', 'subtitleToggle')
     .condition(hasSubtitle)
     .class('subtitle-toggle')
     .title('Subtitle')
-    .css(() => toggleDisplayByData('subtitle-on', 'subtitle-toggle'))
+    .css(() => toggleDisplayByDataBool('subtitle-on', 'subtitle-toggle'))
     .selfEvents({
         click: (P) =>
             toggleComponent(
@@ -417,7 +411,7 @@ const subtitleToggle = new EDC('button', 'subtitleToggle')
 const danmakuToggle = new EDC('button', 'danmakuToggle')
     .class('danmaku-toggle')
     .title('Danmaku')
-    .css(() => toggleDisplayByData('danmaku-on', 'danmaku-toggle'))
+    .css(() => toggleDisplayByDataBool('danmaku-on', 'danmaku-toggle'))
     .selfEvents({
         click: (P) =>
             toggleComponent(
@@ -480,7 +474,7 @@ const danmakuSizeOffset = new EDC('input')
 const fullscreenToggle = new EDC('button', 'fullscreenToggle')
     .class('fullscreen-toggle')
     .title('Fullscreen')
-    .css(() => toggleDisplayByData('fullscreen', 'fullscreen-toggle'))
+    .css(() => toggleDisplayByDataBool('fullscreen', 'fullscreen-toggle'))
     .selfEvents({
         click: (P) => P.toggleFullscreen(),
     })
