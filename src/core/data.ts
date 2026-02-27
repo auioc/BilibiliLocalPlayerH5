@@ -32,6 +32,7 @@ import {
     opacityInvisible,
     opacityVisible,
     randomStr,
+    span,
     spans,
     StrGenKV,
     timeToSeconds,
@@ -48,6 +49,19 @@ function toggleDisplayByData(dataName: string, clazz: string) {
         r += `.${clazz}>span:${i % 2 === 0 ? 'first' : 'last'}-child`;
         r += `{display: ${i > 0 && i - 3 < 0 ? 'none' : 'unset'};}\n`;
     }
+    return r;
+}
+
+function toggleDisplayByDataValues(
+    dataName: string,
+    values: string[],
+    clazz: string
+) {
+    let r = `.player .${clazz}>*{display:none}\n`;
+    values.forEach((v, i) => {
+        r += `.player[data-${dataName}='${values[i]}'] `;
+        r += `.${clazz}>:nth-child(${i + 1}){display:unset}\n`;
+    });
     return r;
 }
 
@@ -87,14 +101,22 @@ const icon_danmaku_off =
 const icon_subtitle_on =
     '<path d="M3.708 7.755c0-1.111.488-1.753 1.319-1.753.681 0 1.138.47 1.186 1.107H7.36V7c-.052-1.186-1.024-2-2.342-2C3.414 5 2.5 6.05 2.5 7.751v.747c0 1.7.905 2.73 2.518 2.73 1.314 0 2.285-.792 2.342-1.939v-.114H6.213c-.048.615-.496 1.05-1.186 1.05-.84 0-1.319-.62-1.319-1.727zm6.14 0c0-1.111.488-1.753 1.318-1.753.682 0 1.139.47 1.187 1.107H13.5V7c-.053-1.186-1.024-2-2.342-2C9.554 5 8.64 6.05 8.64 7.751v.747c0 1.7.905 2.73 2.518 2.73 1.314 0 2.285-.792 2.342-1.939v-.114h-1.147c-.048.615-.497 1.05-1.187 1.05-.839 0-1.318-.62-1.318-1.727z"/><path d="M14 3a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/>';
 
-const icon_volume =
-    'M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12zm3.025 4a4.5 4.5 0 0 1-1.318 3.182L10 10.475A3.5 3.5 0 0 0 11.025 8 3.5 3.5 0 0 0 10 5.525l.707-.707A4.5 4.5 0 0 1 12.025 8';
+const icon_volume_base1 =
+    'M8.707 11.182A4.5 4.5 0 0 0 10.025 8a4.5 4.5 0 0 0-1.318-3.182L8 5.525A3.5 3.5 0 0 1 9.025 8 3.5 3.5 0 0 1 8 10.475zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06';
+const icon_volume_2 =
+    'M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.61 3.89z';
+const icon_volume_3 =
+    'M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303z';
 
 const icons: StrGenKV<string | string[]> = {
     play: 'm11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393',
     pause: 'M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5',
-    volume: icon_volume,
-    volume1: icon_volume,
+    volume0:
+        'M10.717 3.55A.5.5 0 0 1 11 4v8a.5.5 0 0 1-.812.39L7.825 10.5H5.5A.5.5 0 0 1 5 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06',
+    volume1:
+        'M9 4a.5.5 0 0 0-.812-.39L5.825 5.5H3.5A.5.5 0 0 0 3 6v4a.5.5 0 0 0 .5.5h2.325l2.363 1.89A.5.5 0 0 0 9 12zm3.025 4a4.5 4.5 0 0 1-1.318 3.182L10 10.475A3.5 3.5 0 0 0 11.025 8 3.5 3.5 0 0 0 10 5.525l.707-.707A4.5 4.5 0 0 1 12.025 8',
+    volume2: [icon_volume_base1, icon_volume_2],
+    volume3: [icon_volume_base1, icon_volume_2, icon_volume_3],
     mute: 'M6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06m7.137 2.096a.5.5 0 0 1 0 .708L12.207 8l1.647 1.646a.5.5 0 0 1-.708.708L11.5 8.707l-1.646 1.647a.5.5 0 0 1-.708-.708L10.793 8 9.146 6.354a.5.5 0 1 1 .708-.708L11.5 7.293l1.646-1.647a.5.5 0 0 1 .708 0',
     danmakuOff: icon_danmaku_off,
     danmakuOn:
@@ -230,7 +252,27 @@ const muteToggle = new EDC('button', 'muteToggle')
     .selfEvents({
         click: (P) => P.toggleMute(),
     })
-    .children(...spans(icon('mute'), icon('volume')));
+    .children(
+        new EDC('span').children(span(icon('mute'))),
+        new EDC('span', 'volume-levels')
+            .class('volume-levels')
+            .css(() =>
+                toggleDisplayByDataValues(
+                    'volume',
+                    ['zero', 'low', 'medium', 'high', 'max'],
+                    'volume-levels'
+                )
+            )
+            .children(
+                ...spans(
+                    icon('volume0'),
+                    icon('volume1'),
+                    icon('volume2'),
+                    icon('volume2'),
+                    icon('volume3')
+                )
+            )
+    );
 
 const volumeInput = new EDC('input', 'volume')
     .class('volume')

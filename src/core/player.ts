@@ -25,6 +25,7 @@ import {
     appendChild,
     calcVideoRenderedSize,
     clamp,
+    convertVolumeToLevel,
     formatTime,
     StrAnyKV,
     StrGenKV,
@@ -129,6 +130,7 @@ export default class Player {
             this.setData('paused', this.video.paused);
             this.data.overHour = this.video.duration >= 60 * 60;
             this.#calcVideoRenderedSize();
+            this.#updateVolumeData();
             this.#ready = true;
             this.firePlayerEvent('ready');
         });
@@ -139,9 +141,7 @@ export default class Player {
         this.onVideoEvent('pause', () =>
             this.setData('paused', this.video.paused)
         );
-        this.onVideoEvent('volumechange', () =>
-            this.setData('muted', this.video.muted)
-        );
+        this.onVideoEvent('volumechange', () => this.#updateVolumeData());
         this.onPlayerEvent('fullscreenchange', () => {
             const fullscreen = document.fullscreenElement === this.container;
             this.setData('fullscreen', fullscreen ? true : false);
@@ -175,6 +175,11 @@ export default class Player {
             this.data.renderedHeight = d[1];
             this.data.physicalHeight = d[1] * r;
         }
+    }
+
+    #updateVolumeData() {
+        this.setData('muted', this.video.muted);
+        this.setData('volume', convertVolumeToLevel(this.video.volume));
     }
 
     ready() {

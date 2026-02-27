@@ -193,6 +193,18 @@ export function bindEvents<F extends AnyFunction>(
     }
 }
 
+export function convertVolumeToLevel(v: number) {
+    return v === 0
+        ? 'zero'
+        : v <= 0.3
+          ? 'low'
+          : v <= 0.6
+            ? 'medium'
+            : v <= 0.9
+              ? 'high'
+              : 'max';
+}
+
 export function calcVideoRenderedSize(
     video: HTMLVideoElement
 ): [number, number] | null {
