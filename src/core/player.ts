@@ -23,6 +23,7 @@ import { CommentManager } from '../lib/CommentCoreLibrary';
 import { bindMetaEvent, PlayerMetadata } from './metadata';
 import {
     appendChild,
+    calcAspectRatio,
     calcVideoRenderedSize,
     clamp,
     convertVolumeToLevel,
@@ -39,12 +40,14 @@ interface PlayerOptions extends StrAnyKV {
 }
 
 interface PlayerData extends StrAnyKV {
-    overHour: boolean;
-    fullscreen: boolean;
+    overHour?: boolean;
+    fullscreen?: boolean;
     renderedWidth: number;
     renderedHeight: number;
     physicalWidth: number;
     physicalHeight: number;
+    videoScale: number;
+    aspectRatio?: string;
 }
 
 interface MediaResources {
@@ -63,12 +66,11 @@ export default class Player {
     readonly container: HTMLDivElement;
     readonly elements: StrGenKV<HTMLElement> = {};
     readonly data: PlayerData = {
-        overHour: false,
-        fullscreen: false,
         renderedWidth: 0,
         renderedHeight: 0,
         physicalWidth: 0,
         physicalHeight: 0,
+        videoScale: 0,
     };
     #ready: boolean = false;
     commentManager?: CommentManager;
@@ -129,6 +131,10 @@ export default class Player {
         this.onVideoEvent('loadedmetadata', () => {
             this.setData('paused', this.video.paused);
             this.data.overHour = this.video.duration >= 60 * 60;
+            this.data.aspectRatio = calcAspectRatio(
+                this.video.videoWidth,
+                this.video.videoHeight
+            );
             this.#calcVideoRenderedSize();
             this.#updateVolumeData();
             this.#ready = true;
@@ -174,6 +180,8 @@ export default class Player {
             this.data.physicalWidth = d[0] * r;
             this.data.renderedHeight = d[1];
             this.data.physicalHeight = d[1] * r;
+            this.data.videoScale =
+                this.data.physicalWidth / this.video.videoWidth;
         }
     }
 

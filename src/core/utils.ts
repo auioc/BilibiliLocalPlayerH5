@@ -193,6 +193,18 @@ export function bindEvents<F extends AnyFunction>(
     }
 }
 
+function gcd(a: number, b: number): number {
+    return b === 0 ? a : gcd(b, a % b);
+}
+
+export function calcAspectRatio(a: number, b: number) {
+    if (a > 0 && b > 0) {
+        const d = gcd(a, b);
+        return a / d + ':' + b / d;
+    }
+    return a + ':' + b;
+}
+
 export function isTouchDevice() {
     return (
         window.matchMedia('(pointer: coarse)').matches ||

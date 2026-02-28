@@ -238,18 +238,17 @@ const toastBox = new EDC('div') //
     });
 
 function infoToast(P: Player) {
+    const V = P.video;
     const lines = [
         ['LocalTime', new Date().toLocaleString()],
         ['File', P.title],
         [
             'Time',
-            `${P.currentTime()} / ${formatTime(
-                P.video.duration
-            )} (${P.video.playbackRate.toFixed(2)}x)`,
+            `${P.currentTime()} / ${formatTime(V.duration)} (${V.playbackRate.toFixed(2)}x)`,
         ],
         [
             'Video',
-            `${P.video.videoWidth}x${P.video.videoHeight} -> ${Math.round(P.data.physicalWidth)}x${Math.round(P.data.physicalHeight)}`,
+            `${V.videoWidth}x${V.videoHeight} (${P.data.aspectRatio}) -> ${Math.round(P.data.physicalWidth)}x${Math.round(P.data.physicalHeight)} (${P.data.videoScale.toFixed(2)}x)`,
         ],
     ];
     if (P.data.danmakuOn) {
