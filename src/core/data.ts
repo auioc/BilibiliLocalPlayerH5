@@ -259,6 +259,17 @@ function infoToast(P: Player) {
             `${cm.position} / ${cm.timeline.length} (${cm.runline.length} on stage)`,
         ]);
     }
+    if (P.data.subtitleOn) {
+        const m = P.subtitleManager!;
+        lines.push([
+            'ASS',
+            `<i>${m.info.Title}</i> by ${m.info['Original Script']}`,
+        ]);
+        lines.push([
+            'Subtitle',
+            `${m._.index} / ${m.dialogues.length} (${m._.stagings.length} on stage)`,
+        ]);
+    }
     return (
         '<table>' +
         lines //
