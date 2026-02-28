@@ -29,6 +29,7 @@ import Player from './player';
 import {
     formatDate,
     formatTime,
+    isTouchDevice,
     opacityInvisible,
     opacityVisible,
     randomStr,
@@ -327,6 +328,7 @@ const muteToggle = new EDC('button', 'muteToggle')
     );
 
 const volumeInput = new EDC('input', 'volume')
+    .condition(() => !isTouchDevice())
     .class('volume')
     .title('Volume')
     .attrs({ type: 'number', min: '0', max: '100', step: '5', value: '100' })
@@ -539,8 +541,8 @@ const fullscreenToggle = new EDC('button', 'fullscreenToggle')
     .children(...spans(icon('exitFullscreen'), icon('fullscreen')));
 
 const touchControls = new EDC('div') // TODO use touch actions (eg. double-click pause/play) instead
+    .condition(isTouchDevice)
     .class('touch-controls')
-    .condition(() => window.matchMedia('(pointer: coarse)').matches)
     .children(
         new EDC('button', 'toggleInfo')
             .title('Toggle Info')

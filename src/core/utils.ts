@@ -193,6 +193,14 @@ export function bindEvents<F extends AnyFunction>(
     }
 }
 
+export function isTouchDevice() {
+    return (
+        window.matchMedia('(pointer: coarse)').matches ||
+        'ontouchstart' in window ||
+        navigator.maxTouchPoints > 0
+    );
+}
+
 export function convertVolumeToLevel(v: number) {
     return v === 0
         ? 'zero'
