@@ -1,6 +1,6 @@
 {
     "name": "bilibili-local-player-h5",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "description": "bilibili-local-player-h5",
     "main": "index.js",
     "type": "module",
@@ -66,6 +66,6 @@
         "sass": "^1.77.8",
         "terser": "^5.31.2",
         "tslib": "^2.6.3",
-        "typescript": "^5.5.3"
+        "typescript": "^6.0.3"
     }
 }

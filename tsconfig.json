@@ -1,16 +1,15 @@
 {
     "compilerOptions": {
         "alwaysStrict": true,
-        "baseUrl": "./src",
+        "rootDir": "./src",
         "lib": ["ESNext", "DOM"],
         "module": "ESNext",
-        "moduleResolution": "Node10",
+        "moduleResolution": "bundler",
         "noImplicitAny": true,
         "noImplicitReturns": true,
         "strictNullChecks": true,
         "outDir": "./public",
         "removeComments": true,
-        "rootDir": "./src",
         "sourceMap": true,
         "strictFunctionTypes": true,
         "target": "ESNext"

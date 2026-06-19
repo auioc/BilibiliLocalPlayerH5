@@ -62,10 +62,10 @@ export class EDC<T extends HTMLTagNames> {
     #condition?: (player: Player) => boolean;
     #css?: (data: EDC<T>) => string;
     #attrs: StrKV = {};
-    #html: string;
-    #selfEvents: ElementMetaEvents<T>;
-    #playerEvents: ElementMetaEvents<T>;
-    #videoEvent: ElementVideoMetaEvents<T>;
+    #html?: string;
+    #selfEvents?: ElementMetaEvents<T>;
+    #playerEvents?: ElementMetaEvents<T>;
+    #videoEvent?: ElementVideoMetaEvents<T>;
     #childrenBuilders: EDC<any>[] = [];
     #children: HTMLElement[] = [];
 
