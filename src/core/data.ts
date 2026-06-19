@@ -483,15 +483,21 @@ const danmakuToggle = new EDC('button', 'danmakuToggle')
     .title('Danmaku')
     .css(() => toggleDisplayByDataBool('danmaku-on', 'danmaku-toggle'))
     .selfEvents({
-        click: (P) =>
+        click: (P, E, ev) =>
             toggleComponent(
                 P,
                 'danmakuOn',
-                () => P.commentManager!.start(),
+                () => {
+                    P.commentManager!.start();
+                    opacityVisible(P.elements.danmakuStage);
+                },
                 'Danmaku On',
                 () => {
-                    P.commentManager!.clear();
-                    P.commentManager!.stop();
+                    if (ev.shiftKey) {
+                        P.commentManager!.clear();
+                        P.commentManager!.stop();
+                    }
+                    opacityInvisible(P.elements.danmakuStage);
                 },
                 'Danmaku Off'
             ),
@@ -725,7 +731,11 @@ const hotkeys = (P: Player, T: KeyboardEvent) => {
                 }
                 break;
             case 'KeyD':
-                if (P.elements.danmakuToggle) P.elements.danmakuToggle.click();
+                P.elements.danmakuToggle?.dispatchEvent(
+                    new MouseEvent('click', {
+                        shiftKey: T.shiftKey,
+                    })
+                );
                 break;
             case 'KeyQ':
                 console.log(P.video.currentTime);
