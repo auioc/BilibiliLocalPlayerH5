@@ -4,7 +4,8 @@
 
 本地视频与B站弹幕播放器
 
-<https://hi.auioc.org/BilibiliLocalPlayerH5>
+<https://app.qttp.net/BilibiliLocalPlayerH5/><br/>
+<https://hi.auioc.org/BilibiliLocalPlayerH5/>
 
 </div>
 
@@ -22,11 +23,11 @@
 
 ## 使用
 
-- <https://hi.auioc.org/BilibiliLocalPlayerH5>
+- <https://app.qttp.net/BilibiliLocalPlayerH5/> ([地址2](https://hi.auioc.org/BilibiliLocalPlayerH5/))
   - 默认构建，依赖使用 UNPKG CDN 引入
-- 无 CDN 构建：[Bundled](https://hi.auioc.org/BilibiliLocalPlayerH5/bundled)
+- 无 CDN 构建：[地址1](https://app.qttp.net/BilibiliLocalPlayerH5/bundled/) ([地址2](https://hi.auioc.org/BilibiliLocalPlayerH5/bundled/))
   - 依赖包含在打包的 `player.all.js` 中
-- All-in-One 构建：[AllInOne](https://hi.auioc.org/BilibiliLocalPlayerH5/all-in-one)
+- All-in-One 构建：[地址2](https://app.qttp.net/BilibiliLocalPlayerH5/all-in-one/) ([地址2](https://hi.auioc.org/BilibiliLocalPlayerH5/all-in-one/))
   - 样式和脚本内联在单个 HTML 文件中，可保存在本地离线使用
 
 ## 开发
