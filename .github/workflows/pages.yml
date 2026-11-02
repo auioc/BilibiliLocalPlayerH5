@@ -69,3 +69,55 @@ jobs:
             - name: Deploy to GitHub Pages
               id: deployment
               uses: actions/deploy-pages@v4
+
+    sync:
+        runs-on: ubuntu-latest
+        needs: build
+        steps:
+            - name: Download Artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: github-pages
+                  path: ${{ runner.temp }}/artifact
+
+            - name: Extract Artifact
+              run: |
+                  mkdir -p "$RUNNER_TEMP/build"
+                  tar -xvf "$RUNNER_TEMP/artifact/artifact.tar" \
+                    --directory "$RUNNER_TEMP/build"
+
+            - name: Push to sync repo
+              env:
+                  DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+                  TARGET_REPO: ${{ secrets.SYNC_REPO }}
+                  TARGET_BRANCH: 'main'
+                  TARGET_DIR: 'BilibiliLocalPlayerH5'
+                  SOURCE_DIR: ${{ runner.temp }}/build
+              run: |
+                  set -euo pipefail
+
+                  mkdir -p ~/.ssh
+                  echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+                  chmod 600 ~/.ssh/deploy_key
+                  ssh-keyscan -t rsa,ecdsa,ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+
+                  export GIT_SSH_COMMAND="ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes"
+
+                  rm -rf "$RUNNER_TEMP/target-repo"
+                  git clone --depth 1 --branch "$TARGET_BRANCH" \
+                    "git@github.com:${TARGET_REPO}.git" "$RUNNER_TEMP/target-repo"
+
+                  mkdir -p "$RUNNER_TEMP/target-repo/${TARGET_DIR}"
+                  rm -rf "$RUNNER_TEMP/target-repo/${TARGET_DIR:?}/"*
+                  cp -a "${SOURCE_DIR}/." "$RUNNER_TEMP/target-repo/${TARGET_DIR}/"
+
+                  cd "$RUNNER_TEMP/target-repo"
+                  git config user.name  "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+                  git add -A
+                  if git diff --cached --quiet; then
+                    echo "No changes to commit."
+                  else
+                    git commit -m "chore: update build output from ${GITHUB_REPOSITORY}@${GITHUB_SHA::7}"
+                    git push origin "HEAD:${TARGET_BRANCH}"
+                  fi
